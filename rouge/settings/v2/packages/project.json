@@ -1,0 +1,32 @@
+{
+  "__version__": "1.0.6",
+  "general": {
+    "designResolution": {
+      "width": 750,
+      "height": 1280
+    }
+  },
+  "physics": {
+    "collisionGroups": [
+      {
+        "index": 1,
+        "name": "PLAYER"
+      },
+      {
+        "index": 2,
+        "name": "ENEMY"
+      },
+      {
+        "index": 3,
+        "name": "PROJECTILE"
+      }
+    ],
+    "collisionMatrix": {
+      "0": 15,
+      "1": 9,
+      "2": 9,
+      "3": 7
+    }
+  },
+  "custom_joint_texture_layouts": []
+}
