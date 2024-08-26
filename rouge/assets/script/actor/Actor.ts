@@ -37,7 +37,7 @@ export class Actor extends Component {
     get input(): Vec2 { return this._input; }
     @property(CCFloat)
     linearSpeed:number=0;
-   
+    isAttacking: boolean = false;
 
     start() {
         this.rigidbody = this.getComponent(RigidBody2D);
@@ -64,7 +64,7 @@ export class Actor extends Component {
             let hitNormal = v3();
             Vec3.subtract(hitNormal, ca.node.worldPosition, cb.node.worldPosition);
             hitNormal.normalize();
-            const v2HitNormal = v2(hitNormal.x*5, hitNormal.y*5);
+            const v2HitNormal = v2(hitNormal.x, hitNormal.y);
             this.onHurt(this.attack, this.hurtSrc, v2HitNormal);
         }
     }
@@ -78,6 +78,10 @@ export class Actor extends Component {
         this.scheduleOnce(()=>{
             this.mainRenderer.color=Color.WHITE;
     },0.2)}
+    assetManager.resources.load("sounds/bulletIn", AudioClip, (err, clip) => {
+        // 播放音效
+        this.audioSource.playOneShot(clip, 0.5);
+         });   
     if(this.hp<=0){
         this.dead = true; // 设置死亡标志
         this.stateMgr.transit(StateDefine.Die)

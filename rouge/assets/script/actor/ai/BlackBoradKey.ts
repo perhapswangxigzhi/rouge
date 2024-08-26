@@ -6,6 +6,9 @@ export enum BlackboardKey {
     // Actor
     Actor = 'actor',
 
+       // Actor
+    playerActor = 'playerActor',
+
     // Player controller
     Self = 'self',
 

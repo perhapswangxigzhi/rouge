@@ -37,12 +37,6 @@ export class Projectile extends Component {
     onCollisionBegin(self: Collider2D, other: Collider2D, contact: IPhysics2DContact) {
         if ( colliderTag.isProjectileHitable(self.tag, other.tag)) {
            // self.enabled = false;            
-            assetManager.resources.load("sounds/bulletIn", AudioClip, (err, clip) => {
-                if (this.audioSource) {
-                    // 播放音效
-                    this.audioSource.playOneShot(clip, 0.5);
-                } 
-          });
           
           this.scheduleOnce(() => {
             PoolManager.instance().putNode(this.node);
