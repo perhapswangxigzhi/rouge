@@ -63,7 +63,7 @@ export class SetMoveDest extends bt.Action {
         let actor = result.blackboard.get(BlackboardKey.Actor) as Actor;
         let ec = actor.node.getComponent(EnemyControl);
         ec.moveNextMoveDest();
-        console.log('moveAI');
+        // console.log('moveAI');
     }
 }
 
@@ -98,7 +98,7 @@ export class StayIdle extends bt.Action {
         bt.markSuccess(result);
         let actor: Actor = result.blackboard.get(BlackboardKey.Actor);
         actor.stateMgr.transit(StateDefine.Idle);
-        console.log("Idle: 空闲");
+        // console.log("Idle: 空闲");
     }
 }
 

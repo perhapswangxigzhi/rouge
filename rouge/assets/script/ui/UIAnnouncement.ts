@@ -14,11 +14,15 @@ export class UIAnnouncement extends Component {
         // 设置公告内容
         this.announcementLabel.string = `更新内容：
         1. 新增功能：
-           - 增加近战敌人攻击
+           - 新增敌人物品掉落功能
+           - 新增物品时区吸附功能
+           - 新增经验条获取功能
+
         2. 优化功能：
-           - 优化近战敌人行为树逻辑
+           - 
         3. 修复BUG:
-           - 修复近战攻击失效问题`;
+           - 修复物品吸附卡住问题
+           - 修复经验条显示问题`;
         // 监听关闭按钮点击事件
         this.closeButton1.node.on(Button.EventType.CLICK, this.onCloseButtonClicked, this);
         this.closeButton2.node.on(Button.EventType.CLICK, this.onCloseButtonClicked, this);

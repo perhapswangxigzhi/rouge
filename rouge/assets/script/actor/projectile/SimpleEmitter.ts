@@ -36,9 +36,7 @@ export class SimpleEmitter extends Component {
             const wr=emiterNode.worldRotation;
             //可以用内存池优化
             let node=PoolManager.instance().getNode(this.projectilePrefab,this.canvasNode)
-            // let node=instantiate(this.projectilePrefab)
-            // node.setParent(this.canvasNode);
-            // this.canvasNode.addChild(node)
+
             //旋转x轴
             let left = Vec3.UNIT_X;
             let velocityV3 = v3();
@@ -56,10 +54,10 @@ export class SimpleEmitter extends Component {
 
             let projectile= node.getComponent(Projectile)
             projectile.host=this.actor;
-            //3秒后回收节点
+            //10秒后回收节点
             this.scheduleOnce(() => {
                 PoolManager.instance().putNode(node);
-            }, 3);
+            }, 10);
         }
    }
 

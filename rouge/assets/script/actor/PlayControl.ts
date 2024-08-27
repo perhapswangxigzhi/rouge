@@ -6,7 +6,6 @@ import { Idle } from './state/Idle';
 import { Walk } from './state/Walk';
 import { Die } from './state/Die';
 import { SimpleEmitter } from './projectile/SimpleEmitter';
-import { AimDirection } from './AimDirection';
 import { VirtualInput } from '../input/VirtualInput';
 
 @ccclass('PlayerController')

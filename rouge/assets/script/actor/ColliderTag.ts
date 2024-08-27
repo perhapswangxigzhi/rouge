@@ -8,6 +8,8 @@ export namespace colliderTag {
         AlertRange = 103,
         PlayerProjectile = 104,
         EnemyProjectile = 105,
+        magnet=106,
+        dropItem=107,
     }
     ccenum(Define);
 

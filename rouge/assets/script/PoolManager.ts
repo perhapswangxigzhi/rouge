@@ -27,8 +27,7 @@ export class PoolManager{
         if(pool){
             if(pool.size() > 0){
                 node=pool.get();
-                // console.log("get node :",name);
-                // console.log("get node from pool");
+              
             }else{
                 node=instantiate(prefab);
             }
@@ -36,6 +35,7 @@ export class PoolManager{
             this._dictPool[name] = new NodePool();
             node=instantiate(prefab);
         }
+        
         node.parent = parent;
         node.active = true;
           // 激活节点的碰撞组件
@@ -48,7 +48,6 @@ export class PoolManager{
 
     public putNode(node: Node){
         let name=node.name;
-        // console.log("put node :",name);
         node.parent = null;
         if(!this._dictPool[name]){
             this._dictPool[name] = new NodePool();
