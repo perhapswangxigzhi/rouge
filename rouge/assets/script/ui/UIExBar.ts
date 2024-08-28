@@ -16,14 +16,14 @@ export class UIExBar extends Component {
         if (!PlayerController.instance || !PlayerController.instance.actor) {
             return;
         }
-        const ex = PlayerController.instance.actor.ex;
-        const maxEx = PlayerController.instance.actor.maxEx;
+        const ex = PlayerController.instance.actor.playerProperty.ex;
+        const maxEx = PlayerController.instance.actor.playerProperty.maxEx;
         this.progressBar.progress = ex / maxEx;
         if(ex / maxEx==1){
         this.progressBar!.progress = 0;
-        PlayerController.instance.actor.ex = 0;
-        PlayerController.instance.actor.level+=1;
-        const level = PlayerController.instance.actor.level;
+        PlayerController.instance.actor.playerProperty.ex = 0;
+        PlayerController.instance.actor.playerProperty.level+=1;
+        const level = PlayerController.instance.actor.playerProperty.level;
         this.richTextLabel.string = `LV:${level}`;
         }
     }

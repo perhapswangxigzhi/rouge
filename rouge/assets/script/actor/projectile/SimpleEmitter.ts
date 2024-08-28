@@ -24,6 +24,16 @@ export class SimpleEmitter extends Component {
     castTime:number=0
     start() {
         this.canvasNode=find('LevelCanvas')
+       if(this.node.name=="Emitter01"){
+        const playerNode=find('LevelCanvas/Player')
+        this.actor=playerNode.getComponent(Actor)
+       // console.log(this.actor.node)
+       }else if(this.node.name=="Emitter4Dir"){
+        const ememyNode=find('LevelCanvas/Enemy1')
+        this.actor=ememyNode.getComponent(Actor)
+      //  console.log(this.actor.node)
+       }
+       
     } 
     get isCoolingdown(){
         return game.totalTime-this.castTime>=this.cooldown*1000;
@@ -54,10 +64,10 @@ export class SimpleEmitter extends Component {
 
             let projectile= node.getComponent(Projectile)
             projectile.host=this.actor;
-            //10秒后回收节点
+            //4秒后回收节点
             this.scheduleOnce(() => {
                 PoolManager.instance().putNode(node);
-            }, 10);
+            }, 4);
         }
    }
 

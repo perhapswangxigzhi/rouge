@@ -18,6 +18,8 @@ export class EnemyControl extends Component {
     playerActor:Actor = null;
     ai :bt.BehaviourTree = null;
     moveDest:Vec3=null
+    @property(SimpleEmitter)
+    projectileEmitter:SimpleEmitter | null = null;
     start() {
         this.actor = this.node.getComponent(Actor);
         this.playerActor=this.node.parent.getChildByName('Player').getComponent(Actor);

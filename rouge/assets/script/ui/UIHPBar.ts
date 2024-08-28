@@ -16,8 +16,8 @@ export class UIHPBar extends Component {
         if (!PlayerController.instance || !PlayerController.instance.actor) {
             return;
         }
-        const hp = PlayerController.instance.actor.hp;
-        const maxHp = PlayerController.instance.actor.maxHp;
+        const hp = PlayerController.instance.actor.playerProperty.hp;
+        const maxHp = PlayerController.instance.actor.playerProperty.maxHp;
         
         this.progressBar!.progress = hp / maxHp;
         this.richTextLabel!.string = `${hp}/${maxHp}`;

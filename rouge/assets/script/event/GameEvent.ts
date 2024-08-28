@@ -1,6 +1,7 @@
 export enum GameEvent {
     OnDie='onDie',
-    OnFireButtonClicked='onFireButtonClicked'
+    OnFireButtonClicked='onFireButtonClicked',
+    OnCreate='onCreate'
 
 
 }

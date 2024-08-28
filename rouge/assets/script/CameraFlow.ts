@@ -14,7 +14,7 @@ export class CameraFlow extends Component {
     offset: Vec3 = new Vec3(0, 0, 0);
 
     update(deltaTime: number) {
-        if (this.target && this.camera) {
+       if (this.target && this.camera) {
             // 获取目标节点的位置
             const targetPosition = this.target.position;
 
@@ -25,6 +25,7 @@ export class CameraFlow extends Component {
             // 更新相机的位置
             this.camera.node.position = newCameraPosition;
             }
-        }
+       }
+       
     }
 }

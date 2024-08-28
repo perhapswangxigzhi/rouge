@@ -57,7 +57,8 @@ export class MagnetEffect extends Component {
                 }
                 if (distance <5) {
                     PoolManager.instance().putNode(this.item);
-                    this.actor.ex+=this.dropEx;
+                    this.actor.playerProperty.ex+=this.dropEx;
+                    this.actor.playerProperty.killCount+=1;
                     assetManager.resources.load("sounds/getcoin", AudioClip, (err, clip) => {
                         // 播放音效
                         this.audioSource.playOneShot(clip, 0.5);

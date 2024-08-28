@@ -32,7 +32,10 @@ export class Weapon extends Component {
          // 将组件赋到全局变量 _audioSource 中
         this.audioSource = this.node.getComponent(AudioSource);
         this.collider.on(Contact2DType.BEGIN_CONTACT, this.onCollisionBegin, this);
-        
+        const ememyNode=find('LevelCanvas/Enemy3')
+        this.host=ememyNode.getComponent(Actor)
+        //console.log(this.host.node)
+      
     }
 
 

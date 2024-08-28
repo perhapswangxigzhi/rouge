@@ -34,9 +34,12 @@ export class MoveToDest extends bt.Action {
             bt.markSuccess(result);
             result.blackboard.delete(BlackboardKey.MoveDest);
             actor.stateMgr.transit(StateDefine.Idle);
+            //如果是近战敌人则发起攻击
+            if(actor.current_ActorProperty.name=="Enemy3"){
             actor.stateMgr.transit(StateDefine.Attack);
             const v2HitNormal = v2(0,0);
-            plplayerActor.onHurt(10,actor,v2HitNormal);
+            plplayerActor.onHurt(actor.current_ActorProperty.attack,actor,v2HitNormal);
+            }
             return;
         }
         if(dur < 0){

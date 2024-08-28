@@ -2,12 +2,12 @@
   "ver": "1.1.50",
   "importer": "prefab",
   "imported": true,
-  "uuid": "4ced46a5-3272-4d9a-85aa-e5b2823103cb",
+  "uuid": "ceb4b342-dfb2-498c-a960-86e43d63f79a",
   "files": [
     ".json"
   ],
   "subMetas": {},
   "userData": {
-    "syncNodeName": "Gun"
+    "syncNodeName": "Player"
   }
 }

@@ -36,12 +36,11 @@ export class Projectile extends Component {
 
     onCollisionBegin(self: Collider2D, other: Collider2D, contact: IPhysics2DContact) {
         if ( colliderTag.isProjectileHitable(self.tag, other.tag)) {
-           // self.enabled = false;            
-          
           this.scheduleOnce(() => {
-            PoolManager.instance().putNode(this.node);
+            // PoolManager.instance().putNode(this.node);
+            this.node.destroy();
           });
-
+          
         }
     }
 }

@@ -849,7 +849,7 @@
     },
     "_anchorPoint": {
       "__type__": "cc.Vec2",
-      "x": 0.5,
+      "x": 0,
       "y": 0.5
     },
     "_id": ""
@@ -938,13 +938,16 @@
       "__id__": 29
     },
     "dragonBoneAnimation": null,
-    "maxHp": 50,
     "mainRenderer": {
       "__id__": 27
     },
     "linearSpeed": 1,
     "ItemPrefab": {
       "__uuid__": "0f05e22e-9abf-487f-a64f-2c55f764222d",
+      "__expectedType__": "cc.Prefab"
+    },
+    "damageTextPrefab": {
+      "__uuid__": "7492ab80-b3fc-4296-9a0b-84c757d07c3d",
       "__expectedType__": "cc.Prefab"
     },
     "_id": ""
@@ -964,6 +967,9 @@
     "_enabled": true,
     "__prefab": {
       "__id__": 45
+    },
+    "projectileEmitter": {
+      "__id__": 22
     },
     "_id": ""
   },

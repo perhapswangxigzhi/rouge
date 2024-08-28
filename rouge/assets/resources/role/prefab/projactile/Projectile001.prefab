@@ -22,7 +22,7 @@
         "__id__": 2
       }
     ],
-    "_active": true,
+    "_active": false,
     "_components": [
       {
         "__id__": 8
@@ -45,8 +45,8 @@
     },
     "_lpos": {
       "__type__": "cc.Vec3",
-      "x": 61.828,
-      "y": -14.339,
+      "x": 179.941,
+      "y": -133.105,
       "z": 0
     },
     "_lrot": {
@@ -314,6 +314,7 @@
     },
     "audioSource": null,
     "hitTag": 104,
+    "host": null,
     "_id": ""
   },
   {

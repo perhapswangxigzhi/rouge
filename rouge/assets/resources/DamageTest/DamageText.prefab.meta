@@ -2,12 +2,12 @@
   "ver": "1.1.50",
   "importer": "prefab",
   "imported": true,
-  "uuid": "35d25a8d-e082-4c7f-866e-5db59e64e793",
+  "uuid": "7492ab80-b3fc-4296-9a0b-84c757d07c3d",
   "files": [
     ".json"
   ],
   "subMetas": {},
   "userData": {
-    "syncNodeName": "Player"
+    "syncNodeName": "DamageText"
   }
 }

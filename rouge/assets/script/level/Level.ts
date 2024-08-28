@@ -1,4 +1,4 @@
-import { CCFloat, CCInteger, Component, Label, Node, Prefab, _decorator, assert, director, instantiate, screen, sys } from "cc";
+import { CCFloat, CCInteger, Component, Label, Node, Prefab, Vec3, _decorator, assert, director, instantiate, screen, sys } from "cc";
 import { GameEvent } from "../event/GameEvent";
 import { PlayerController } from "../actor/PlayControl";
 const { ccclass, property, requireComponent } = _decorator;
@@ -55,6 +55,7 @@ export class Level extends Component {
         }
 
         director.on(GameEvent.OnDie, this.onActorDead, this);
+        director.on(GameEvent.OnCreate, this.onActorCreate,  this);
         this.statictics.string = `${this.killedCount}/${this.totalCount}`;
     }
 
@@ -78,6 +79,22 @@ export class Level extends Component {
             if( this.killedCount >= this.totalCount){
                 this.uiWin.active = true;
             }
+        }
+    }
+    onActorCreate(node: Node) {
+        if( node &&node == PlayerController.instance?.node){
+            const playerNode = PlayerController.instance.actor.node;
+            const playerPosition = playerNode.worldPosition;
+            console.log("playerPosition",playerPosition);
+            const spawnPoint = new SpawnPoint();
+            spawnPoint.spawnNode=new Node();
+            spawnPoint.spawnNode.worldPosition = new Vec3(playerPosition.x +100, playerPosition.y+100, playerPosition.z);
+            spawnPoint.interval = 2.0;
+            spawnPoint.repeatCount = 4;
+            this.spawnPoints.push(spawnPoint);
+            this.schedule(() => {
+                this.doSpawn(spawnPoint)
+            }, spawnPoint.interval, spawnPoint.repeatCount, 0.0);
         }
     }
 }

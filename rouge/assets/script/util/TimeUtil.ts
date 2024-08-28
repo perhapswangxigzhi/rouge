@@ -24,7 +24,7 @@ export namespace timeUtil {
      * 监听场景切换事件，重设关卡事件
      */
     director.on(Director.EVENT_AFTER_SCENE_LAUNCH, () => {
-        log('[timeUtil] resetLevelTime')
+       log('[timeUtil] resetLevelTime')
         resetLevelTime();
     })
 }

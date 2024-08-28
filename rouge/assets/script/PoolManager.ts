@@ -27,7 +27,6 @@ export class PoolManager{
         if(pool){
             if(pool.size() > 0){
                 node=pool.get();
-              
             }else{
                 node=instantiate(prefab);
             }
@@ -49,8 +48,10 @@ export class PoolManager{
     public putNode(node: Node){
         let name=node.name;
         node.parent = null;
+        node.active = false;
         if(!this._dictPool[name]){
             this._dictPool[name] = new NodePool();
+            
         }
         this._dictPool[name].put(node);
     }

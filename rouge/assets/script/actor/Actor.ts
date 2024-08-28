@@ -6,6 +6,8 @@ import { Projectile } from './projectile/Projectile';
 import { Weapon } from './weapon/Weapon';
 import { GameEvent } from '../event/GameEvent';
 import { PoolManager } from '../PoolManager';
+import { DamageTextManager } from './DamageTextManager';
+import { ActorProperty } from './ActorProperty';
 const { ccclass, property ,requireComponent,disallowMultiple} = _decorator;
 
 @ccclass('Actor')
@@ -25,14 +27,18 @@ export class Actor extends Component {
     dragonBoneAnimation:dragonBones.ArmatureDisplay|null = null;
 
     hp:number=100;
-    @property(CCFloat)
     maxHp:number=100;
     attack:number=10;
-
     ex:number=0;
     maxEx:number=100;
     level:number=0;
-
+    
+    // 使用字典存储多个ActorProperty对象
+    actorProperties: { [key: string]: ActorProperty } = {};
+    playerProperty : ActorProperty = new ActorProperty("Player",100,10);
+    enemy1_Property : ActorProperty = new ActorProperty("Enemy1",50,5);
+    enemy3_Property : ActorProperty = new ActorProperty("Enemy3",100,5);
+    current_ActorProperty:ActorProperty|null=null;
     @property(Sprite)
     mainRenderer: Sprite|null=null;
     audioSource: AudioSource = null;
@@ -41,6 +47,7 @@ export class Actor extends Component {
     hurtSrc:Actor|null=null;
     set input(v: Vec2) { this._input.set(v.x, v.y); }
     get input(): Vec2 { return this._input; }
+
     @property(CCFloat)
     linearSpeed:number=0;
     isAttacking: boolean = false;
@@ -48,14 +55,28 @@ export class Actor extends Component {
     canvasNode:Node=null;
     @property(Prefab)
     ItemPrefab: Prefab | null=null;
+
+    @property(Prefab)
+    damageTextPrefab: Prefab = null;
+
     start() {
         this.rigidbody = this.getComponent(RigidBody2D);
         this.collider = this.getComponent(Collider2D);
         this.collider.on(Contact2DType.BEGIN_CONTACT, this.onProjectileTriggerEnter, this);
         this.audioSource = this.node.getComponent(AudioSource);
         this.canvasNode=find('LevelCanvas')
+        this.addActorProperty(this.playerProperty);
+        this.addActorProperty(this.enemy1_Property);
+        this.addActorProperty(this.enemy3_Property);
+        this.current_ActorProperty=this.getActorProperty(this.node.name)
     }
-    
+      // 根据名字获取ActorProperty对象
+    getActorProperty(name: string): ActorProperty | undefined {
+        return this.actorProperties[name];
+    }
+    addActorProperty(actorProperty: ActorProperty) {
+        this.actorProperties[actorProperty.name] = actorProperty;
+    }
     onDisable() {
         this.collider.off(Contact2DType.BEGIN_CONTACT, this.onProjectileTriggerEnter, this);
     }
@@ -68,18 +89,29 @@ export class Actor extends Component {
     onProjectileTriggerEnter(ca:Collider2D, cb:Collider2D,contact:IPhysics2DContact){
         if (colliderTag.isProjectileHitable(cb.tag, ca.tag)) {
             if(cb.node.getComponent(Projectile)){
-            this.hurtSrc = cb.node.getComponent(Projectile).host;}
-            else{this.hurtSrc = cb.node.getComponent(Weapon).host;}
+            this.hurtSrc = cb.node.getComponent(Projectile).host;
+           }
+            // else{this.hurtSrc = cb.node.getComponent(Weapon).host;
+            //     console.log("actor weapon:",this.hurtSrc.node.name)
+            // }
             let hitNormal = v3();
             Vec3.subtract(hitNormal, ca.node.worldPosition, cb.node.worldPosition);
             hitNormal.normalize();
             const v2HitNormal = v2(hitNormal.x, hitNormal.y);
-            this.onHurt(this.attack, this.hurtSrc, v2HitNormal);
+            if(this.hurtSrc.current_ActorProperty!=null){
+            this.onHurt(this.hurtSrc.current_ActorProperty.attack, this.hurtSrc, v2HitNormal);
+            }
         }
     }
     onHurt(damage:number, from:Actor, hurtDirection?:Vec2){
         if (this.dead) {return;}
-        this.hp=Math.floor(math.clamp(this.hp-damage,0,this.maxHp));
+        this.current_ActorProperty.hp=this.current_ActorProperty.hp-damage;
+        const hitPosition = new Vec3(hurtDirection.x, hurtDirection.y*2+30, this.node.position.z);
+        // 显示伤害文字
+        const damageTextNode=instantiate(this.damageTextPrefab);
+        damageTextNode.setParent(this.node);
+        damageTextNode.getComponent(DamageTextManager).showDamage(hitPosition, damage);;
+
         this.rigidbody.applyLinearImpulseToCenter(hurtDirection,true)
         //受伤闪烁
         if(this.mainRenderer!=null){
@@ -91,16 +123,8 @@ export class Actor extends Component {
         // 播放音效
         this.audioSource.playOneShot(clip, 0.3);
          });   
-    if(this.hp<=0){
+    if(this.current_ActorProperty.hp<=0){
         this.dead = true; // 设置死亡标志
-        // resources.load('item/Item', Prefab, (err, prefab) => {
-        //     if (err) {
-        //         console.error(err);
-        //         return;
-        //     }
-        //     this.Item = prefab;
-        //     console.log(this.Item)
-        // })
         this.scheduleOnce(()=>{
         let node=PoolManager.instance().getNode(this.ItemPrefab,this.canvasNode)
         node.worldPosition=this.node.worldPosition;
