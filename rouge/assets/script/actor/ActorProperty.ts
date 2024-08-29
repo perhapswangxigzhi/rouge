@@ -25,12 +25,12 @@ export class ActorProperty {
     level: number = 0;
 
     /**
-     * 当前经验
+     * 获取经验
      */
     ex: number = 0;
 
     /**
-     * 本级最大经验
+     * 升级所需经验
      */
     maxEx: number = 50;
     /**

@@ -37,10 +37,10 @@ export class PoolManager{
         
         node.parent = parent;
         node.active = true;
-          // 激活节点的碰撞组件
-          node.getComponents(Collider2D).forEach(collider => {
-            collider.enabled = true;
-        });
+        //   // 激活节点的碰撞组件
+        //   node.getComponents(Collider2D).forEach(collider => {
+        //     collider.enabled = true;
+        // });
 
         return node;
     }

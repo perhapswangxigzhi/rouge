@@ -63,9 +63,10 @@ export class MagnetEffect extends Component {
                         // 播放音效
                         this.audioSource.playOneShot(clip, 0.5);
                         });    
-                    this.scheduleOnce(() => {
-                    this.item=null;
-                        })
+                    // this.scheduleOnce(() => {
+                    // this.item=null;
+                    
+                        // })
              }
                
     }

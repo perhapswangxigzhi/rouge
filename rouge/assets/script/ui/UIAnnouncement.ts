@@ -19,16 +19,13 @@ export class UIAnnouncement extends Component {
             版本V1.0.2 
                   更新内容：
                 1. 新增功能：
-                  - 新增伤害数字显示功能
-                  - 新增属性系统
-                  - 新增敌人击杀奖励金币功能
-                  - 新增挑战技能按钮功能
-                  - 新增点击挑战生成敌人功能
+                  - 新增点击金币经验怪挑战后奖励散落且可收回功能
+                  - 天赋选择模板初步完成
 
                2. 优化功能：
                   - 
                3. 修复BUG:
-                  - 修复有时射出子弹短时间消失问题
+                  - 修复挑战后的金币经验奖励回收计数问题
                   - 修复吃经验时经验一直不消失问题`;
         // 监听关闭按钮点击事件
         this.closeButton1.node.on(Button.EventType.CLICK, this.onCloseButtonClicked, this);

@@ -8,13 +8,18 @@ const { ccclass, property } = _decorator;
 export class UIGold extends Component {
     richTextLabel:RichText | null = null;
     killCount:number=0;
+    coinCount:number=0
+    Count:number=0
+    static instance:UIGold | null = null;
     start() {
+        UIGold.instance = this;
         this.richTextLabel = this.node.getChildByName('RichText').getComponent(RichText);
     }
 
     update(deltaTime: number) {
         this.killCount= PlayerController.instance.actor.playerProperty.killCount;
-        this.richTextLabel!.string = this.killCount.toString();
+        this.Count=this.coinCount+this.killCount*2;
+        this.richTextLabel!.string = this.Count.toString();
     }
 }
 

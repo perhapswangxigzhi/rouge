@@ -29,8 +29,9 @@ export class Level extends Component {
     @property(Prefab)
     enemyPrefab: Prefab | null = null;
 
-    totalCount = 0;
+    totalCount = 2;
     killedCount: number = 0;
+    challengeKilledCount: number = 0;
 
     @property(Node)
     uiFail: Node = null;
@@ -68,7 +69,7 @@ export class Level extends Component {
         this.node.addChild(node);
         node.worldPosition = sp.spawnNode.worldPosition;
     }
-
+    
     onActorDead(node: Node) {
         if (node && node == PlayerController.instance?.node) {
             this.uiFail.active = true;
@@ -83,9 +84,8 @@ export class Level extends Component {
     }
     onActorCreate(node: Node) {
         if( node &&node == PlayerController.instance?.node){
-            const playerNode = PlayerController.instance.actor.node;
+            const playerNode = PlayerController.instance.node;
             const playerPosition = playerNode.worldPosition;
-            console.log("playerPosition",playerPosition);
             const spawnPoint = new SpawnPoint();
             spawnPoint.spawnNode=new Node();
             spawnPoint.spawnNode.worldPosition = new Vec3(playerPosition.x +100, playerPosition.y+100, playerPosition.z);
@@ -94,6 +94,8 @@ export class Level extends Component {
             this.spawnPoints.push(spawnPoint);
             this.schedule(() => {
                 this.doSpawn(spawnPoint)
+                this.totalCount +=  1;
+                this.statictics.string = `${this.killedCount}/${this.totalCount}`;
             }, spawnPoint.interval, spawnPoint.repeatCount, 0.0);
         }
     }
