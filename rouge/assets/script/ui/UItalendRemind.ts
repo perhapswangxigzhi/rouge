@@ -1,4 +1,4 @@
-import { _decorator, Button, Component, director, Node } from 'cc';
+import { _decorator, Button, Component, director, find, Node } from 'cc';
 const { ccclass, property } = _decorator;
 
 @ccclass('UItalendRemind')
@@ -16,9 +16,9 @@ export class UItalendRemind extends Component {
      
       this.talentNode.active = true;
   
-      this.scheduleOnce(()=>{;
-      director.pause();
-      },0.1);
+      // this.scheduleOnce(()=>{;
+      // // director.pause();
+      // },0.1);
   }
 }
 

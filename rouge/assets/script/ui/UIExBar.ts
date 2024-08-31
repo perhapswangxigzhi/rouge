@@ -8,12 +8,12 @@ export class UIExBar extends Component {
     richTextLabel:RichText | null = null;
     ExpDrop:number = 0;
     ExpCount:number = 0;
-    static instacnce: UIExBar | null = null;
+    static instance: UIExBar | null = null;
     
     start() {
         this.progressBar = this.node.getComponent(ProgressBar);
         this.richTextLabel = this.node.getChildByName('RichText').getComponent(RichText);
-        UIExBar.instacnce = this;
+        UIExBar.instance = this;
     }
 
     update(deltaTime: number) {
