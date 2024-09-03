@@ -12,13 +12,14 @@ export class Reflash extends Component {
     filpCard(UIFrame:Node){
         let changeSprite= UIFrame.getChildByName('SkillBg').getChildByName('SkillIcon').getComponent(Sprite);
         let chanegSkillName= UIFrame.getChildByName('SkillBg').getChildByName('SkillName').getComponent(Label);
+        let changeSkillExplain= UIFrame.getChildByName('SkillBg').getChildByName('SkillExplain').getComponent(Label);
         const filpDuration = 0.2;// 翻牌动画持续时间
         tween(UIFrame)
         .to(filpDuration/2, {eulerAngles:new Vec3(0,-90,0)})
         
         .call(() => {
             // 在半翻时更换精灵帧
-           SkillManager.instance.randomSkill(changeSprite, chanegSkillName);
+           SkillManager.instance.randomSkill(changeSprite, chanegSkillName,changeSkillExplain);
            UIFrame.getChildByName('SkillBg').getChildByName('SkillIcon').getComponent(Sprite).spriteFrame = changeSprite.spriteFrame;  
         })
         .to(filpDuration/ 2, { eulerAngles: new Vec3(0,  -180, 0) })

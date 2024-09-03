@@ -21,18 +21,25 @@ export class UIFrameLayout extends Component {
     skillIcon1: Sprite | null = null;
     @property(Label)
     skillName1: Label | null = null;
+    @property(Label)
+    skillExplain1: Label | null = null;
+    @property(Node)
+    UIFrame_002: Node | null = null;
     @property(Sprite)
     skillIcon2: Sprite | null = null;
     @property(Label)
     skillName2: Label | null = null;
+    @property(Label)
+    skillExplain2: Label | null = null;
+    @property(Node)
+    UIFrame_003: Node | null = null;
     @property(Sprite)
     skillIcon3: Sprite | null = null;
     @property(Label)
     skillName3: Label | null = null;
-    @property(Node)
-    UIFrame_002: Node | null = null;
-    @property(Node)
-    UIFrame_003: Node | null = null;
+    @property(Label)
+    skillExplain3: Label | null = null;
+   
     start() {
          // 监听关闭按钮点击事件
          this.closeButton.node.on(Button.EventType.CLICK, this.onCloseButtonClicked, this);
@@ -40,9 +47,11 @@ export class UIFrameLayout extends Component {
          this.choseTalentButton2.node.on(Button.EventType.CLICK, this.onCloseButtonClicked, this);
          this.choseTalentButton3.node.on(Button.EventType.CLICK, this.onCloseButtonClicked, this);
          this.reflashButton.node.on(Button.EventType.CLICK, this.onReflashFrmae, this);
-        SkillManager.instance.randomSkill(this.skillIcon1, this.skillName1)
-        SkillManager.instance.randomSkill(this.skillIcon2, this.skillName2)
-        SkillManager.instance.randomSkill(this.skillIcon3, this.skillName3)
+        SkillManager.instance.randomSkill(this.skillIcon1, this.skillName1,this.skillExplain1)
+        SkillManager.instance.randomSkill(this.skillIcon2, this.skillName2,this.skillExplain2)
+        SkillManager.instance.randomSkill(this.skillIcon3, this.skillName3,this.skillExplain3)
+    
+        //this.node.active=false;
     }
     onCloseButtonClicked() {
         // 关闭界面

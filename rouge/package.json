@@ -2,7 +2,13 @@
   "name": "rouge",
   "uuid": "382aa763-1fe3-40af-a6a1-243e5c1fd5f6",
   "creator": {
-    "version": "3.8.3"
+    "version": "3.8.3",
+    "registry": {
+      "remote": {}
+    },
+    "dependencies": {
+      "localization-editor": "1.0.3"
+    }
   },
   "description": ""
 }

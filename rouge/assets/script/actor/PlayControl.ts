@@ -7,6 +7,7 @@ import { Walk } from './state/Walk';
 import { Die } from './state/Die';
 import { SimpleEmitter } from './projectile/SimpleEmitter';
 import { VirtualInput } from '../input/VirtualInput';
+import { IndividualSkill } from '../skill/IndividualSkill';
 
 @ccclass('PlayerController')
 @requireComponent(Actor)
@@ -21,6 +22,9 @@ export class PlayerController extends Component {
 
     @property(SimpleEmitter)
     projectileEmitter:SimpleEmitter | null = null;
+    @property(IndividualSkill)
+    skillEmitter:IndividualSkill | null = null;
+
     static instance:PlayerController | null = null;
     lastAngleRad:number=0;
     direction:number=0;
@@ -39,7 +43,9 @@ export class PlayerController extends Component {
         this.audioSource = this.node.getComponent(AudioSource);
         const h=VirtualInput.horizontal;
         const v=VirtualInput.vertical;
-        
+        this.schedule(()=>{
+           this.skillEmitter.skillRealse();
+        },2,4,2)
         this.schedule(() => this.fire(), 0.3, macro.REPEAT_FOREVER, 0);
   
 

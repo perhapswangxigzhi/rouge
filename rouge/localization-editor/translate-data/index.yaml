@@ -1,0 +1,18 @@
+locale: index
+items:
+  17sAs9YjREvqHutuxDs00h:
+    key: 17sAs9YjREvqHutuxDs00h
+    value: ""
+    type: 2
+    isVariant: false
+    associations:
+      - sceneUuid: e23b9eca-179a-4122-b826-547520328690
+        nodeUuid: f4u3Wa8MFFP78CtUsgRKqn
+        reference: e23b9eca-179a-4122-b826-547520328690
+    _variants: []
+languageConfig:
+  bcp47Tag: index
+  translateFinished: 9
+  translateTotal: 0
+  compileFinished: 0
+  compileTotal: 0

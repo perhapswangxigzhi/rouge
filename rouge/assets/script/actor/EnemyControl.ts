@@ -51,7 +51,7 @@ export class EnemyControl extends Component {
         this.ai.setData(BlackboardKey.MoveDest, this.moveDest);
         this.ai.setData(BlackboardKey.MoveDestDuration, 0.9);
         let data=this.ai.getData(BlackboardKey.MoveDestDuration);
-        console.log('MoveDestDuration1',data);
+       // console.log('MoveDestDuration1',data);
     }
     createAI() {
         if(this.ai==null){
@@ -73,7 +73,7 @@ export class EnemyControl extends Component {
         }
 
         if (this.node.getComponentInChildren(SimpleEmitter)) {
-            console.log('has emitter');
+          //  console.log('has emitter');
             let emitSeq = new bt.Sequence();
             rootNode.addChild(emitSeq);
             let simpleEmitter = this.node.getComponentInChildren(SimpleEmitter);

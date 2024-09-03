@@ -4,19 +4,14 @@ const { ccclass, property } = _decorator;
 
 @ccclass('SkillManager')
 export class SkillManager extends Component {
-    // @property(SpriteFrame)
-    // skillIcon: SpriteFrame = null;
-    // @property(Label)
-    // skillName_Label: Label = null;
-    // @property(Label)
-    // skillExplain_Label: Label = null;
     static instance: SkillManager | null = null;
-    skillIconGetName: string[] = [];
+    skillIconFileName: string[] = [];
     skillIconName: string[] = [];
+    skillExplain: string[] = [];
 
     onLoad() {
         SkillManager.instance = this;
-        this.skillIconGetName = [
+        this.skillIconFileName = [
             'HolySpring_skillicon_30011',
             'HolySpring_skillicon_30011a',
             'HolySpring_skillicon_30021',
@@ -159,26 +154,99 @@ export class SkillManager extends Component {
             '多重箭雨',
             '灵魂碎裂',
         ];
-        console.log(this.skillIconGetName[0]);
-        
+        console.log(this.skillIconFileName[0]);
+        this.skillExplain = [
+            '召唤寒冰之力，挥舞武器进行冰刃斩击，对敌人造成寒冰伤害，并可能使目标冻结。',
+            '挥动炽烈之刃，对敌人造成高温灼伤，附加火焰效果，持续对敌人造成灼烧伤害。',
+            '释放霜雷之力，引发震荡波，对范围内敌人造成冰霜与雷电双重伤害。',
+            '召唤狂暴的雷霆力量，猛烈震击敌人，造成强烈的雷电伤害，并有几率使敌人麻痹。',
+            '快速射出飞矢，以极快速度命中目标，造成穿透伤害，并提高自身攻速。',
+            '聚集炽焰之力进行冲击，对敌人造成火焰伤害，并有几率点燃敌人。',
+            '利用灵能制造漩涡，将周围敌人吸引至中心，造成持续性伤害。',
+            '释放紫电之力形成旋风，对接触到的敌人造成高额雷电伤害。',
+            '凝聚生命之力形成护盾，吸收一定伤害，并在破碎时释放治愈能量。',
+            '召唤磐石力量，形成坚固护盾，减少所受伤害，并提升自身防御力。',
+            '召唤雷霆之力凝聚在锤上，猛然击打敌人，造成雷电伤害并使其眩晕。',
+            '挥动炽烈火焰凝聚的重锤，猛烈击打敌人，造成火焰伤害并有灼烧效果。',
+            '召唤火流星从天而降，对目标及其周围敌人造成大范围火焰伤害。',
+            '从天召唤巨大的烈焰陨石，对范围内敌人造成毁灭性火焰伤害。',
+            '发射水晶裂弹，命中敌人后分裂成多发碎片，对多名敌人造成伤害。',
+            '发射尖锐的晶石飞弹，对敌人造成穿透性伤害，并降低其护甲。',
+            '使用金属尖刺快速突袭目标，造成高额物理伤害，并有几率使敌人流血。',
+            '旋转钻头般的武器，对敌人进行螺旋钻击，造成持续伤害并击破护甲。',
+            '挥舞刀锋以极快速度袭击敌人，造成高速多段伤害。',
+            '火焰之刃旋转舞动，持续攻击周围敌人，造成范围火焰伤害。',
+            '召唤金龙之力，在战场上狂舞，对敌人造成大范围的致命打击。',
+            '召唤银蛇之力，施展乱舞攻击，对敌人造成连续的雷电伤害。',
+            '释放紫能，快速对敌人进行连击，造成雷电伤害，并附加麻痹效果。',
+            '挥舞武器撕裂空气，对敌人发动猛击，造成破甲伤害并击退目标。',
+            '以水影般的速度斩击敌人，造成高额物理伤害，并提高自身闪避率。',
+            '释放炽热能量形成波涛，对沿途敌人造成火焰伤害，并附加燃烧效果。',
+            '聚集大地之力，向前方发动岩砾冲击，对敌人造成物理伤害并击倒目标。',
+            '以巨力猛袭敌人，破除其护甲，并造成巨额物理伤害。',
+            '挥舞月刃进行快速斩击，对敌人造成斩击伤害，并附加寒冰减速效果。',
+            '挥动烈刃释放斩波，对直线上敌人造成高额火焰伤害。',
+            '从地下召唤岩浆喷涌而出，对敌人造成范围性火焰伤害。',
+            '召唤爆裂火焰冲击地面，对范围内敌人造成巨大伤害，并使其灼烧。',
+            '召唤金光涌流，治疗周围盟友并增强他们的防御力。',
+            '以极快的速度移动，在短时间内提升自身闪避率，并免疫部分伤害。',
+            '获得风之祝福，移动速度大幅提升，并减少技能冷却时间。',
+            '释放治愈能量，恢复自身和周围盟友的生命值，并解除负面状态。',
+            '通过强心术恢复自身生命力，同时提高生命回复速度。',
+            '挥舞碧影之剑，释放剑气，对敌人造成连环斩击伤害。',
+            '召唤圣光之力，释放剑影，对敌人造成神圣伤害，并附加治疗效果。',
+            '召唤能量屏障，抵挡敌方攻击，并反射部分伤害。',
+            '形成光耀护壁，减少所受伤害，并对敌人造成反击光伤害。',
+            '激发体内能量，短时间内提高攻击速度与伤害输出。',
+            '激发内心狂焰，短时间内大幅提升自身攻击力与战斗意志。',
+            '召唤祝福之力，持续恢复自身与周围盟友的生命值。',
+            '召唤金辉之力，复苏倒下的盟友，并提高其生命恢复速度。',
+            '激发勇者之力，短时间内大幅提升自身力量与抗性。',
+            '释放勇者威严，震慑敌人，降低其攻击力与防御力。',
+            '召唤碧影之力，迅速在战场上穿梭，短时间内提升自身移动速度。',
+            '激发金影之力，以极快速度在战场上行动，并提高闪避率。',
+            '激发财富祝福，增加获取资源与财富的速度。',
+            '通过黄金之力，短时间内大幅增加所获得的财富与资源。',
+            '操控时间，使时间缓慢流动，延长自身技能持续时间。',
+            '暂停时间，使敌人的行动暂时凝滞，便于进行攻击。',
+            '释放强大力量的冲击波，对直线上敌人造成巨额伤害。',
+            '召集炽焰之力，汇聚在一点，发动强力爆发，对敌人造成毁灭性伤害。',
+            '召唤星辉之力，刻印法印，对范围内敌人造成持续伤害。',
+            '释放魂灵之力，侵袭敌人心灵，造成精神伤害并削弱敌人。',
+            '挥舞紫影刀锋，对敌人造成连击伤害，并附加雷电效果。',
+            '激发紫旋之力，短时间内大幅提升自身的移动速度与攻击速度。',
+            '吸收暗能，回复自身生命值，并增加自身能量。',
+            '凝聚能量进行爆裂，对范围内敌人造成大范围伤害。',
+            '召唤暗能形成护盾，吸收部分伤害，并反击近战攻击者。',
+            '激发攻防一体之力，短时间内提升自身攻击与防御能力。',
+            '释放内心战意，短时间内大幅提升自身的攻击力与暴击率。',
+            '召唤紫电之力，快速掠过敌人，对沿途敌人造成雷电伤害。',
+            '召唤飞剑穿越空间，对远距离敌人进行精准打击，造成巨大伤害。',
+            '挥动武器以千钧之力压制敌人，造成巨额物理伤害并击退目标。',
+            '释放霜冻之力，对周围敌人进行扩散攻击，造成减速与冰霜伤害。',
+            '快速射出多发箭矢，形成箭雨，对范围内敌人造成多次打击。',
+
+        ];
     }
 
    
 
 
 
-    randomSkill(skillIcon:Sprite, skillName:Label){
-       const randomIndex = Math.floor(Math.random() * this.skillIconGetName.length);
+    randomSkill(skillIcon:Sprite, skillName:Label, skillExplain:Label){
+       const randomIndex = Math.floor(Math.random() * this.skillIconFileName.length);
        console.log("randomIndex的大小",randomIndex);
-       console.log("获取的技能索引",this.skillIconGetName[11]);
-        assetManager.resources.load(`skill/${this.skillIconGetName[randomIndex]}/spriteFrame`, SpriteFrame, (err, spriteFrame ) => {
+       console.log("获取的技能索引",this.skillIconFileName[11]);
+        assetManager.resources.load(`skill/${this.skillIconFileName[randomIndex]}/spriteFrame`, SpriteFrame, (err, spriteFrame ) => {
             if (err) {
                 console.error(err);
                 return;
             }
         skillIcon.spriteFrame= spriteFrame;
         skillName.string = this.skillIconName[randomIndex];
+        skillExplain.string = this.skillExplain[randomIndex];
         })
+
         
 }
 }
