@@ -23,7 +23,7 @@ export class Projectile extends Component {
     isDie: boolean = false;
     @property(Actor)
     host: Actor | null = null;
-
+    damage: number = 0;
 
     start() {
         this.collider = this.node.getComponent(Collider2D);

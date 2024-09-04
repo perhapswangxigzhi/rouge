@@ -64,6 +64,9 @@ export class SimpleEmitter extends Component {
 
             let projectile= node.getComponent(Projectile)
             projectile.host=this.actor;
+            if(this.actor.current_ActorProperty!=null){
+            projectile.damage=this.actor.current_ActorProperty.attack;
+            }
             //4秒后回收节点
             this.scheduleOnce(() => {
                 PoolManager.instance().putNode(node);

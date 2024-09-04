@@ -19,8 +19,8 @@ export class UIAnnouncement extends Component {
             版本V1.0.4 
                   更新内容：
                 1. 新增功能：
-                  - 新增地图装饰随机生成器
-                  - 新增一个范围类技能生成器
+                  - 新增一个定点释放技能生成器
+                  - 
                   -
                   
 

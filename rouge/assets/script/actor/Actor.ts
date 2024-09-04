@@ -8,6 +8,8 @@ import { GameEvent } from '../event/GameEvent';
 import { PoolManager } from '../PoolManager';
 import { DamageTextManager } from './DamageTextManager';
 import { ActorProperty } from './ActorProperty';
+import { StrightSkill } from '../skill/StrightSkill';
+import { FixedSkill } from '../skill/FixedSkill';
 const { ccclass, property ,requireComponent,disallowMultiple} = _decorator;
 
 @ccclass('Actor')
@@ -32,7 +34,7 @@ export class Actor extends Component {
     ex:number=0;
     maxEx:number=100;
     level:number=0;
-    
+    damage:number=0;
     // 使用字典存储多个ActorProperty对象
     actorProperties: { [key: string]: ActorProperty } = {};
     playerProperty : ActorProperty = new ActorProperty("Player",100,10);
@@ -90,7 +92,18 @@ export class Actor extends Component {
         if (colliderTag.isProjectileHitable(cb.tag, ca.tag)) {
             if(cb.node.getComponent(Projectile)){
             this.hurtSrc = cb.node.getComponent(Projectile).host;
-           }
+            this.damage = cb.node.getComponent(Projectile).damage;
+            }
+            if(cb.node.getComponent(StrightSkill)){
+                this.hurtSrc = cb.node.getComponent(StrightSkill).host;
+                this.damage = cb.node.getComponent(StrightSkill).damage;
+            }
+            if(cb.node.getComponent(FixedSkill)){
+                this.hurtSrc = cb.node.getComponent(FixedSkill).host;
+                this.damage = cb.node.getComponent(FixedSkill).damage;
+                cb.node.getComponent(FixedSkill).onCollisionBegin
+                
+            }
             // else{this.hurtSrc = cb.node.getComponent(Weapon).host;
             //     console.log("actor weapon:",this.hurtSrc.node.name)
             // }
@@ -99,13 +112,15 @@ export class Actor extends Component {
             hitNormal.normalize();
             const v2HitNormal = v2(hitNormal.x, hitNormal.y);
             if(this.hurtSrc.current_ActorProperty!=null){
-            this.onHurt(this.hurtSrc.current_ActorProperty.attack, this.hurtSrc, v2HitNormal);
+            this.onHurt(this.damage, this.hurtSrc, v2HitNormal);
             }
         }
     }
     onHurt(damage:number, from:Actor, hurtDirection?:Vec2){
         if (this.dead) {return;}
+        if(this.current_ActorProperty!=null){
         this.current_ActorProperty.hp=this.current_ActorProperty.hp-damage;
+        }
         const hitPosition = new Vec3(hurtDirection.x, hurtDirection.y*2+30, this.node.position.z);
         // 显示伤害文字
         const damageTextNode=instantiate(this.damageTextPrefab);

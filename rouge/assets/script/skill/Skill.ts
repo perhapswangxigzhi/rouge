@@ -9,7 +9,7 @@ enum SkillType {
     
 }
 @ccclass('Skill')
-export class Skill  {
+export class Skill extends Component {
    
     attack:number=4;
     skillIndex:number=0;
@@ -18,6 +18,7 @@ export class Skill  {
     skillIconFileName: string=""
     skillPre:Prefab|null=null;
 
+    
     initSkill(skillIndex:number,skillType:SkillType,attack:number){
         this.skillIndex=skillIndex;
         this.skillType=skillType;
