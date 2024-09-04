@@ -10,6 +10,7 @@ import { DamageTextManager } from './DamageTextManager';
 import { ActorProperty } from './ActorProperty';
 import { StrightSkill } from '../skill/StrightSkill';
 import { FixedSkill } from '../skill/FixedSkill';
+import { PointSkill } from '../skill/PointSkill';
 const { ccclass, property ,requireComponent,disallowMultiple} = _decorator;
 
 @ccclass('Actor')
@@ -100,9 +101,13 @@ export class Actor extends Component {
             }
             if(cb.node.getComponent(FixedSkill)){
                 this.hurtSrc = cb.node.getComponent(FixedSkill).host;
-                this.damage = cb.node.getComponent(FixedSkill).damage;
+                this.damage = 0
                 cb.node.getComponent(FixedSkill).onCollisionBegin
-                
+            }
+            if(cb.node.getComponent(PointSkill)){
+                this.hurtSrc = cb.node.getComponent(PointSkill).host;
+                this.damage = 0
+                cb.node.getComponent(PointSkill).onCollisionBegin
             }
             // else{this.hurtSrc = cb.node.getComponent(Weapon).host;
             //     console.log("actor weapon:",this.hurtSrc.node.name)
@@ -118,6 +123,7 @@ export class Actor extends Component {
     }
     onHurt(damage:number, from:Actor, hurtDirection?:Vec2){
         if (this.dead) {return;}
+        if(damage==0){return;}
         if(this.current_ActorProperty!=null){
         this.current_ActorProperty.hp=this.current_ActorProperty.hp-damage;
         }
@@ -141,9 +147,11 @@ export class Actor extends Component {
     if(this.current_ActorProperty.hp<=0){
         this.dead = true; // 设置死亡标志
         this.scheduleOnce(()=>{
-        let node=PoolManager.instance().getNode(this.ItemPrefab,this.canvasNode)
+       // let node=PoolManager.instance().getNode(this.ItemPrefab,this.canvasNode)
+        let node=instantiate(this.ItemPrefab);
+        this.canvasNode.addChild(node);
         node.worldPosition=this.node.worldPosition;
-        },0.3)
+        },0.1)
         
         this.stateMgr.transit(StateDefine.Die)
         assetManager.resources.load("sounds/die1", AudioClip, (err, clip) => {

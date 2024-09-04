@@ -1,4 +1,4 @@
-import { _decorator, Animation, assert, assetManager, AudioClip, AudioSource, CCFloat, Collider2D, Component, Contact2DType, find, instantiate, IPhysics2DContact, Node, Prefab, RigidBody2D, Tween, v2, v3, Vec2, Vec3 } from 'cc';
+import { _decorator, Animation, assert, assetManager, AudioClip, AudioSource, CCFloat, Collider2D, Component, Contact2DType, dragonBones, find, instantiate, IPhysics2DContact, Node, Prefab, RigidBody2D, Tween, v2, v3, Vec2, Vec3 } from 'cc';
 import { colliderTag } from '../actor/ColliderTag';
 import { Actor } from '../actor/Actor';
 
@@ -14,21 +14,34 @@ export class StrightSkill extends Component {
     audioSource: AudioSource = null;
     hitTag: colliderTag.Define = colliderTag.Define.PlayerProjectile;
     skillAnimation:Animation = null;
+    skillDragonBoneAnimation: dragonBones.ArmatureDisplay=null;
     host: Actor | null = null;
     damage: number = 0;
     @property(CCFloat)
     startLinearSpeed: number = 0;
+    @property(String)
+    playSkillDragonBoneAudio: string = '';  //播放技能动画名
+    @property(CCFloat)
+    skillCoefficient: number = 0;  //技能伤害系数
+    @property(Number)
+    skillContinueTime: number = 0;  //技能持续时间
     start() {
         this.collider = this.node.getComponent(Collider2D);
         this.rigidbody = this.node.getComponent(RigidBody2D);
          // 将组件赋到全局变量 _audioSource 中
         this.audioSource = this.node.getComponent(AudioSource);
         this.skillAnimation = this.node.getComponent(Animation);
+        if(this.skillAnimation){
         this.skillAnimation.play();
+        }
+        this.skillDragonBoneAnimation=this.node.getComponent(dragonBones.ArmatureDisplay);
+        if(this.skillDragonBoneAnimation){
+          this.skillDragonBoneAnimation.playAnimation(this.playSkillDragonBoneAudio,0);
+        }
         const playerNode=find('LevelCanvas/Player')
         this.host=playerNode.getComponent(Actor)
         if(this.host.current_ActorProperty!=null){
-          this.damage=this.host.current_ActorProperty.attack*2;
+          this.damage=this.host.current_ActorProperty.attack*this.skillCoefficient;
           }
 
         this.collider.on(Contact2DType.BEGIN_CONTACT, this.onCollisionBegin, this);
@@ -39,9 +52,9 @@ export class StrightSkill extends Component {
         if ( colliderTag.isProjectileHitable(self.tag, other.tag)) {
             // console.log('技能已经命中目标');
             // console.log(this.damage)
-          this.scheduleOnce(() => {
-            this.node.destroy();
-          },1);
+          // this.scheduleOnce(() => {
+          //   this.node.destroy();
+          // },1);
           
         }
     }
@@ -62,6 +75,6 @@ export class StrightSkill extends Component {
    
       this.scheduleOnce(()=>{
           this.node.destroy();
-      },4)
+      },this.skillContinueTime)
   }
 }

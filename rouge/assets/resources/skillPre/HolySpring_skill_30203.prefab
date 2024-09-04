@@ -47,8 +47,8 @@
     },
     "_lpos": {
       "__type__": "cc.Vec3",
-      "x": -84.662,
-      "y": -308.796,
+      "x": -864.662,
+      "y": -971.653,
       "z": 0
     },
     "_lrot": {
@@ -254,6 +254,9 @@
     },
     "audioSource": null,
     "startLinearSpeed": 30,
+    "playSkillDragonBoneAudio": "",
+    "skillCoefficient": 2,
+    "skillContinueTime": 4,
     "_id": ""
   },
   {

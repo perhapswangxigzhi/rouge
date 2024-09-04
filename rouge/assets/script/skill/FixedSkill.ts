@@ -13,39 +13,44 @@ export class FixedSkill extends Component {
     @property(AudioSource)
     audioSource: AudioSource = null;
     hitTag: colliderTag.Define = colliderTag.Define.PlayerProjectile;
-    skillAnimation: dragonBones.ArmatureDisplay=null;
+    skillDragonBoneAnimation: dragonBones.ArmatureDisplay=null;
     host: Actor | null = null;
-    enemHost: Actor | null = null;
+    enemHost: Actor[] = [];
     damage: number = 0;
     isEnemyInRange: boolean = false;
+    @property(CCFloat)
+    skillCoefficient: number = 0;  //技能伤害系数
+    @property(Number)
+    skillContinueTime: number = 0;  //技能持续时间
+    @property(String)
+    playSkillDragonBoneAudio: string = '';  //播放技能龙骨动画名
     start() {
-      
         this.collider = this.node.getComponent(Collider2D);
         this.rigidbody = this.node.getComponent(RigidBody2D);
          // 将组件赋到全局变量 _audioSource 中
         this.audioSource = this.node.getComponent(AudioSource);
-        this.skillAnimation=this.node.getComponent(dragonBones.ArmatureDisplay)
-        this.skillAnimation.playAnimation("skill_1",0);
+        this.skillDragonBoneAnimation=this.node.getComponent(dragonBones.ArmatureDisplay)
+        this.skillDragonBoneAnimation.playAnimation(this.playSkillDragonBoneAudio,0);
         const playerNode=find('LevelCanvas/Player')
         this.host=playerNode.getComponent(Actor)
         if(this.host.current_ActorProperty!=null){
-          this.damage=this.host.current_ActorProperty.attack*0.5;
+          this.damage=this.host.current_ActorProperty.attack*this.skillCoefficient;
         }
 
         this.collider.on(Contact2DType.BEGIN_CONTACT, this.onCollisionBegin, this);
         this.collider.on(Contact2DType.END_CONTACT, this.onCollisionEnd, this);
         //监听动画播放完成事件
-       this.skillAnimation.addEventListener(dragonBones.EventObject.LOOP_COMPLETE, this.onAnimationComplete, this);
+       this.skillDragonBoneAnimation.addEventListener(dragonBones.EventObject.LOOP_COMPLETE, this.onAnimationComplete, this);
        this.scheduleOnce(()=>{
         this.node.destroy();
-        },4)
+        },this.skillContinueTime)
     }
 
     onCollisionBegin(self: Collider2D, other: Collider2D, contact: IPhysics2DContact) {
         if ( colliderTag.isProjectileHitable(self.tag, other.tag)) {
-          console.log('敌人进入技能范围');
+          //console.log('敌人进入技能范围');
           this.isEnemyInRange = true;
-          this.enemHost = other.node.getComponent(Actor);
+          this.enemHost.push(other.node.getComponent(Actor));
         }
     }
     
@@ -53,14 +58,19 @@ export class FixedSkill extends Component {
       if (colliderTag.isProjectileHitable(self.tag, other.tag)) {
         //  console.log('敌人离开技能范围');
           this.isEnemyInRange = false;
-          this.enemHost = null;
+          var index = this.enemHost.indexOf(other.node.getComponent(Actor));
+          if (index > -1) {
+            this.enemHost.splice(index, 1);
       }
     }
+  }
     onAnimationComplete() {
      // console.log("动画播放完成");
       if (this.isEnemyInRange==true) {
         const v2HitNormal = v2(0,0);
-        this.enemHost.onHurt(this.damage, this.host, v2HitNormal)
+        this.enemHost.forEach((enemy) => {
+          enemy.onHurt(this.damage, this.host, v2HitNormal)
+        })
       }
       
    }

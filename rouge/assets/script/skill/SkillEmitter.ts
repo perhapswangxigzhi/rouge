@@ -7,6 +7,8 @@ enum SkillType {
     NONE=0,
     StrightSkill=1,    //直线技能
     FixedSkill=2,  // 定点释放技能
+    PointSkill=3,    // 指向技能
+    
     
 }
 @ccclass('SkillEmitter')
@@ -20,7 +22,17 @@ export class SkillEmitter extends Component {
      @property(Prefab)
      strightSkillPrefab:Prefab=null;
      @property(Prefab)
+     strightSkillPrefab1:Prefab=null;
+     @property(Prefab)
      fixedSkillPrefab:Prefab=null;
+     @property(Prefab)
+     fixedSkillPrefab1:Prefab=null;
+     @property(Prefab)
+     fixedSkillPrefab2:Prefab=null;
+     @property(Prefab)
+     fixedSkillPrefab3:Prefab=null;
+     @property(Prefab)
+     pointSkillPrefab:Prefab=null;
      actor:Actor|null=null;
     start(){
         
@@ -36,6 +48,13 @@ export class SkillEmitter extends Component {
          }
         , 1, macro.REPEAT_FOREVER, 0);
         this.schedule(() => {
+            let node=instantiate(this.strightSkillPrefab1) 
+            node.position = this.node.parent.position;
+            node.rotation = this.node.parent.rotation;
+            this.node.parent.parent.addChild(node);
+             }
+            , 4, macro.REPEAT_FOREVER, 0);
+        this.schedule(() => {
             let node1=instantiate(this.fixedSkillPrefab) 
             node1.position = new Vec3(this.node.parent.position.x+100,this.node.parent.position.y,this.node.parent.position.z);
             this.node.parent.parent.addChild(node1);
@@ -50,6 +69,35 @@ export class SkillEmitter extends Component {
             this.node.parent.parent.addChild(node4);
              }
             , 8, macro.REPEAT_FOREVER, 0);
+        
+        this.schedule(() => {
+            let node=instantiate(this.fixedSkillPrefab1) 
+            node.position = this.node.position;
+            this.node.parent.addChild(node);
+             }
+            , 4, macro.REPEAT_FOREVER, 0);
+        this.schedule(() => {
+            let node=instantiate(this.fixedSkillPrefab2) 
+                node.position = this.node.parent.position;
+                this.node.parent.parent.addChild(node);
+                 }
+        , 6, macro.REPEAT_FOREVER, 0);
+        
+        this.schedule(() => {
+            let node=instantiate(this.fixedSkillPrefab3) 
+            node.position = this.node.parent.position;
+            this.node.parent.parent.addChild(node);
+             }
+            , 4, macro.REPEAT_FOREVER, 0);
+        this.schedule(() => {
+                let node=instantiate(this.pointSkillPrefab) 
+                node.position = this.node.parent.parent.position;
+              //  node.rotation = this.node.parent.rotation;
+                this.node.parent.parent.parent.addChild(node);
+                 }
+            , 4, macro.REPEAT_FOREVER, 0);
+
+
+
+        }
     }
-   
-}
