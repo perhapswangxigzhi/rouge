@@ -1,38 +1,33 @@
-import { _decorator, assetManager, Component, Enum, Label, Prefab, resources, Sprite, SpriteFrame} from 'cc';
+import { _decorator, assetManager, Component, Label, Prefab, resources, Sprite, SpriteFrame} from 'cc';
 import { SkillManager } from './SkillManager';
+import { SkillEmitter } from './SkillEmitter';
 const { ccclass, property } = _decorator;
 enum SkillType {
     NONE=0,
-    IndividualSkill=1,    //单体技能
-    RangeSkill=2,  // 范围技能
-    
+    StrightSkill=1,    //直线技能
+    FixedSkill=2,  // 定点释放技能
+    PointSkill=3,    // 指向技能
     
 }
 @ccclass('Skill')
-export class Skill extends Component {
-   
-    attack:number=4;
+export class Skill extends Component  {
+
     skillIndex:number=0;
     skillType:SkillType=SkillType.NONE;
     skillName:string="";
     skillIconFileName: string=""
     skillPre:Prefab|null=null;
-
+    static instance:Skill|null=null;
     
-    initSkill(skillIndex:number,skillType:SkillType,attack:number){
-        this.skillIndex=skillIndex;
-        this.skillType=skillType;
-        this.attack=attack;
-        this.skillIconFileName=SkillManager.instance.skillIconFileName[skillIndex]
-        this.skillName=SkillManager.instance.skillIconName[skillIndex]
-        // assetManager.resources.load(`skill/${this.skillIconFileName}/spriteFrame`, Prefab, (err, prefab ) => {
-        //     if (err) {
-        //         console.error(err);
-        //         return;
-        //     }
-        // this.skillPre=prefab;
-        // this.node.addChild(prefab.instantiate());
-        // })
+    onLoad() {
+        Skill.instance=this;
+    }
+    initSkill(skillIndex:number){
+        //this.skillIndex=skillIndex;
+      // this.skillType=skillType;
+       // this.skillIconFileName=SkillManager.instance.skillIconFileName[skillIndex]
+    //    console.log("initSkill:获取的序号"+skillIndex);
+        SkillEmitter.instance.getSkill(SkillManager.instance.skillIconFileName[skillIndex]);
     }
     
 

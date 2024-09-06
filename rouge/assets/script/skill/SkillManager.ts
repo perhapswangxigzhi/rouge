@@ -1,14 +1,21 @@
 
 import { _decorator, assetManager, Component, Label, resources, Sprite, SpriteFrame} from 'cc';
 const { ccclass, property } = _decorator;
-
+enum SkillType {
+    NONE=0,
+    StrightSkill=1,    //直线技能
+    FixedSkill=2,  // 定点释放技能
+    PointSkill=3,    // 指向技能
+    HealingSkill=4,    // 治疗技能
+}
 @ccclass('SkillManager')
 export class SkillManager extends Component {
     static instance: SkillManager | null = null;
     skillIconFileName: string[] = [];
     skillIconName: string[] = [];
     skillExplain: string[] = [];
-
+    skillType: number[] = [];
+    
     onLoad() {
         SkillManager.instance = this;
         this.skillIconFileName = [
@@ -80,7 +87,9 @@ export class SkillManager extends Component {
             'HolySpring_skillicon_50106',
             'HolySpring_skillicon_50107',
             'HolySpring_skillicon_50208',
-            'HolySpring_skillicon_50210',               
+            'HolySpring_skillicon_50210',
+            'HolySpring_skillicon_30135',
+            'HolySpring_skillicon_30236',               
         ];
         this.skillIconName = [
             '冰刃斩击',
@@ -97,7 +106,7 @@ export class SkillManager extends Component {
             '烈焰重锤',
             '火流星击',
             '烈焰陨石',
-            '水晶裂弹',
+            '追影晶灵',
             '晶石飞弹',
             '金刺突袭',
             '螺旋钻击',
@@ -115,7 +124,7 @@ export class SkillManager extends Component {
             '烈刃斩波',
             '地裂喷涌',
             '炎爆裂地',
-            '金光涌流',
+            '金刀光斩',
             '飞驰步影',
             '迅捷如风',
             '治愈之心',
@@ -152,9 +161,9 @@ export class SkillManager extends Component {
             '力压千钧',
             '霜冻扩散',
             '多重箭雨',
-            '灵魂碎裂',
+            '极旋光轮',
+            '冰晶轰击',
         ];
-        console.log(this.skillIconFileName[0]);
         this.skillExplain = [
             '召唤寒冰之力，挥舞武器进行冰刃斩击，对敌人造成寒冰伤害，并可能使目标冻结。',
             '挥动炽烈之刃，对敌人造成高温灼伤，附加火焰效果，持续对敌人造成灼烧伤害。',
@@ -170,7 +179,7 @@ export class SkillManager extends Component {
             '挥动炽烈火焰凝聚的重锤，猛烈击打敌人，造成火焰伤害并有灼烧效果。',
             '召唤火流星从天而降，对目标及其周围敌人造成大范围火焰伤害。',
             '从天召唤巨大的烈焰陨石，对范围内敌人造成毁灭性火焰伤害。',
-            '发射水晶裂弹，命中敌人后分裂成多发碎片，对多名敌人造成伤害。',
+            '发射一种具有追踪能力的魔法水晶，在追踪过程中，水晶会不断调整方向，直到击中目标并对敌人造成伤害。',
             '发射尖锐的晶石飞弹，对敌人造成穿透性伤害，并降低其护甲。',
             '使用金属尖刺快速突袭目标，造成高额物理伤害，并有几率使敌人流血。',
             '旋转钻头般的武器，对敌人进行螺旋钻击，造成持续伤害并击破护甲。',
@@ -188,10 +197,10 @@ export class SkillManager extends Component {
             '挥动烈刃释放斩波，对直线上敌人造成高额火焰伤害。',
             '从地下召唤岩浆喷涌而出，对敌人造成范围性火焰伤害。',
             '召唤爆裂火焰冲击地面，对范围内敌人造成巨大伤害，并使其灼烧。',
-            '召唤金光涌流，治疗周围盟友并增强他们的防御力。',
+            '向前发射一道金光刀气切割敌人的胸膛，造成致命伤害',
             '以极快的速度移动，在短时间内提升自身闪避率，并免疫部分伤害。',
             '获得风之祝福，移动速度大幅提升，并减少技能冷却时间。',
-            '释放治愈能量，恢复自身和周围盟友的生命值，并解除负面状态。',
+            '释放治愈能量，恢复自身生命值。',
             '通过强心术恢复自身生命力，同时提高生命回复速度。',
             '挥舞碧影之剑，释放剑气，对敌人造成连环斩击伤害。',
             '召唤圣光之力，释放剑影，对敌人造成神圣伤害，并附加治疗效果。',
@@ -225,18 +234,95 @@ export class SkillManager extends Component {
             '挥动武器以千钧之力压制敌人，造成巨额物理伤害并击退目标。',
             '释放霜冻之力，对周围敌人进行扩散攻击，造成减速与冰霜伤害。',
             '快速射出多发箭矢，形成箭雨，对范围内敌人造成多次打击。',
-
+            '能够释放出高速旋转的光束,形成一个持续旋转的光轮,当激光穿透敌人时造成切割伤害',
+            '在角色前后生成大量冰晶轰击敌人，敌人短时间内受到大量攻击',
+        ];
+        this.skillType=[
+                0,     
+                0,
+                2,
+                0,
+                0,
+                0,
+                2,
+                0,
+                0,
+                0,
+                2,
+                0,
+                1,
+                0,
+                3,
+                0,
+                0,
+                0,
+                0,
+                0,
+                0,
+                0,
+                0,
+                0,
+                1,
+                0,
+                0,
+                0,
+                0,
+                0,
+                2,
+                0,
+                1, 
+                0,
+                0,
+                4,
+                0,
+                0,
+                0,
+                0,
+                0,
+                0,
+                0,
+                0,
+                0,
+                0,
+                0,
+                0,
+                0,
+                0,
+                0,
+                0,
+                0,
+                0,
+                0,
+                0,
+                0,
+                0,
+                0,
+                0,
+                0,
+                0,
+                0,
+                0,
+                0,
+                2,
+                0,
+                0,
+                0,
+                2,
+                2,
         ];
     }
 
    
+ 
 
 
-
-    randomSkill(skillIcon:Sprite, skillName:Label, skillExplain:Label){
-       const randomIndex = Math.floor(Math.random() * this.skillIconFileName.length);
-       console.log("randomIndex的大小",randomIndex);
-       console.log("获取的技能索引",this.skillIconFileName[11]);
+    randomSkill(skillIcon:Sprite, skillName:Label, skillExplain:Label):number{
+        let randomIndex=0
+        let skillType=0
+        for(var i=0;skillType==0;i++){
+            randomIndex = Math.floor(Math.random() * this.skillIconFileName.length);
+            skillType=this.skillType[randomIndex];
+        }
         assetManager.resources.load(`skill/${this.skillIconFileName[randomIndex]}/spriteFrame`, SpriteFrame, (err, spriteFrame ) => {
             if (err) {
                 console.error(err);
@@ -245,8 +331,10 @@ export class SkillManager extends Component {
         skillIcon.spriteFrame= spriteFrame;
         skillName.string = this.skillIconName[randomIndex];
         skillExplain.string = this.skillExplain[randomIndex];
+        // console.log("获取的图片序号",randomIndex)
         })
-
+        return randomIndex;
+   
         
 }
 }

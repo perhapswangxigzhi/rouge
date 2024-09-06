@@ -2,12 +2,12 @@
   "ver": "1.1.50",
   "importer": "prefab",
   "imported": true,
-  "uuid": "113bbfb6-f468-41f6-855b-6453f26149a1",
+  "uuid": "f294a06b-10a3-4a86-b7bc-9618bad075ec",
   "files": [
     ".json"
   ],
   "subMetas": {},
   "userData": {
-    "syncNodeName": "HolySpring_skill_30021"
+    "syncNodeName": "HolySpring_skillicon_30102"
   }
 }

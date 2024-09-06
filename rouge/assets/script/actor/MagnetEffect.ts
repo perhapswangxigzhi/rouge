@@ -54,7 +54,7 @@ export class MagnetEffect extends Component {
                         let speed = this.magnetSpeed * dt;
                         item.setPosition(item.position.add(dir.multiplyScalar(speed)));
                     }
-                    if (distance < 10) {
+                    if (distance < 5) {
                         // PoolManager.instance().putNode(item);
                         this.actor.playerProperty.ex += this.dropEx;
                         this.actor.playerProperty.killCount += 1;

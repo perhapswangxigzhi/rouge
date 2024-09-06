@@ -71,8 +71,6 @@ export class StrightSkill extends Component {
       velocity.y = velocityV3.y;
       velocity.multiplyScalar(this.startLinearSpeed);
       rigid.linearVelocity = velocity;
-
-   
       this.scheduleOnce(()=>{
           this.node.destroy();
       },this.skillContinueTime)

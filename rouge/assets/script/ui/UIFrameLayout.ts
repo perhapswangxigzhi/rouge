@@ -1,6 +1,8 @@
-import { _decorator, Button, Component, director, find, Label, Node, Sprite, SpriteFrame } from 'cc';
+import { _decorator, Button, Component, director, find, Label, Node, Sprite, SpriteFrame, tween } from 'cc';
 import { Reflash } from '../ani/Reflash';
 import { SkillManager } from '../skill/SkillManager';
+import { Skill } from '../skill/Skill';
+import { UItalendRemind } from './UItalendRemind';
 const { ccclass, property } = _decorator;
 
 @ccclass('UIFrameLayout')
@@ -39,29 +41,113 @@ export class UIFrameLayout extends Component {
     skillName3: Label | null = null;
     @property(Label)
     skillExplain3: Label | null = null;
-   
+    @property(Node)
+    dialog: Node | null = null;
+    @property(Node)
+    dialog1: Node | null = null;
+    choseTalentSwitch:boolean=true;
+    choseReflash:boolean=true;
+    skillIndex1:number=0;
+    skillIndex2:number=0;
+    skillIndex3:number=0;
     start() {
          // 监听关闭按钮点击事件
-         this.closeButton.node.on(Button.EventType.CLICK, this.onCloseButtonClicked, this);
-         this.choseTalentButton1.node.on(Button.EventType.CLICK, this.onCloseButtonClicked, this);
-         this.choseTalentButton2.node.on(Button.EventType.CLICK, this.onCloseButtonClicked, this);
-         this.choseTalentButton3.node.on(Button.EventType.CLICK, this.onCloseButtonClicked, this);
-         this.reflashButton.node.on(Button.EventType.CLICK, this.onReflashFrmae, this);
-        SkillManager.instance.randomSkill(this.skillIcon1, this.skillName1,this.skillExplain1)
-        SkillManager.instance.randomSkill(this.skillIcon2, this.skillName2,this.skillExplain2)
-        SkillManager.instance.randomSkill(this.skillIcon3, this.skillName3,this.skillExplain3)
-    
-        //this.node.active=false;
+        this.closeButton.node.on(Button.EventType.CLICK, this.onCloseButtonClicked, this);
+        this.choseTalentButton1.node.on(Button.EventType.CLICK, this.onchoseTalent_1, this);
+        this.choseTalentButton2.node.on(Button.EventType.CLICK, this.onchoseTalent_2, this);
+        this.choseTalentButton3.node.on(Button.EventType.CLICK, this.onchoseTalent_3, this);
+        this.reflashButton.node.on(Button.EventType.CLICK, this.onReflashFrmae, this);
+        this.skillIndex1=SkillManager.instance.randomSkill(this.skillIcon1, this.skillName1,this.skillExplain1)
+        this.skillIndex2=SkillManager.instance.randomSkill(this.skillIcon2, this.skillName2,this.skillExplain2)
+        this.skillIndex3=SkillManager.instance.randomSkill(this.skillIcon3, this.skillName3,this.skillExplain3)
     }
     onCloseButtonClicked() {
         // 关闭界面
+        this.dialog.active=false;
+        this.dialog1.active=false;
         this.node.active=false;
+        
     }
     onReflashFrmae(){
         // 刷新界面
+        if( UItalendRemind.instance.Count!=0){
         Reflash.instance.filpCard(this.UIFrame_001);
         Reflash.instance.filpCard(this.UIFrame_002);   
-        Reflash.instance.filpCard(this.UIFrame_003); 
+        Reflash.instance.filpCard(this.UIFrame_003);
+        this.choseTalentSwitch=true;
+        this.dialog.active=false;
+        UItalendRemind.instance.talentCurrentCount-=1;
+        // if(UItalendRemind.instance.talentCurrentCount==0){
+        //     this.choseReflash=false;
+        // }
+        this.scheduleOnce(()=>{
+        this.skillIndex1= SkillManager.instance.skillIconName.indexOf(this.skillName1.string)
+        this.skillIndex2= SkillManager.instance.skillIconName.indexOf(this.skillName2.string)
+        this.skillIndex3= SkillManager.instance.skillIconName.indexOf(this.skillName3.string)
+        },0.5)
+        }else{
+            this.dialog1.active=true;
+            const labelComponent = this.dialog1.getChildByName('Label').getComponent(Label);
+            tween(labelComponent)
+            .to(0.5, { fontSize: 40 }) 
+            .to(0.5, { fontSize: 20 }) 
+            .start();
+        }
+    }
+    onchoseTalent_1(){
+        // 选择第一个天赋框
+        if(this.choseTalentSwitch==true){
+        Skill.instance.initSkill(this.skillIndex1)
+        this.choseTalentSwitch=false;
+        this.scheduleOnce(()=>{
+            this.node.active=false;
+           },0.1)
+        }else{
+            this.dialog.active=true;
+            const labelComponent = this.dialog.getChildByName('Label').getComponent(Label);
+            tween(labelComponent)
+            .to(0.5, { fontSize: 40 }) 
+            .to(0.5, { fontSize: 20 }) 
+            .start();
+        }
+       
+    }
+    onchoseTalent_2(){
+        // 选择第二个天赋框
+        if(this.choseTalentSwitch==true){
+        Skill.instance.initSkill(this.skillIndex2)
+        this.choseTalentSwitch=false;
+        this.scheduleOnce(()=>{
+            this.node.active=false;
+           },0.1)
+        }else{
+            this.dialog.active=true;
+            const labelComponent = this.dialog.getChildByName('Label').getComponent(Label);
+            tween(labelComponent)
+            .to(0.5, { fontSize: 40 }) 
+            .to(0.5, { fontSize: 20 }) 
+            .start();
+        }
+       
+    }
+    onchoseTalent_3(){
+        // 选择第三个天赋框
+        if(this.choseTalentSwitch==true){
+        Skill.instance.initSkill(this.skillIndex3)
+        this.choseTalentSwitch=false;
+        this.scheduleOnce(()=>{
+        this.node.active=false;
+        },0.1)
+     }else{
+        this.dialog.active=true;
+        const labelComponent = this.dialog.getChildByName('Label').getComponent(Label);
+         tween(labelComponent)
+         .to(0.5, { fontSize: 40 }) 
+         .to(0.5, { fontSize: 20 }) 
+         .start();
+    }
+       
+       
     }
   
 }

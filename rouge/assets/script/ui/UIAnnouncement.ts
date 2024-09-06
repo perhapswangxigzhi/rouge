@@ -16,18 +16,20 @@ export class UIAnnouncement extends Component {
         `
 
         
-            版本V1.0.6
+            版本V1.0.7
                   更新内容：
                 1. 新增功能：
-                  - 新增两个直线释放技能
-                  - 新增四个定点释放技能
-                  - 新增一个指向技能类以及指向技能
+                  - 新增技能选择系统
+                  - 新增技能刷新系统
+                  - 新增技能点获取系统
+                  - 新增治疗系技能
+                  - 新增3个定点释放技能与1个直线释放技能
                   
 
                2. 优化功能：
                   - 
                3. 修复BUG:
-                  - 修复不能同时吃多个经验球bug
+                  - 
                   - `;
         // 监听关闭按钮点击事件
         this.closeButton1.node.on(Button.EventType.CLICK, this.onCloseButtonClicked, this);

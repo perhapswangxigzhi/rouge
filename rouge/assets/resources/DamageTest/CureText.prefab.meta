@@ -2,12 +2,12 @@
   "ver": "1.1.50",
   "importer": "prefab",
   "imported": true,
-  "uuid": "ee1f3fc2-0e6e-4220-b82e-5919df53edfc",
+  "uuid": "26a64d29-f4fd-4196-84b7-c1b7d43f687e",
   "files": [
     ".json"
   ],
   "subMetas": {},
   "userData": {
-    "syncNodeName": "HolySpring_skill_30204"
+    "syncNodeName": "CureText"
   }
 }

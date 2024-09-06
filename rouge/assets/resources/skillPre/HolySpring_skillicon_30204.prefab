@@ -1,7 +1,7 @@
 [
   {
     "__type__": "cc.Prefab",
-    "_name": "HolySpring_skill_30130",
+    "_name": "HolySpring_skillicon_30204",
     "_objFlags": 0,
     "__editorExtras__": {},
     "_native": "",
@@ -13,7 +13,7 @@
   },
   {
     "__type__": "cc.Node",
-    "_name": "HolySpring_skill_30130",
+    "_name": "HolySpring_skillicon_30204",
     "_objFlags": 0,
     "__editorExtras__": {},
     "_parent": null,
@@ -34,15 +34,18 @@
       },
       {
         "__id__": 10
+      },
+      {
+        "__id__": 12
       }
     ],
     "_prefab": {
-      "__id__": 12
+      "__id__": 14
     },
     "_lpos": {
       "__type__": "cc.Vec3",
-      "x": -1400.14,
-      "y": -826.798,
+      "x": -1091.215,
+      "y": -753.602,
       "z": 0
     },
     "_lrot": {
@@ -82,8 +85,8 @@
     },
     "_contentSize": {
       "__type__": "cc.Size",
-      "width": 308.33,
-      "height": 152.72
+      "width": 120,
+      "height": 90
     },
     "_anchorPoint": {
       "__type__": "cc.Vec2",
@@ -94,10 +97,10 @@
   },
   {
     "__type__": "cc.CompPrefabInfo",
-    "fileId": "73EiS9g9ZCB5QnCTabeZ8P"
+    "fileId": "1e1g78NRpO85fzhS9ujkoO"
   },
   {
-    "__type__": "dragonBones.ArmatureDisplay",
+    "__type__": "cc.Sprite",
     "_name": "",
     "_objFlags": 0,
     "__editorExtras__": {},
@@ -118,31 +121,57 @@
       "b": 255,
       "a": 255
     },
-    "playTimes": -1,
-    "premultipliedAlpha": false,
-    "_defaultArmatureIndexValue": 0,
-    "_dragonAsset": {
-      "__uuid__": "37b0f69a-66d5-4af1-ab49-9c48eaf960e4",
-      "__expectedType__": "dragonBones.DragonBonesAsset"
+    "_spriteFrame": {
+      "__uuid__": "bfa191e1-6127-4408-b5fb-c5c687867e83@f9941",
+      "__expectedType__": "cc.SpriteFrame"
     },
-    "_dragonAtlasAsset": {
-      "__uuid__": "ed2f7a0f-6a72-4af8-8b76-a45292947fbb",
-      "__expectedType__": "dragonBones.DragonBonesAtlasAsset"
+    "_type": 0,
+    "_fillType": 0,
+    "_sizeMode": 0,
+    "_fillCenter": {
+      "__type__": "cc.Vec2",
+      "x": 0,
+      "y": 0
     },
-    "_armatureName": "Armature",
-    "_animationName": "skill_5",
-    "_animationIndexValue": 5,
-    "_defaultCacheModeValue": 0,
-    "_timeScale": 1,
-    "_playTimes": -1,
-    "_debugBones": false,
-    "_enableBatch": false,
-    "_sockets": [],
+    "_fillStart": 0,
+    "_fillRange": 0,
+    "_isTrimmedMode": true,
+    "_useGrayscale": false,
+    "_atlas": null,
     "_id": ""
   },
   {
     "__type__": "cc.CompPrefabInfo",
-    "fileId": "1cu9Ksyb9KP70yvb3+vXxx"
+    "fileId": "4exeM2uHJBcbO5u0M1+KXA"
+  },
+  {
+    "__type__": "cc.Animation",
+    "_name": "",
+    "_objFlags": 0,
+    "__editorExtras__": {},
+    "node": {
+      "__id__": 1
+    },
+    "_enabled": true,
+    "__prefab": {
+      "__id__": 7
+    },
+    "playOnLoad": false,
+    "_clips": [
+      {
+        "__uuid__": "2ddf43f7-c72a-4b9b-a57e-aa45c0611083",
+        "__expectedType__": "cc.AnimationClip"
+      }
+    ],
+    "_defaultClip": {
+      "__uuid__": "2ddf43f7-c72a-4b9b-a57e-aa45c0611083",
+      "__expectedType__": "cc.AnimationClip"
+    },
+    "_id": ""
+  },
+  {
+    "__type__": "cc.CompPrefabInfo",
+    "fileId": "49XbRoaWpHZIwBjHWFM8Bg"
   },
   {
     "__type__": "cc.RigidBody2D",
@@ -154,7 +183,7 @@
     },
     "_enabled": true,
     "__prefab": {
-      "__id__": 7
+      "__id__": 9
     },
     "enabledContactListener": true,
     "bullet": false,
@@ -176,44 +205,10 @@
   },
   {
     "__type__": "cc.CompPrefabInfo",
-    "fileId": "2emWRSWw1BN53sO2lrPFVO"
+    "fileId": "aedBlzfZRMDq3gTbPoaml0"
   },
   {
-    "__type__": "cc.BoxCollider2D",
-    "_name": "",
-    "_objFlags": 0,
-    "__editorExtras__": {},
-    "node": {
-      "__id__": 1
-    },
-    "_enabled": true,
-    "__prefab": {
-      "__id__": 9
-    },
-    "tag": 104,
-    "_group": 8,
-    "_density": 1,
-    "_sensor": true,
-    "_friction": 0.2,
-    "_restitution": 0,
-    "_offset": {
-      "__type__": "cc.Vec2",
-      "x": 0,
-      "y": 0
-    },
-    "_size": {
-      "__type__": "cc.Size",
-      "width": 500,
-      "height": 500
-    },
-    "_id": ""
-  },
-  {
-    "__type__": "cc.CompPrefabInfo",
-    "fileId": "1bZOIeqYdLcaV7I7GiGE3R"
-  },
-  {
-    "__type__": "b149a7lRAxIhLCVAFAFGxjp",
+    "__type__": "cc.CircleCollider2D",
     "_name": "",
     "_objFlags": 0,
     "__editorExtras__": {},
@@ -224,15 +219,46 @@
     "__prefab": {
       "__id__": 11
     },
-    "audioSource": null,
-    "skillCoefficient": 3,
-    "skillContinueTime": 0.66,
-    "playSkillDragonBoneAudio": "skill_5",
+    "tag": 104,
+    "_group": 8,
+    "_density": 0,
+    "_sensor": true,
+    "_friction": 0.2,
+    "_restitution": 0,
+    "_offset": {
+      "__type__": "cc.Vec2",
+      "x": 0,
+      "y": 0
+    },
+    "_radius": 1000,
     "_id": ""
   },
   {
     "__type__": "cc.CompPrefabInfo",
-    "fileId": "6cYskeLEBNpb9ugTiZiCmq"
+    "fileId": "ceyYBYa2RKdZ6dmOZtT5qq"
+  },
+  {
+    "__type__": "25d86B4y2VFL61aYg3NcvNF",
+    "_name": "",
+    "_objFlags": 0,
+    "__editorExtras__": {},
+    "node": {
+      "__id__": 1
+    },
+    "_enabled": true,
+    "__prefab": {
+      "__id__": 13
+    },
+    "audioSource": null,
+    "startLinearSpeed": 15,
+    "playSkillDragonBoneAudio": "",
+    "skillCoefficient": 1,
+    "skillContinueTime": 8,
+    "_id": ""
+  },
+  {
+    "__type__": "cc.CompPrefabInfo",
+    "fileId": "2cBTm5GsdAeZx63+ZVDi9t"
   },
   {
     "__type__": "cc.PrefabInfo",
@@ -242,7 +268,7 @@
     "asset": {
       "__id__": 0
     },
-    "fileId": "a0ZkkTqBROF4Cxvv0B/vT9",
+    "fileId": "e9Ad67U0JOtZcY8fOzwPbE",
     "targetOverrides": null
   }
 ]

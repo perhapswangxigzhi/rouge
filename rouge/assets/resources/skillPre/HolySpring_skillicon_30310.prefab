@@ -1,7 +1,7 @@
 [
   {
     "__type__": "cc.Prefab",
-    "_name": "HolySpring_skill_30217",
+    "_name": "HolySpring_skillicon_30310",
     "_objFlags": 0,
     "__editorExtras__": {},
     "_native": "",
@@ -13,7 +13,7 @@
   },
   {
     "__type__": "cc.Node",
-    "_name": "HolySpring_skill_30217",
+    "_name": "HolySpring_skillicon_30310",
     "_objFlags": 0,
     "__editorExtras__": {},
     "_parent": null,
@@ -31,18 +31,15 @@
       },
       {
         "__id__": 8
-      },
-      {
-        "__id__": 10
       }
     ],
     "_prefab": {
-      "__id__": 12
+      "__id__": 10
     },
     "_lpos": {
       "__type__": "cc.Vec3",
-      "x": -1353.515,
-      "y": -1174.834,
+      "x": 0,
+      "y": 0,
       "z": 0
     },
     "_lrot": {
@@ -82,8 +79,8 @@
     },
     "_contentSize": {
       "__type__": "cc.Size",
-      "width": 173,
-      "height": 124
+      "width": 137,
+      "height": 141.74
     },
     "_anchorPoint": {
       "__type__": "cc.Vec2",
@@ -94,7 +91,7 @@
   },
   {
     "__type__": "cc.CompPrefabInfo",
-    "fileId": "7f37Djyv9FcYWC30Q6cG2a"
+    "fileId": "d7QjrIhKJFrLnHdckWWVDa"
   },
   {
     "__type__": "dragonBones.ArmatureDisplay",
@@ -122,11 +119,11 @@
     "premultipliedAlpha": false,
     "_defaultArmatureIndexValue": 0,
     "_dragonAsset": {
-      "__uuid__": "415a925d-164e-4828-b488-447f968a30dd",
+      "__uuid__": "fb66ec4f-5758-47ee-b7fe-1d454288671d",
       "__expectedType__": "dragonBones.DragonBonesAsset"
     },
     "_dragonAtlasAsset": {
-      "__uuid__": "4a65ab4c-6b3f-48a7-8497-3d13610836db",
+      "__uuid__": "b006e2ca-5bba-443a-989f-485b4eaa78f2",
       "__expectedType__": "dragonBones.DragonBonesAtlasAsset"
     },
     "_armatureName": "Armature",
@@ -142,10 +139,10 @@
   },
   {
     "__type__": "cc.CompPrefabInfo",
-    "fileId": "9cmqApoK1JaKzy0nOT0Q0u"
+    "fileId": "07rV24Z0ZP5b29y+H9Bqp9"
   },
   {
-    "__type__": "cc.RigidBody2D",
+    "__type__": "fed0cptiLZPm4WUyYJ4H9cg",
     "_name": "",
     "_objFlags": 0,
     "__editorExtras__": {},
@@ -156,30 +153,22 @@
     "__prefab": {
       "__id__": 7
     },
-    "enabledContactListener": true,
-    "bullet": false,
-    "awakeOnLoad": true,
-    "_group": 8,
-    "_type": 1,
-    "_allowSleep": true,
-    "_gravityScale": 0,
-    "_linearDamping": 0,
-    "_angularDamping": 0,
-    "_linearVelocity": {
-      "__type__": "cc.Vec2",
-      "x": 0,
-      "y": 0
+    "audioSource": null,
+    "skillCoefficient": 0.5,
+    "skillContinueTime": 4,
+    "playSkillDragonBoneAudio": "skill_1",
+    "cureTextPrefab": {
+      "__uuid__": "26a64d29-f4fd-4196-84b7-c1b7d43f687e",
+      "__expectedType__": "cc.Prefab"
     },
-    "_angularVelocity": 0,
-    "_fixedRotation": false,
     "_id": ""
   },
   {
     "__type__": "cc.CompPrefabInfo",
-    "fileId": "83xvdldnFEy7eMiilIjCa1"
+    "fileId": "70FpTnUx5AW64aMneQ75VU"
   },
   {
-    "__type__": "cc.CircleCollider2D",
+    "__type__": "cc.AudioSource",
     "_name": "",
     "_objFlags": 0,
     "__editorExtras__": {},
@@ -190,46 +179,18 @@
     "__prefab": {
       "__id__": 9
     },
-    "tag": 104,
-    "_group": 8,
-    "_density": 1,
-    "_sensor": true,
-    "_friction": 0.2,
-    "_restitution": 0,
-    "_offset": {
-      "__type__": "cc.Vec2",
-      "x": -22,
-      "y": 0
+    "_clip": {
+      "__uuid__": "be9ad4f0-0dce-4499-a765-12dfc59b1f7e",
+      "__expectedType__": "cc.AudioClip"
     },
-    "_radius": 70,
+    "_loop": false,
+    "_playOnAwake": false,
+    "_volume": 1,
     "_id": ""
   },
   {
     "__type__": "cc.CompPrefabInfo",
-    "fileId": "d3bxzkdFBPlLy/3dr1bTej"
-  },
-  {
-    "__type__": "cd535tnyWtOM4vGSqcHzsMI",
-    "_name": "",
-    "_objFlags": 0,
-    "__editorExtras__": {},
-    "node": {
-      "__id__": 1
-    },
-    "_enabled": true,
-    "__prefab": {
-      "__id__": 11
-    },
-    "audioSource": null,
-    "startLinearSpeed": 15,
-    "playSkillDragonBoneAudio": "skill_1",
-    "skillCoefficient": 3,
-    "skillContinueTime": 4,
-    "_id": ""
-  },
-  {
-    "__type__": "cc.CompPrefabInfo",
-    "fileId": "7aqrpY+x5KV6XBMB8FamFL"
+    "fileId": "422aku/e1AQ6PlnoWRepv8"
   },
   {
     "__type__": "cc.PrefabInfo",
@@ -239,7 +200,8 @@
     "asset": {
       "__id__": 0
     },
-    "fileId": "8eD4umk9BIJK+KPpx+n3Y0",
+    "fileId": "f32+WVEO1PCrA7uGs5FRgF",
+    "instance": null,
     "targetOverrides": null
   }
 ]

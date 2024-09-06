@@ -1,7 +1,7 @@
 [
   {
     "__type__": "cc.Prefab",
-    "_name": "HolySpring_skill_30102",
+    "_name": "HolySpring_skillicon_30203",
     "_objFlags": 0,
     "__editorExtras__": {},
     "_native": "",
@@ -13,7 +13,7 @@
   },
   {
     "__type__": "cc.Node",
-    "_name": "HolySpring_skill_30102",
+    "_name": "HolySpring_skillicon_30203",
     "_objFlags": 0,
     "__editorExtras__": {},
     "_parent": null,
@@ -34,15 +34,21 @@
       },
       {
         "__id__": 10
+      },
+      {
+        "__id__": 12
+      },
+      {
+        "__id__": 14
       }
     ],
     "_prefab": {
-      "__id__": 12
+      "__id__": 16
     },
     "_lpos": {
       "__type__": "cc.Vec3",
-      "x": -1544.924,
-      "y": -1399.745,
+      "x": -864.662,
+      "y": -971.653,
       "z": 0
     },
     "_lrot": {
@@ -82,8 +88,8 @@
     },
     "_contentSize": {
       "__type__": "cc.Size",
-      "width": 192.14,
-      "height": 191.54
+      "width": 120,
+      "height": 80
     },
     "_anchorPoint": {
       "__type__": "cc.Vec2",
@@ -94,10 +100,10 @@
   },
   {
     "__type__": "cc.CompPrefabInfo",
-    "fileId": "04pGoicdVIDIJp0OlFITlc"
+    "fileId": "eel0HDCXpE2IZnwtI6zeKu"
   },
   {
-    "__type__": "dragonBones.ArmatureDisplay",
+    "__type__": "cc.Sprite",
     "_name": "",
     "_objFlags": 0,
     "__editorExtras__": {},
@@ -118,31 +124,57 @@
       "b": 255,
       "a": 255
     },
-    "playTimes": -1,
-    "premultipliedAlpha": false,
-    "_defaultArmatureIndexValue": 0,
-    "_dragonAsset": {
-      "__uuid__": "61ffdb85-229c-4d65-9f4a-8aa9ddef4e18",
-      "__expectedType__": "dragonBones.DragonBonesAsset"
+    "_spriteFrame": {
+      "__uuid__": "0dd81487-f09a-4075-bb24-bcd3e989e48f@f9941",
+      "__expectedType__": "cc.SpriteFrame"
     },
-    "_dragonAtlasAsset": {
-      "__uuid__": "c1a4602a-60cc-443e-bfb0-d670eee0aec5",
-      "__expectedType__": "dragonBones.DragonBonesAtlasAsset"
+    "_type": 0,
+    "_fillType": 0,
+    "_sizeMode": 0,
+    "_fillCenter": {
+      "__type__": "cc.Vec2",
+      "x": 0,
+      "y": 0
     },
-    "_armatureName": "Armature",
-    "_animationName": "",
-    "_animationIndexValue": 0,
-    "_defaultCacheModeValue": 0,
-    "_timeScale": 1,
-    "_playTimes": -1,
-    "_debugBones": false,
-    "_enableBatch": false,
-    "_sockets": [],
+    "_fillStart": 0,
+    "_fillRange": 0,
+    "_isTrimmedMode": true,
+    "_useGrayscale": false,
+    "_atlas": null,
     "_id": ""
   },
   {
     "__type__": "cc.CompPrefabInfo",
-    "fileId": "c6PvODZWBHKoMN10NhRL7v"
+    "fileId": "b7OIYbDJxBrbTntZ0Tppri"
+  },
+  {
+    "__type__": "cc.Animation",
+    "_name": "",
+    "_objFlags": 0,
+    "__editorExtras__": {},
+    "node": {
+      "__id__": 1
+    },
+    "_enabled": true,
+    "__prefab": {
+      "__id__": 7
+    },
+    "playOnLoad": false,
+    "_clips": [
+      {
+        "__uuid__": "cc662607-f403-4e80-80ad-ad77bfbd88b8",
+        "__expectedType__": "cc.AnimationClip"
+      }
+    ],
+    "_defaultClip": {
+      "__uuid__": "cc662607-f403-4e80-80ad-ad77bfbd88b8",
+      "__expectedType__": "cc.AnimationClip"
+    },
+    "_id": ""
+  },
+  {
+    "__type__": "cc.CompPrefabInfo",
+    "fileId": "27gS+mcz5O37NodkAZjSK0"
   },
   {
     "__type__": "cc.RigidBody2D",
@@ -154,13 +186,13 @@
     },
     "_enabled": true,
     "__prefab": {
-      "__id__": 7
+      "__id__": 9
     },
     "enabledContactListener": true,
     "bullet": false,
     "awakeOnLoad": true,
     "_group": 8,
-    "_type": 3,
+    "_type": 1,
     "_allowSleep": true,
     "_gravityScale": 0,
     "_linearDamping": 0,
@@ -176,7 +208,7 @@
   },
   {
     "__type__": "cc.CompPrefabInfo",
-    "fileId": "e9qcWDkGdBPJ5MPflscZHb"
+    "fileId": "60DcjFw51EDoL+bh19sjSW"
   },
   {
     "__type__": "cc.CircleCollider2D",
@@ -188,7 +220,7 @@
     },
     "_enabled": true,
     "__prefab": {
-      "__id__": 9
+      "__id__": 11
     },
     "tag": 104,
     "_group": 8,
@@ -201,15 +233,15 @@
       "x": 0,
       "y": 0
     },
-    "_radius": 96.07,
+    "_radius": 50,
     "_id": ""
   },
   {
     "__type__": "cc.CompPrefabInfo",
-    "fileId": "14ZdN8jflMxaxObaq+FuOH"
+    "fileId": "239s+Nk6lPj6R2YgSgFpDI"
   },
   {
-    "__type__": "b149a7lRAxIhLCVAFAFGxjp",
+    "__type__": "cd535tnyWtOM4vGSqcHzsMI",
     "_name": "",
     "_objFlags": 0,
     "__editorExtras__": {},
@@ -218,17 +250,40 @@
     },
     "_enabled": true,
     "__prefab": {
-      "__id__": 11
+      "__id__": 13
     },
     "audioSource": null,
-    "skillCoefficient": 0.1,
+    "startLinearSpeed": 30,
+    "playSkillDragonBoneAudio": "",
+    "skillCoefficient": 2,
     "skillContinueTime": 4,
-    "playSkillDragonBoneAudio": "skill_1",
     "_id": ""
   },
   {
     "__type__": "cc.CompPrefabInfo",
-    "fileId": "73O2ZPFiVJDYVIg5XuxCrb"
+    "fileId": "c1QTtLqY1Gm7giVu7jQXri"
+  },
+  {
+    "__type__": "cc.AudioSource",
+    "_name": "",
+    "_objFlags": 0,
+    "__editorExtras__": {},
+    "node": {
+      "__id__": 1
+    },
+    "_enabled": true,
+    "__prefab": {
+      "__id__": 15
+    },
+    "_clip": null,
+    "_loop": false,
+    "_playOnAwake": true,
+    "_volume": 1,
+    "_id": ""
+  },
+  {
+    "__type__": "cc.CompPrefabInfo",
+    "fileId": "66Fsm8sZpInZ/A5pVDspPZ"
   },
   {
     "__type__": "cc.PrefabInfo",
@@ -238,7 +293,7 @@
     "asset": {
       "__id__": 0
     },
-    "fileId": "5f1rUufwVPr64TilFtRw2v",
+    "fileId": "8eAqpJQ+hLxph2IARdHMgi",
     "targetOverrides": null
   }
 ]

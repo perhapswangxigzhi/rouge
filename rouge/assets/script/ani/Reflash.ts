@@ -19,15 +19,17 @@ export class Reflash extends Component {
         
         .call(() => {
             // 在半翻时更换精灵帧
-           SkillManager.instance.randomSkill(changeSprite, chanegSkillName,changeSkillExplain);
-           UIFrame.getChildByName('SkillBg').getChildByName('SkillIcon').getComponent(Sprite).spriteFrame = changeSprite.spriteFrame;  
+        SkillManager.instance.randomSkill(changeSprite, chanegSkillName,changeSkillExplain);
+        UIFrame.getChildByName('SkillBg').getChildByName('SkillIcon').getComponent(Sprite).spriteFrame = changeSprite.spriteFrame;  
         })
         .to(filpDuration/ 2, { eulerAngles: new Vec3(0,  -180, 0) })
         .call(() => {
             UIFrame.getChildByName('SkillBg').getChildByName('SkillName').getComponent(Label).string = chanegSkillName.string;
             UIFrame.eulerAngles = new Vec3(0, 0, 0);
+           
         })
         .start();
-    
+        
+        
     }
 }

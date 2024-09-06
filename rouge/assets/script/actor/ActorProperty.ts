@@ -13,7 +13,7 @@ export class ActorProperty {
     /**
      * 生命
      */
-    hp: number = 100;    
+    hp: number ;
     /**
      * 攻击力
     */
@@ -37,6 +37,13 @@ export class ActorProperty {
      * 击杀数
     */
     killCount: number = 0;
+     /**
+     * 设置血量
+     * @param value 血量值
+     */
+     setHp(value: number) {
+        this.hp = math.clamp(value, 0, this.maxHp);
+    }
     /**
      * 获取血量百分比
      */
@@ -46,7 +53,7 @@ export class ActorProperty {
     constructor(name:string, maxHp:number,attack:number) {
         this.name = name;
         this.maxHp = maxHp;
-        this.hp = maxHp;
+        this.hp = math.clamp(100, 0, this.maxHp);;
         this.attack = attack;
     }
 }

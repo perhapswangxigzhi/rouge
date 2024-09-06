@@ -131,7 +131,7 @@ export class Actor extends Component {
         // 显示伤害文字
         const damageTextNode=instantiate(this.damageTextPrefab);
         damageTextNode.setParent(this.node);
-        damageTextNode.getComponent(DamageTextManager).showDamage(hitPosition, damage);;
+        damageTextNode.getComponent(DamageTextManager).showDamage(hitPosition, damage);
 
         this.rigidbody.applyLinearImpulseToCenter(hurtDirection,true)
         //受伤闪烁
