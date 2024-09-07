@@ -1,8 +1,8 @@
 import { _decorator, Animation, assert, assetManager, AudioClip, AudioSource, CCFloat, Collider2D, Component, Contact2DType, dragonBones, find, instantiate, IPhysics2DContact, Node, Prefab, RigidBody2D, Tween, v2, v3, Vec2, Vec3 } from 'cc';
 import { colliderTag } from '../actor/ColliderTag';
 import { Actor } from '../actor/Actor';
-import { DamageTextManager } from '../actor/DamageTextManager';
-import { CureTextManager } from '../actor/CureTextManager';
+import { DamageTextManager } from '../TextManager/DamageTextManager';
+import { CureTextManager } from '../TextManager/CureTextManager';
 
 const { ccclass, property, requireComponent } = _decorator;
 

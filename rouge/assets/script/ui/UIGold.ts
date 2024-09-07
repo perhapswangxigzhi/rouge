@@ -17,6 +17,9 @@ export class UIGold extends Component {
     }
 
     update(deltaTime: number) {
+        if (!PlayerController.instance || !PlayerController.instance.actor) {
+            return;
+        }
         this.killCount= PlayerController.instance.actor.playerProperty.killCount;
         this.Count=this.coinCount+this.killCount*2;
         this.richTextLabel!.string = this.Count.toString();

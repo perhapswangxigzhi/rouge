@@ -25,9 +25,9 @@ export class Skill extends Component  {
     initSkill(skillIndex:number){
         //this.skillIndex=skillIndex;
       // this.skillType=skillType;
-       // this.skillIconFileName=SkillManager.instance.skillIconFileName[skillIndex]
+    //    this.skillIconFileName=SkillManager.instance.skillIconFileName[skillIndex]
     //    console.log("initSkill:获取的序号"+skillIndex);
-        SkillEmitter.instance.getSkill(SkillManager.instance.skillIconFileName[skillIndex]);
+       SkillEmitter.instance.getSkill(SkillManager.instance.skillIconFileName[skillIndex]);
     }
     
 

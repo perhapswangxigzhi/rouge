@@ -18,6 +18,9 @@ export class Die extends ActorState {
     }
     animationEventHandler(){
 		//对某个动画做监听
+        if(this.actor.current_ActorProperty.name=="challengeEnemy1"){
+            director.emit(GameEvent.OnChallengeDie, this.actor.node); 
+            }
             this.actor.scheduleOnce(() => {    
             this.actor.node.destroy();
             director.emit(GameEvent.OnDie, this.actor.node); 
@@ -27,6 +30,7 @@ export class Die extends ActorState {
     onDieEnd(animationType: Animation.EventType, state: AnimationState) {
         if (animationType == Animation.EventType.FINISHED) {
             if (state.name == StateDefine.Die) {
+                
                 //删除角色
                 this.actor.scheduleOnce(() => {    
                 this.actor.node.destroy();
