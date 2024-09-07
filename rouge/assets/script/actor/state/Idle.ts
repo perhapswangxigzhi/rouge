@@ -9,7 +9,7 @@ export class Idle extends ActorState {
        
             if(this.dragonBoneAnimation){
                 this.dragonBoneAnimation.playAnimation(StateDefine.Idle,-1);
-                console.log("the dragon bone play idle animation");
+                //console.log("the dragon bone play idle animation");
             }
             else{
             this.animation.play(StateDefine.Idle);

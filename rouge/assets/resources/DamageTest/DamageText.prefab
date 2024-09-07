@@ -159,7 +159,7 @@
     "fileId": "fbbSOP+olMfIzhzASXelY5"
   },
   {
-    "__type__": "c709euf9bpF0o+RCkEa1zR1",
+    "__type__": "eb23bBfPmtNv7X6g5UtLJaU",
     "_name": "",
     "_objFlags": 0,
     "__editorExtras__": {},
@@ -174,7 +174,7 @@
   },
   {
     "__type__": "cc.CompPrefabInfo",
-    "fileId": "25Sb/IISRBqYTLJUiahWFC"
+    "fileId": "4bMDC9lRpIu7g+co6zWc74"
   },
   {
     "__type__": "cc.PrefabInfo",
@@ -185,6 +185,7 @@
       "__id__": 0
     },
     "fileId": "15AKuduc5Ja5YKkw3PlANO",
+    "instance": null,
     "targetOverrides": null
   }
 ]

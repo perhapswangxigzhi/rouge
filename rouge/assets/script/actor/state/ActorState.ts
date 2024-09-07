@@ -1,4 +1,4 @@
-import { Animation, dragonBones } from "cc";
+import { Animation, dragonBones, find } from "cc";
 import { IState } from "../../fsm/State";
 import { Actor } from "../Actor";
 import { StateDefine } from "../StateDefine";
@@ -6,6 +6,7 @@ import { StateDefine } from "../StateDefine";
 export abstract class ActorState implements IState<StateDefine> {
     id: StateDefine;
     actor: Actor
+    playerActor: Actor
     animation: Animation
     dragonBoneAnimation: dragonBones.ArmatureDisplay;     // 定义龙骨
     constructor(id: StateDefine, actor: Actor) {
@@ -13,7 +14,7 @@ export abstract class ActorState implements IState<StateDefine> {
         this.id = id;
         this.animation = actor.animation;
         this.dragonBoneAnimation = actor.dragonBoneAnimation;
-
+        this.playerActor=find('LevelCanvas/Player').getComponent(Actor)
     }
 
     onEnter() { }

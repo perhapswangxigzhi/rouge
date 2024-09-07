@@ -202,7 +202,7 @@ export namespace bt {
 
             this.elapsed += dt;
             if (this.elapsed < this.interval) {
-                markRunning(result);
+               markFail(result);
                 return;
             }
 

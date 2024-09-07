@@ -35,7 +35,7 @@ export class PlayerController extends Component {
     start(){
         PlayerController.instance = this;
         this.actor = this.node.getComponent(Actor);
-         this.audioSource = this.node.getComponent(AudioSource);
+        this.audioSource = this.node.getComponent(AudioSource);
         this.actor.stateMgr.registState(new Idle(StateDefine.Idle, this.actor))
         this.actor.stateMgr.registState(new Walk(StateDefine.Walk, this.actor))
         this.actor.stateMgr.registState(new Die(StateDefine.Die, this.actor))

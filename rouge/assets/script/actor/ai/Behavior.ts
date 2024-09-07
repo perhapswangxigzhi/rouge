@@ -5,49 +5,29 @@ import { SimpleEmitter } from "../projectile/SimpleEmitter";
 import { bt } from "../../bt/beheviourTree";
 import { BlackboardKey } from "./BlackBoradKey";
 import { EnemyControl } from "../EnemyControl";
-import { Weapon } from "../weapon/Weapon";
 
 
 
 export class MoveToDest extends bt.Action {
     execute(dt: number, result: bt.ExecuteResult) {
         let actor = result.blackboard.get(BlackboardKey.Actor) as Actor;
-        let plplayerActor= result.blackboard.get(BlackboardKey.playerActor) as Actor;
-        let moveDest = result.blackboard.get(BlackboardKey.MoveDest) as Vec3;
-        if (!actor || !moveDest) {
+        if (!actor ) {
             bt.markFail(result);
-            console.error("MoveToDest: actor or moveDest is null");
             return;
         }
 
         let dur = result.blackboard.get(BlackboardKey.MoveDestDuration) - dt;
         result.blackboard.set(BlackboardKey.MoveDestDuration, dur);
-       
-
-        let dir = v3(); 
-        Vec3.subtract(dir, moveDest, actor.node.worldPosition);
-        let distance = dir.length();
+        
+        let dir =  result.blackboard.get(BlackboardKey.Dir)as Vec3;
         dir.normalize();
-        let movedDistance = dir.length();
 
-        if (movedDistance > distance ) {
-            bt.markSuccess(result);
-            result.blackboard.delete(BlackboardKey.MoveDest);
-            actor.stateMgr.transit(StateDefine.Idle);
-            //如果是近战敌人则发起攻击
-            if(actor.current_ActorProperty.name=="Enemy3"){
-            actor.stateMgr.transit(StateDefine.Attack);
-            const v2HitNormal = v2(0,0);
-            plplayerActor.onHurt(actor.current_ActorProperty.attack,actor,v2HitNormal);
-            }
-            return;
-        }
         if(dur < 0){
-            bt.markSuccess(result);
-            result.blackboard.delete(BlackboardKey.MoveDest);
+            bt.markFail(result);
+            // bt.markSuccess(result);
+          //  result.blackboard.delete(BlackboardKey.MoveDest);
             return;
         }
-
         actor.input.set(dir.x, dir.y)
         bt.markRunning(result);
         actor.stateMgr.transit(StateDefine.Walk);
@@ -60,7 +40,6 @@ export class MoveToDest extends bt.Action {
  * 
  */
 export class SetMoveDest extends bt.Action {
-    weapon: Weapon = null;
     execute(dt: number, result: bt.ExecuteResult) {
         bt.markSuccess(result);
         let actor = result.blackboard.get(BlackboardKey.Actor) as Actor;
@@ -69,7 +48,37 @@ export class SetMoveDest extends bt.Action {
         // console.log('moveAI');
     }
 }
+/**
+ * 判断是否进入攻击范围
+ */
+export class AttackRange extends bt.Condition {
+    isSatisfy(result: bt.ExecuteResult): boolean {
+        let distance=result.blackboard.get(BlackboardKey.Distance) as number;
+        if(distance<5){
+            return true;
+        }else{
+            return false;
+        }
+    }
+}
+/**
+ * 发起攻击
+ */
+export class Attack_Action extends bt.Action {
+    execute(dt: number, result: bt.ExecuteResult) {
+        let actor = result.blackboard.get(BlackboardKey.Actor) as Actor;
+        let distance=result.blackboard.get(BlackboardKey.Distance) as number;
+        if (distance < 5) {
+            actor.stateMgr.transit(StateDefine.Attack);
+            bt.markRunning(result); // 标记为 RUNNING 状态
+            
+        } else {
+           //result.blackboard.set(BlackboardKey.MoveDestDuration, 0.2);
+            bt.markSuccess(result); // 敌人离开攻击范围，标记为 SUCCESS
+        }
 
+    }
+}
 
 /**
  * 检查某个发射器（emitter）是否处于冷却状态

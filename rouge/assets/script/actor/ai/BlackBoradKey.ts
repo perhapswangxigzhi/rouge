@@ -30,6 +30,8 @@ export enum BlackboardKey {
     // boolean
     Escaped = 'escaped',
 
+   // number
+    Distance = 'distance',
     // number
-    //AttackRange = 'attackRange',
+    Dir = 'dir',
 }   

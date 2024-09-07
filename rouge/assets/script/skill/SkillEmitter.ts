@@ -172,12 +172,13 @@ export class SkillEmitter extends Component {
                         , 1, macro.REPEAT_FOREVER, 0);
                     break;
                 case "HolySpring_skillicon_30217":
-                    this.schedule(() => {
-                        let node=instantiate(this.fixedSkillPrefab1)                     
-                        node.position = this.node.parent.position;
-                        this.node.parent.parent.addChild(node);
-                        }
-                        , 4, macro.REPEAT_FOREVER, 0);
+                     this.schedule(() => {
+                            let node=instantiate(this.strightSkillPrefab1) 
+                            node.position = this.node.parent.position;
+                            node.rotation = this.node.parent.rotation;
+                            this.node.parent.parent.addChild(node);
+                             }
+                            , 4, macro.REPEAT_FOREVER, 0);
                     break;
                 case "HolySpring_skillicon_30021":
                     this.schedule(() => {
@@ -199,8 +200,8 @@ export class SkillEmitter extends Component {
                 case "HolySpring_skillicon_30102":
                     this.schedule(() => {
                         let node=instantiate(this.fixedSkillPrefab1) 
-                        node.position = this.node.position;
-                        this.node.parent.addChild(node);
+                        node.position = this.node.parent.position;
+                        this.node.parent.parent.addChild(node);
                          }
                         , 6, macro.REPEAT_FOREVER, 0);
                     break;

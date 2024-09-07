@@ -1,4 +1,4 @@
-import { _decorator, Component, math, Node } from 'cc';
+import { _decorator, CCFloat, Component, math, Node } from 'cc';
 const { ccclass, property } = _decorator;
 
 /**
@@ -9,11 +9,13 @@ export class ActorProperty {
     /**
      * 最大生命值
      */
+    @property(CCFloat)
     maxHp : number = 100;
     /**
      * 生命
      */
-    hp: number ;
+    @property(CCFloat)
+        hp: number ;
     /**
      * 攻击力
     */
@@ -53,7 +55,7 @@ export class ActorProperty {
     constructor(name:string, maxHp:number,attack:number) {
         this.name = name;
         this.maxHp = maxHp;
-        this.hp = math.clamp(100, 0, this.maxHp);;
+        this.hp = maxHp;
         this.attack = attack;
     }
 }

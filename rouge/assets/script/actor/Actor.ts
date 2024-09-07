@@ -3,10 +3,9 @@ import { StateMachine } from '../fsm/StateMachine';
 import { StateDefine } from './StateDefine';
 import { colliderTag } from './ColliderTag';
 import { Projectile } from './projectile/Projectile';
-import { Weapon } from './weapon/Weapon';
 import { GameEvent } from '../event/GameEvent';
 import { PoolManager } from '../PoolManager';
-import { DamageTextManager } from './DamageTextManager';
+import { DamageTextManager } from '../TextManager/DamageTextManager';
 import { ActorProperty } from './ActorProperty';
 import { StrightSkill } from '../skill/StrightSkill';
 import { FixedSkill } from '../skill/FixedSkill';
@@ -41,6 +40,7 @@ export class Actor extends Component {
     playerProperty : ActorProperty = new ActorProperty("Player",100,10);
     enemy1_Property : ActorProperty = new ActorProperty("Enemy1",50,5);
     enemy3_Property : ActorProperty = new ActorProperty("Enemy3",100,5);
+    challengeEnemy1_Property : ActorProperty = new ActorProperty("challengeEnemy1",200,10);
     current_ActorProperty:ActorProperty|null=null;
     @property(Sprite)
     mainRenderer: Sprite|null=null;
@@ -58,9 +58,9 @@ export class Actor extends Component {
     canvasNode:Node=null;
     @property(Prefab)
     ItemPrefab: Prefab | null=null;
-
     @property(Prefab)
     damageTextPrefab: Prefab = null;
+   
 
     start() {
         this.rigidbody = this.getComponent(RigidBody2D);
@@ -71,7 +71,9 @@ export class Actor extends Component {
         this.addActorProperty(this.playerProperty);
         this.addActorProperty(this.enemy1_Property);
         this.addActorProperty(this.enemy3_Property);
+        this.addActorProperty(this.challengeEnemy1_Property);
         this.current_ActorProperty=this.getActorProperty(this.node.name)
+      
     }
       // 根据名字获取ActorProperty对象
     getActorProperty(name: string): ActorProperty | undefined {
@@ -109,9 +111,6 @@ export class Actor extends Component {
                 this.damage = 0
                 cb.node.getComponent(PointSkill).onCollisionBegin
             }
-            // else{this.hurtSrc = cb.node.getComponent(Weapon).host;
-            //     console.log("actor weapon:",this.hurtSrc.node.name)
-            // }
             let hitNormal = v3();
             Vec3.subtract(hitNormal, ca.node.worldPosition, cb.node.worldPosition);
             hitNormal.normalize();
@@ -127,7 +126,7 @@ export class Actor extends Component {
         if(this.current_ActorProperty!=null){
         this.current_ActorProperty.hp=this.current_ActorProperty.hp-damage;
         }
-        const hitPosition = new Vec3(hurtDirection.x, hurtDirection.y*2+30, this.node.position.z);
+        const hitPosition = new Vec3(hurtDirection.x, hurtDirection.y*2+30, 0);
         // 显示伤害文字
         const damageTextNode=instantiate(this.damageTextPrefab);
         damageTextNode.setParent(this.node);
@@ -139,6 +138,11 @@ export class Actor extends Component {
         this.mainRenderer.color=Color.RED;
         this.scheduleOnce(()=>{
             this.mainRenderer.color=Color.WHITE;
+    },0.2)}
+    if(this.dragonBoneAnimation!=null){
+        this.dragonBoneAnimation.color=Color.RED;
+        this.scheduleOnce(()=>{
+            this.dragonBoneAnimation.color=Color.WHITE;
     },0.2)}
     assetManager.resources.load("sounds/bulletIn", AudioClip, (err, clip) => {
         // 播放音效
