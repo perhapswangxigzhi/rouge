@@ -16,19 +16,19 @@ export class UIAnnouncement extends Component {
         `
 
         
-            版本V1.0.8
+            版本V1.0.9
                   更新内容：
                 1. 新增功能：
-                  - 新增龙骨角色受击反馈
-                  - 新增金币挑战怪
-                  - 实现挑战怪全部死亡后触发奖励功能
+                  - 新增三种debuff机制
+                  - 新增经验挑战怪
+
                   
                   
 
                2. 优化功能：
-                  - 优化行为树的al逻辑,使其可以扩充更多的功能
+                  
                3. 修复BUG:
-                  - 修复人物死亡后的初始化bug
+                  - 
                   - `;
         // 监听关闭按钮点击事件
         this.closeButton1.node.on(Button.EventType.CLICK, this.onCloseButtonClicked, this);

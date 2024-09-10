@@ -44,8 +44,8 @@
     },
     "_lpos": {
       "__type__": "cc.Vec3",
-      "x": -1091.215,
-      "y": -753.602,
+      "x": 70.313,
+      "y": 108.597,
       "z": 0
     },
     "_lrot": {
@@ -250,6 +250,10 @@
       "__id__": 13
     },
     "audioSource": null,
+    "skillBuffPrefab": {
+      "__uuid__": "9bbe67cf-a56d-4d2a-a66c-35931d7105b6",
+      "__expectedType__": "cc.Prefab"
+    },
     "startLinearSpeed": 15,
     "playSkillDragonBoneAudio": "",
     "skillCoefficient": 1,

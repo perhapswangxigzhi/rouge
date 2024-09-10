@@ -18,6 +18,8 @@ export class FixedSkill extends Component {
     enemHost: Actor[] = [];
     damage: number = 0;
     isEnemyInRange: boolean = false;
+    @property(Prefab)
+    skillBuffPrefab: Prefab = null;
     @property(CCFloat)
     skillCoefficient: number = 0;  //技能伤害系数
     @property(Number)
@@ -41,9 +43,11 @@ export class FixedSkill extends Component {
         this.collider.on(Contact2DType.END_CONTACT, this.onCollisionEnd, this);
         //监听动画播放完成事件
        this.skillDragonBoneAnimation.addEventListener(dragonBones.EventObject.LOOP_COMPLETE, this.onAnimationComplete, this);
+       if(this.skillContinueTime>1){
        this.scheduleOnce(()=>{
         this.node.destroy();
         },this.skillContinueTime)
+      }
     }
 
     onCollisionBegin(self: Collider2D, other: Collider2D, contact: IPhysics2DContact) {
@@ -69,8 +73,15 @@ export class FixedSkill extends Component {
       if (this.isEnemyInRange==true) {
         const v2HitNormal = v2(0,0);
         this.enemHost.forEach((enemy) => {
+          if(this.skillBuffPrefab!=null){
+            const skillBuffNode=instantiate(this.skillBuffPrefab);
+             skillBuffNode.setParent(enemy.node);
+           }
           enemy.onHurt(this.damage, this.host, v2HitNormal)
         })
+        if(this.skillContinueTime<1){
+           this.node.destroy();
+         }
       }
       
    }

@@ -44,8 +44,8 @@
     },
     "_lpos": {
       "__type__": "cc.Vec3",
-      "x": -2314.417,
-      "y": -1326.301,
+      "x": -103.245,
+      "y": -43.687,
       "z": 0
     },
     "_lrot": {
@@ -246,6 +246,10 @@
       "__id__": 13
     },
     "audioSource": null,
+    "skillBuffPrefab": {
+      "__uuid__": "2e029169-f5f2-4c2a-9d97-1ac4f4aa30b7",
+      "__expectedType__": "cc.Prefab"
+    },
     "skillCoefficient": 0.5,
     "skillContinueTime": 4,
     "playSkillDragonBoneAudio": "skill_1",

@@ -24,12 +24,19 @@ export class SkillCooling extends Component {
         this.button.enabled = false;
         this.icon.grayscale = true;
         this.mask.fillRange = 1;
-        this.coin.active=true;
-        this.coin.getComponent(CoinDrop).drop();
+        // this.coin.active=true;
+        // this.coin.getComponent(CoinDrop).drop();
        // const random = Math.floor(Math.random() * 9) + 2;
         const tweenTime =  10;
-         const playerNode=PlayerController.instance.node;
-        director.emit(GameEvent.OnCreate, playerNode); 
+        if(this.node.name=='GoldChanllengeBg'){
+        const playerNode=PlayerController.instance.node;
+        director.emit(GameEvent.OnCreate1, playerNode); 
+        }
+        else if(this.node.name=='ExpChallengeBg'){
+        const playerNode=PlayerController.instance.node;
+        director.emit(GameEvent.OnCreate2, playerNode); 
+        }
+ 
         tween(this.mask)
             .to(tweenTime - 1, { fillRange: 1 / tweenTime }, {
                 onUpdate: (target: object, ratio: number) => {

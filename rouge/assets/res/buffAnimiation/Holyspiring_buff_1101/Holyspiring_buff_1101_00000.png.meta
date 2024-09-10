@@ -1,0 +1,134 @@
+{
+  "ver": "1.0.27",
+  "importer": "image",
+  "imported": true,
+  "uuid": "e6ec2224-9242-4a6e-8a53-b4cebd06923e",
+  "files": [
+    ".json",
+    ".png"
+  ],
+  "subMetas": {
+    "6c48a": {
+      "importer": "texture",
+      "uuid": "e6ec2224-9242-4a6e-8a53-b4cebd06923e@6c48a",
+      "displayName": "Holyspiring_buff_1101_00000",
+      "id": "6c48a",
+      "name": "texture",
+      "userData": {
+        "wrapModeS": "clamp-to-edge",
+        "wrapModeT": "clamp-to-edge",
+        "imageUuidOrDatabaseUri": "e6ec2224-9242-4a6e-8a53-b4cebd06923e",
+        "isUuid": true,
+        "visible": false,
+        "minfilter": "linear",
+        "magfilter": "linear",
+        "mipfilter": "none",
+        "anisotropy": 0
+      },
+      "ver": "1.0.22",
+      "imported": true,
+      "files": [
+        ".json"
+      ],
+      "subMetas": {}
+    },
+    "f9941": {
+      "importer": "sprite-frame",
+      "uuid": "e6ec2224-9242-4a6e-8a53-b4cebd06923e@f9941",
+      "displayName": "Holyspiring_buff_1101_00000",
+      "id": "f9941",
+      "name": "spriteFrame",
+      "userData": {
+        "trimType": "auto",
+        "trimThreshold": 1,
+        "rotated": false,
+        "offsetX": -3.5,
+        "offsetY": -1.5,
+        "trimX": 11,
+        "trimY": 14,
+        "width": 195,
+        "height": 190,
+        "rawWidth": 224,
+        "rawHeight": 215,
+        "borderTop": 0,
+        "borderBottom": 0,
+        "borderLeft": 0,
+        "borderRight": 0,
+        "packable": true,
+        "pixelsToUnit": 100,
+        "pivotX": 0.5,
+        "pivotY": 0.5,
+        "meshType": 0,
+        "vertices": {
+          "rawPosition": [
+            -97.5,
+            -95,
+            0,
+            97.5,
+            -95,
+            0,
+            -97.5,
+            95,
+            0,
+            97.5,
+            95,
+            0
+          ],
+          "indexes": [
+            0,
+            1,
+            2,
+            2,
+            1,
+            3
+          ],
+          "uv": [
+            11,
+            201,
+            206,
+            201,
+            11,
+            11,
+            206,
+            11
+          ],
+          "nuv": [
+            0.049107142857142856,
+            0.05116279069767442,
+            0.9196428571428571,
+            0.05116279069767442,
+            0.049107142857142856,
+            0.9348837209302325,
+            0.9196428571428571,
+            0.9348837209302325
+          ],
+          "minPos": [
+            -97.5,
+            -95,
+            0
+          ],
+          "maxPos": [
+            97.5,
+            95,
+            0
+          ]
+        },
+        "isUuid": true,
+        "imageUuidOrDatabaseUri": "e6ec2224-9242-4a6e-8a53-b4cebd06923e@6c48a",
+        "atlasUuid": ""
+      },
+      "ver": "1.0.12",
+      "imported": true,
+      "files": [
+        ".json"
+      ],
+      "subMetas": {}
+    }
+  },
+  "userData": {
+    "type": "sprite-frame",
+    "hasAlpha": true,
+    "fixAlphaTransparencyArtifacts": false,
+    "redirect": "e6ec2224-9242-4a6e-8a53-b4cebd06923e@6c48a"
+  }
+}

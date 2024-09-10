@@ -21,7 +21,6 @@ export class MoveToDest extends bt.Action {
         
         let dir =  result.blackboard.get(BlackboardKey.Dir)as Vec3;
         dir.normalize();
-
         if(dur < 0){
             bt.markFail(result);
             // bt.markSuccess(result);
@@ -72,8 +71,8 @@ export class Attack_Action extends bt.Action {
             actor.stateMgr.transit(StateDefine.Attack);
             bt.markRunning(result); // 标记为 RUNNING 状态
             
-        } else {
-           //result.blackboard.set(BlackboardKey.MoveDestDuration, 0.2);
+        } else if(distance>5){
+           result.blackboard.set(BlackboardKey.MoveDestDuration, 0.2);
             bt.markSuccess(result); // 敌人离开攻击范围，标记为 SUCCESS
         }
 

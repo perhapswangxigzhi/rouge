@@ -17,6 +17,8 @@ export class StrightSkill extends Component {
     skillDragonBoneAnimation: dragonBones.ArmatureDisplay=null;
     host: Actor | null = null;
     damage: number = 0;
+    @property(Prefab)
+    skillBuffPrefab: Prefab = null;
     @property(CCFloat)
     startLinearSpeed: number = 0;
     @property(String)
@@ -50,12 +52,10 @@ export class StrightSkill extends Component {
 
     onCollisionBegin(self: Collider2D, other: Collider2D, contact: IPhysics2DContact) {
         if ( colliderTag.isProjectileHitable(self.tag, other.tag)) {
-            // console.log('技能已经命中目标');
-            // console.log(this.damage)
-          // this.scheduleOnce(() => {
-          //   this.node.destroy();
-          // },1);
-          
+          if(this.skillBuffPrefab!=null){
+           const skillBuffNode=instantiate(this.skillBuffPrefab);
+            skillBuffNode.setParent(other.node);
+          }
         }
     }
     skillRealse(){

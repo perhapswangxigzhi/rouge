@@ -1,11 +1,11 @@
-import { _decorator, Component, Label, instantiate, Node, Vec3, Prefab, tween } from 'cc';
+import { _decorator, Component, Label, instantiate, Node, Vec3, Prefab, tween, Color } from 'cc';
 const { ccclass, property } = _decorator;
 
 @ccclass('DamageTextManager')
 export class DamageTextManager extends Component {
    
    
-    public showDamage(position: Vec3, damageAmount: number) {
+    public showDamage(position: Vec3, damageAmount: number,color:Color) {
        
         this.node.position = position;
         const formattedDamage = `-${damageAmount.toString().replace(/\B/g, " ")}`;
@@ -14,7 +14,7 @@ export class DamageTextManager extends Component {
         
         // 设置初始字体大小
         labelComponent.fontSize = 10;
-
+        labelComponent.color =color 
         // 使用tween动画调整字体大小
         tween(labelComponent)
             .to(0.5, { fontSize: 25 }) // 在0.5秒内将字体大小从10变到30

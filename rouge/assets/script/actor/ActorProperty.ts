@@ -43,9 +43,13 @@ export class ActorProperty {
      * 设置血量
      * @param value 血量值
      */
-     setHp(value: number) {
+    setHp(value: number) {
         this.hp = math.clamp(value, 0, this.maxHp);
     }
+    /**
+     * 易伤系数
+    */
+    hurtCoefficient: number = 1;
     /**
      * 获取血量百分比
      */

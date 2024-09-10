@@ -225,6 +225,10 @@
       "__id__": 11
     },
     "audioSource": null,
+    "skillBuffPrefab": {
+      "__uuid__": "9bbe67cf-a56d-4d2a-a66c-35931d7105b6",
+      "__expectedType__": "cc.Prefab"
+    },
     "skillCoefficient": 0.3,
     "skillContinueTime": 3,
     "playSkillDragonBoneAudio": "skill_1",

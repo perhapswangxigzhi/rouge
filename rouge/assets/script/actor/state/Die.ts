@@ -19,14 +19,18 @@ export class Die extends ActorState {
     animationEventHandler(){
 		//对某个动画做监听
         if(this.actor.current_ActorProperty.name=="challengeEnemy1"){
-            director.emit(GameEvent.OnChallengeDie, this.actor.node); 
+            director.emit(GameEvent.OnChallengeDie_1, this.actor.node); 
+            }
+         if(this.actor.current_ActorProperty.name=="challengeEnemy2"){
+         director.emit(GameEvent.OnChallengeDie_2, this.actor.node); 
             }
             this.actor.scheduleOnce(() => {    
             this.actor.node.destroy();
             director.emit(GameEvent.OnDie, this.actor.node); 
-            }, 0.1);         
-	}
-
+            }, 0.1); 
+           
+	    }
+    
     onDieEnd(animationType: Animation.EventType, state: AnimationState) {
         if (animationType == Animation.EventType.FINISHED) {
             if (state.name == StateDefine.Die) {

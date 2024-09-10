@@ -19,6 +19,8 @@ export class PointSkill extends Component {
     enemyNode:Node|null=null;
     enemyHost:Actor|null=null;
     damage: number = 0;
+    @property(Prefab)
+    skillBuffPrefab: Prefab = null;
     @property(CCFloat)
     startLinearSpeed: number = 0;
     @property(String)
@@ -92,6 +94,10 @@ export class PointSkill extends Component {
                     rigid.linearVelocity = velocity;
                    if (distance < 5) {
                        this.scheduleOnce(() => {
+                        if(this.skillBuffPrefab!=null){
+                            const skillBuffNode=instantiate(this.skillBuffPrefab);
+                             skillBuffNode.setParent(this.enemyNode);
+                           }
                         this.enemyHost.onHurt(this.damage, this.host, new Vec2(0, 0))
                         this.node.destroy();
                        });

@@ -1,4 +1,4 @@
-import { _decorator, Component, Node, RigidBody,RigidBody2D,CircleCollider2D,Collider2D, Sprite, CCFloat, Vec2, v2, IPhysics2DContact, Contact2DType, Animation, v3, Vec3, math, Color, Quat, assetManager, AudioClip, AudioSource, dragonBones, resources, Prefab, instantiate, find } from 'cc';
+import { _decorator, Component, Node, RigidBody,RigidBody2D,CircleCollider2D,Collider2D, Sprite, CCFloat, Vec2, v2, IPhysics2DContact, Contact2DType, Animation, v3, Vec3, math, Color, Quat, assetManager, AudioClip, AudioSource, dragonBones, resources, Prefab, instantiate, find, UITransform, color } from 'cc';
 import { StateMachine } from '../fsm/StateMachine';
 import { StateDefine } from './StateDefine';
 import { colliderTag } from './ColliderTag';
@@ -28,12 +28,12 @@ export class Actor extends Component {
     @property(dragonBones.ArmatureDisplay)
     dragonBoneAnimation:dragonBones.ArmatureDisplay|null = null;
 
-    hp:number=100;
-    maxHp:number=100;
-    attack:number=10;
-    ex:number=0;
-    maxEx:number=100;
-    level:number=0;
+    // hp:number=100;
+    // maxHp:number=100;
+    // attack:number=10;
+    // ex:number=0;
+    // maxEx:number=100;
+    // level:number=0;
     damage:number=0;
     // 使用字典存储多个ActorProperty对象
     actorProperties: { [key: string]: ActorProperty } = {};
@@ -41,6 +41,7 @@ export class Actor extends Component {
     enemy1_Property : ActorProperty = new ActorProperty("Enemy1",50,5);
     enemy3_Property : ActorProperty = new ActorProperty("Enemy3",100,5);
     challengeEnemy1_Property : ActorProperty = new ActorProperty("challengeEnemy1",200,10);
+    challengeEnemy2_Property : ActorProperty = new ActorProperty("challengeEnemy2",400,10);
     current_ActorProperty:ActorProperty|null=null;
     @property(Sprite)
     mainRenderer: Sprite|null=null;
@@ -72,6 +73,7 @@ export class Actor extends Component {
         this.addActorProperty(this.enemy1_Property);
         this.addActorProperty(this.enemy3_Property);
         this.addActorProperty(this.challengeEnemy1_Property);
+        this.addActorProperty(this.challengeEnemy2_Property);
         this.current_ActorProperty=this.getActorProperty(this.node.name)
       
     }
@@ -124,14 +126,18 @@ export class Actor extends Component {
         if (this.dead) {return;}
         if(damage==0){return;}
         if(this.current_ActorProperty!=null){
-        this.current_ActorProperty.hp=this.current_ActorProperty.hp-damage;
+        damage=damage*this.current_ActorProperty.hurtCoefficient  
+        this.current_ActorProperty.hp=this.current_ActorProperty.hp-damage
         }
-        const hitPosition = new Vec3(hurtDirection.x, hurtDirection.y*2+30, 0);
+        const hitPosition = new Vec3(hurtDirection.x, hurtDirection.y+this.getComponent(UITransform).height /2+10 , this.node.position.z);
         // 显示伤害文字
         const damageTextNode=instantiate(this.damageTextPrefab);
         damageTextNode.setParent(this.node);
-        damageTextNode.getComponent(DamageTextManager).showDamage(hitPosition, damage);
-
+        if(this.current_ActorProperty.hurtCoefficient==1){
+        damageTextNode.getComponent(DamageTextManager).showDamage(hitPosition, damage,Color.WHITE);
+        }else{
+            damageTextNode.getComponent(DamageTextManager).showDamage(hitPosition, damage,new Color(125, 249, 255,255));
+        }
         this.rigidbody.applyLinearImpulseToCenter(hurtDirection,true)
         //受伤闪烁
         if(this.mainRenderer!=null){
