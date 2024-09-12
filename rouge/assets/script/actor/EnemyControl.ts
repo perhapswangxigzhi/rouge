@@ -6,7 +6,7 @@ import { StateDefine } from './StateDefine';
 import { Die } from './state/Die';
 import { Walk } from './state/Walk';
 import { BlackboardKey } from './ai/BlackBoradKey';
-import { Emit, IsCooldown, IsLowHp, MoveToDest, SetMoveDest, StayIdle ,AttackRange,Attack_Action} from './ai/Behavior';
+import { Emit, IsCooldown, MoveToDest, SetMoveDest, StayIdle ,AttackRange,Attack_Action} from './ai/Behavior';
 import { SimpleEmitter } from './projectile/SimpleEmitter';
 import { Attack } from './state/Attack';
 const { ccclass, property } = _decorator;
@@ -120,7 +120,6 @@ export class EnemyControl extends Component {
         rootNode.addChild(idleSeq);
         let wait = new bt.Wait();
         idleSeq.addChild(wait);
-       
         idleSeq.addChild(new SetMoveDest())
        }   
        if (this.enemyTag==1) {

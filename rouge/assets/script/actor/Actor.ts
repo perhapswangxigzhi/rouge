@@ -1,4 +1,4 @@
-import { _decorator, Component, Node, RigidBody,RigidBody2D,CircleCollider2D,Collider2D, Sprite, CCFloat, Vec2, v2, IPhysics2DContact, Contact2DType, Animation, v3, Vec3, math, Color, Quat, assetManager, AudioClip, AudioSource, dragonBones, resources, Prefab, instantiate, find, UITransform, color } from 'cc';
+import { _decorator, Component, Node, RigidBody,RigidBody2D,CircleCollider2D,Collider2D, Sprite, CCFloat, Vec2, v2, IPhysics2DContact, Contact2DType, Animation, v3, Vec3, math, Color, Quat, assetManager, AudioClip, AudioSource, dragonBones, resources, Prefab, instantiate, find, UITransform, color, game } from 'cc';
 import { StateMachine } from '../fsm/StateMachine';
 import { StateDefine } from './StateDefine';
 import { colliderTag } from './ColliderTag';
@@ -42,6 +42,7 @@ export class Actor extends Component {
     enemy3_Property : ActorProperty = new ActorProperty("Enemy3",100,5);
     challengeEnemy1_Property : ActorProperty = new ActorProperty("challengeEnemy1",200,10);
     challengeEnemy2_Property : ActorProperty = new ActorProperty("challengeEnemy2",400,10);
+    boss1_Property : ActorProperty = new ActorProperty("Boss1",2000,10);
     current_ActorProperty:ActorProperty|null=null;
     @property(Sprite)
     mainRenderer: Sprite|null=null;
@@ -61,8 +62,9 @@ export class Actor extends Component {
     ItemPrefab: Prefab | null=null;
     @property(Prefab)
     damageTextPrefab: Prefab = null;
-   
-
+    cooldown:number=5 
+    castTime:number=0
+    
     start() {
         this.rigidbody = this.getComponent(RigidBody2D);
         this.collider = this.getComponent(Collider2D);
@@ -74,8 +76,12 @@ export class Actor extends Component {
         this.addActorProperty(this.enemy3_Property);
         this.addActorProperty(this.challengeEnemy1_Property);
         this.addActorProperty(this.challengeEnemy2_Property);
+        this.addActorProperty(this.boss1_Property);
         this.current_ActorProperty=this.getActorProperty(this.node.name)
-      
+        this.castTime=game.totalTime;
+    }
+    get isCoolingdown(){
+        return game.totalTime-this.castTime>=this.cooldown*1000;
     }
       // 根据名字获取ActorProperty对象
     getActorProperty(name: string): ActorProperty | undefined {
@@ -90,8 +96,6 @@ export class Actor extends Component {
 
     update(deltaTime: number) {
         this.stateMgr.update(deltaTime);
-
-       
     }
     onProjectileTriggerEnter(ca:Collider2D, cb:Collider2D,contact:IPhysics2DContact){
         if (colliderTag.isProjectileHitable(cb.tag, ca.tag)) {

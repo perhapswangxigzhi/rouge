@@ -115,12 +115,4 @@ export class StayIdle extends bt.Action {
 
 
 
-/**
- * 检查血量是否少于一半
- */
-export class IsLowHp extends bt.Condition {
-    isSatisfy(result: bt.ExecuteResult): boolean {
-        let actor = result.blackboard.get(BlackboardKey.Actor) as Actor;
-        return actor?.hp / actor?.maxHp <= 0.5;
-    }
-}
+

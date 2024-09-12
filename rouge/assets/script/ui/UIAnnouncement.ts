@@ -16,11 +16,13 @@ export class UIAnnouncement extends Component {
         `
 
         
-            版本V1.0.9
+            版本V1.0.10
                   更新内容：
                 1. 新增功能：
-                  - 新增三种debuff机制
-                  - 新增经验挑战怪
+                  - 新增boss类
+                  - 完成boss类AL的制作
+                  - 新增boss突进攻击方式
+                  - 新增boss技能
 
                   
                   

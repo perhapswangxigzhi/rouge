@@ -134,11 +134,13 @@ export namespace bt {
         execute(dt: number, result: ExecuteResult) {
             markFail(result);
             let successCount: number = 0;
+         //   let originalState = result.executeState; // 保存原始状态
             for (let child of this.children) {
                 child.execute(dt, result);
                 if (result.executeState == ExecuteState.Success) {
                     successCount++;
                 }
+              //  result.executeState = originalState; // 恢复原始状态
             }
 
             if (successCount >= this.mustSuccessCount) {

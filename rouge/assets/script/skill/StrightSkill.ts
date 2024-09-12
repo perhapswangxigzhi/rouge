@@ -52,6 +52,7 @@ export class StrightSkill extends Component {
 
     onCollisionBegin(self: Collider2D, other: Collider2D, contact: IPhysics2DContact) {
         if ( colliderTag.isProjectileHitable(self.tag, other.tag)) {
+        
           if(this.skillBuffPrefab!=null){
            const skillBuffNode=instantiate(this.skillBuffPrefab);
             skillBuffNode.setParent(other.node);

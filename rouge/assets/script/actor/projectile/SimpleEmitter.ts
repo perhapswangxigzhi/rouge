@@ -20,7 +20,7 @@ export class SimpleEmitter extends Component {
     emitterRoot:Node=null;
     canvasNode:Node=null;
 
-    cooldown:number=5 ;
+    cooldown:number=5 
     castTime:number=0
     start() {
         this.canvasNode=find('LevelCanvas')

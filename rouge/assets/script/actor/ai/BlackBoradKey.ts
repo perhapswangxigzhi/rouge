@@ -32,6 +32,6 @@ export enum BlackboardKey {
 
    // number
     Distance = 'distance',
-    // number
+    // v3
     Dir = 'dir',
 }   
