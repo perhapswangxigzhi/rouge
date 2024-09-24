@@ -14,23 +14,17 @@ export class UIAnnouncement extends Component {
         // 设置公告内容
         this.announcementLabel.string = 
         `
-
-        
-            版本V1.0.10
+            版本V1.0.11
                   更新内容：
                 1. 新增功能：
-                  - 新增boss类
-                  - 完成boss类AL的制作
-                  - 新增boss突进攻击方式
-                  - 新增boss技能
-
-                  
-                  
-
+                  - 新增音频管理类
+                  - 新增背景音乐与boss出场音乐
+                  - 新增boss出场警告文字
+                  - 新增boss阶段围墙限制
                2. 优化功能：
                   
                3. 修复BUG:
-                  - 
+                  - 修复穿墙bug
                   - `;
         // 监听关闭按钮点击事件
         this.closeButton1.node.on(Button.EventType.CLICK, this.onCloseButtonClicked, this);

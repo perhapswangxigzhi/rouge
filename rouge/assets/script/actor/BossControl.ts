@@ -16,6 +16,7 @@ const { ccclass, property } = _decorator;
 export class BossContorl extends Component {
     actor:Actor = null;
     playerActor:Actor = null;
+    playerNode:Node=null;
     ai :bt.BehaviourTree = null;
     moveDest:Vec3=null
     enemyTag:number=0;
@@ -30,7 +31,8 @@ export class BossContorl extends Component {
     // MaxfrozenTime:number=3;  //冻结时间上限
     start() {
         this.actor = this.node.getComponent(Actor);
-        this.playerActor=this.node.parent.getChildByName('Player').getComponent(Actor);
+        this.playerNode=this.node.parent.getChildByName('Player');
+        this.playerActor=this.playerNode.getComponent(Actor);
         this.initBlackboard();
         this.createAI();
         this.actor.stateMgr.registState(new Idle(StateDefine.Idle, this.actor));
@@ -45,7 +47,9 @@ export class BossContorl extends Component {
     update(deltaTime: number) {
     
         this.ai.update(deltaTime);
-        this.moveDest=this.playerActor.node?.worldPosition.clone();
+        if(this.playerNode.isValid){
+            this.moveDest=this.playerActor.node?.worldPosition.clone();
+        }
         this.distance= Vec3.subtract(this.dir, this.moveDest, this.node.worldPosition).length();
        // this.ai.setData(BlackboardKey.MoveDest, this.moveDest);
         this.ai.setData(BlackboardKey.Dir, this.dir);
@@ -131,8 +135,8 @@ export class BossContorl extends Component {
             skillAction.skillPre=this.skillPrefab;
             skillAction.node=this.node;
             skillSeq.addChild(skillAction);
-            // skillSeq.addChild(new StayIdle());
-          //  rootNode.addChild(attackSeq);
+           // skillSeq.addChild(new StayIdle());
+          // rootNode.addChild(attackSeq);
             parallelNode.addChild(skillSeq);
         }
      

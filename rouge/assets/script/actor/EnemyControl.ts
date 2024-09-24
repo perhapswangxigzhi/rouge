@@ -15,6 +15,7 @@ const { ccclass, property } = _decorator;
 export class EnemyControl extends Component {
     actor:Actor = null;
     playerActor:Actor = null;
+    playerNode:Node=null;
     ai :bt.BehaviourTree = null;
     moveDest:Vec3=null
     enemyTag:number=0;
@@ -28,7 +29,8 @@ export class EnemyControl extends Component {
     MaxfrozenTime:number=3;  //冻结时间上限
     start() {
         this.actor = this.node.getComponent(Actor);
-        this.playerActor=this.node.parent.getChildByName('Player').getComponent(Actor);
+        this.playerNode=this.node.parent.getChildByName('Player');
+        this.playerActor=this.playerNode.getComponent(Actor);
         if(this.node.getComponentInChildren(SimpleEmitter)){
             this.enemyTag=0  //远程敌人
         }else{
@@ -47,7 +49,9 @@ export class EnemyControl extends Component {
     update(deltaTime: number) {
         if (this.frozenTime<=0) {
         this.ai.update(deltaTime);
-        this.moveDest=this.playerActor.node?.worldPosition.clone();
+        if(this.playerNode.isValid){
+            this.moveDest=this.playerActor.node?.worldPosition.clone();
+        }
         this.distance= Vec3.subtract(this.dir, this.moveDest, this.node.worldPosition).length();
         this.ai.setData(BlackboardKey.MoveDest, this.moveDest);
         this.ai.setData(BlackboardKey.Dir, this.dir);

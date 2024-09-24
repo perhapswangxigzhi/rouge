@@ -71,6 +71,7 @@ export class Attack_Action extends bt.Action {
         let playerActor = result.blackboard.get(BlackboardKey.playerActor) as Actor;
         let distance=result.blackboard.get(BlackboardKey.Distance) as number;
         if (distance < 5) {
+            // 攻击玩家
             actor.stateMgr.transit(StateDefine.Attack);
             actor.input.set(0, 0)
             bt.markRunning(result); // 标记为 RUNNING 状态
@@ -78,7 +79,7 @@ export class Attack_Action extends bt.Action {
             console.log('距离过远');
             bt.markSuccess(result); // 敌人离开攻击范围，标记为 SUCCESS
         }
-
+        
     }
 }
 /**
@@ -189,14 +190,14 @@ export class EscapeDash extends bt.Action {
             return;
         }
 
-        // 随机找一个方向，然后使用 dash 状态来逃跑
+        // 随机找一个方向，然后使用 dash 状态来突近玩家
         let dir= v3();
         let target: Actor = result.blackboard.get(BlackboardKey.playerActor);
         if (target) {
             Vec3.subtract(dir, target.node.worldPosition, actor.node.worldPosition);
         }
-        const v2HitNormal = v2(0,0);
-        playerActor.onHurt(actor.current_ActorProperty.attack*2,actor,v2HitNormal);
+        // const v2HitNormal = v2(0,0);
+        // playerActor.onHurt(actor.current_ActorProperty.attack*2,actor,v2HitNormal);
         dir.normalize();
         actor.input.set(dir.x, dir.y);
         actor.stateMgr.transit(StateDefine.Dash);
@@ -207,7 +208,7 @@ export class EscapeDash extends bt.Action {
 export class IsLowHp extends bt.Condition {
     isSatisfy(result: bt.ExecuteResult): boolean {
         let actor = result.blackboard.get(BlackboardKey.Actor) as Actor;
-        console.log(actor?.current_ActorProperty.hp / actor?.current_ActorProperty.maxHp);
+        // console.log(actor?.current_ActorProperty.hp / actor?.current_ActorProperty.maxHp);
         return actor?.current_ActorProperty.hp / actor?.current_ActorProperty.maxHp <= 0.9;
     }
 }

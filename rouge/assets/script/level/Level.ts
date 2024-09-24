@@ -2,6 +2,7 @@ import { CCFloat, CCInteger, Component, Label, Node, Prefab, Vec3, _decorator, a
 import { GameEvent } from "../event/GameEvent";
 import { PlayerController } from "../actor/PlayControl";
 import { CoinDrop } from "../ani/CoinDrop";
+import { AudioMgr } from "../sound/soundManager";
 const { ccclass, property, requireComponent } = _decorator;
 
 /**
@@ -33,12 +34,16 @@ export class Level extends Component {
     challengeEnemyPrefab1: Prefab | null = null;
     @property(Prefab)
     challengeEnemyPrefab2: Prefab | null = null;
+    @property(Prefab)
+    bossPrefab: Prefab | null = null;
     totalCount = 2;
     killedCount: number = 0;
     challengeKilledCount_1: number = 0;
     challengeKilledCount_2: number = 0;
     coin_1:Node;
     coin_2:Node;
+    bossWarningCoin:Node;
+    wall:Node;
     @property(Node)
     uiFail: Node = null;
 
@@ -49,6 +54,9 @@ export class Level extends Component {
     statictics: Label = null;
 
     totalEnemyCount: number = 0;
+    onLoad() {
+        AudioMgr.inst.play('bgm',0.7);
+    }
 
     start() {
         if(sys.platform == sys.Platform.MOBILE_BROWSER ){
@@ -62,11 +70,15 @@ export class Level extends Component {
         }
         this.coin_1=find('UIRoot/GoldChanllengeBg/UIcoin')
         this.coin_2=find('UIRoot/ExpChallengeBg/UIcoin')
+        this.bossWarningCoin=find('UIRoot/UIBossWarning')
+        this.wall=find('LevelCanvas/Wall')
         director.on(GameEvent.OnDie, this.onActorDead, this);
         director.on(GameEvent.OnChallengeDie_1, this.onChallengeDead_1, this);
         director.on(GameEvent.OnChallengeDie_2, this.onChallengeDead_2, this);
+        director.on(GameEvent.OnBossDie, this.onBossDead, this);
         director.on(GameEvent.OnCreate1, this.onActorCreate1,  this);
         director.on(GameEvent.OnCreate2, this.onActorCreate2,  this);
+      
         this.statictics.string = `${this.killedCount}/${this.totalCount}`;
     }
 
@@ -76,6 +88,11 @@ export class Level extends Component {
 
     doSpawn(sp: SpawnPoint) {
         let node = instantiate(this.enemyPrefab);
+        this.node.addChild(node);
+        node.worldPosition = sp.spawnNode.worldPosition;
+    }
+    doBossSpawn(sp: SpawnPoint) {
+        let node = instantiate(this.bossPrefab);
         this.node.addChild(node);
         node.worldPosition = sp.spawnNode.worldPosition;
     }
@@ -95,34 +112,48 @@ export class Level extends Component {
         } else {
             this.killedCount++;
             this.statictics.string = `${this.killedCount}/${this.totalCount}`; 
-            
-            if( this.killedCount >= this.totalCount){
-                this.uiWin.active = true;
+            //所有小怪死亡时boss出场
+            if( this.killedCount == this.totalCount){
+                this.wall.active=true;
+                this.bossWarningCoin.active=true;
+                AudioMgr.inst.playOneShot('Boss_comming_warning',0.4);
+                setTimeout(() => {
+                this.bossWarningCoin.active=false;
+                AudioMgr.inst.play('Boss_comming_bgm',0.7);
+                this.doBossSpawn(this.spawnPoints[this.spawnPoints.length - 1]);
+                },4000);
             }
+           
         }
     }
+    //第一种挑战怪全部死亡时触发
     onChallengeDead_1(){
         this.challengeKilledCount_1++;
         console.log('challengeKilledCount',this.challengeKilledCount_1)
         if(this.challengeKilledCount_1 >= 5){
-            this.coin_1.worldPosition=this.spawnPoints[4].spawnNode.worldPosition;
+            this.coin_1.worldPosition=this.spawnPoints[this.spawnPoints.length - 1].spawnNode.worldPosition;
             this.coin_1.active=true;
             this.coin_1.getComponent(CoinDrop).drop();
         }
 
 
     }
+     //第二种挑战怪全部死亡时触发
     onChallengeDead_2(){
         this.challengeKilledCount_2++;
         console.log('challengeKilledCount',this.challengeKilledCount_2)
         if(this.challengeKilledCount_2 >= 5){
-            this.coin_2.worldPosition=this.spawnPoints[4].spawnNode.worldPosition;
+            this.coin_2.worldPosition=this.spawnPoints[this.spawnPoints.length - 1].spawnNode.worldPosition;
             this.coin_2.active=true;
             this.coin_2.getComponent(CoinDrop).drop();
         }
-
-
+   
     }
+    //Boss死亡时游戏胜利
+    onBossDead(node: Node) {
+        this.uiWin.active = true;
+    }
+
     onActorCreate1(node: Node) {
         if( node &&node == PlayerController.instance?.node){
             const playerNode = PlayerController.instance.node;
@@ -146,7 +177,7 @@ export class Level extends Component {
             const playerPosition = playerNode.worldPosition;
             const spawnPoint = new SpawnPoint();
             spawnPoint.spawnNode=new Node();
-            spawnPoint.spawnNode.worldPosition = new Vec3(playerPosition.x +100, playerPosition.y+100, playerPosition.z);
+            spawnPoint.spawnNode.worldPosition = new Vec3(playerPosition.x +100, playerPosition.y-100, playerPosition.z);
             spawnPoint.interval = 2.0;
             spawnPoint.repeatCount = 4;
             this.spawnPoints.push(spawnPoint);

@@ -43,11 +43,9 @@ export class FixedSkill extends Component {
         this.collider.on(Contact2DType.END_CONTACT, this.onCollisionEnd, this);
         //监听动画播放完成事件
        this.skillDragonBoneAnimation.addEventListener(dragonBones.EventObject.LOOP_COMPLETE, this.onAnimationComplete, this);
-       if(this.skillContinueTime>1){
        this.scheduleOnce(()=>{
         this.node.destroy();
         },this.skillContinueTime)
-      }
     }
 
     onCollisionBegin(self: Collider2D, other: Collider2D, contact: IPhysics2DContact) {
@@ -79,9 +77,7 @@ export class FixedSkill extends Component {
            }
           enemy.onHurt(this.damage, this.host, v2HitNormal)
         })
-        if(this.skillContinueTime<1){
-           this.node.destroy();
-         }
+     
       }
       
    }

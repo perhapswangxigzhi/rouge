@@ -10,6 +10,7 @@ import { ActorProperty } from './ActorProperty';
 import { StrightSkill } from '../skill/StrightSkill';
 import { FixedSkill } from '../skill/FixedSkill';
 import { PointSkill } from '../skill/PointSkill';
+import { mathutil } from '../util/MathUtil';
 const { ccclass, property ,requireComponent,disallowMultiple} = _decorator;
 
 @ccclass('Actor')
@@ -27,13 +28,6 @@ export class Actor extends Component {
     animation: Animation|null=null;
     @property(dragonBones.ArmatureDisplay)
     dragonBoneAnimation:dragonBones.ArmatureDisplay|null = null;
-
-    // hp:number=100;
-    // maxHp:number=100;
-    // attack:number=10;
-    // ex:number=0;
-    // maxEx:number=100;
-    // level:number=0;
     damage:number=0;
     // 使用字典存储多个ActorProperty对象
     actorProperties: { [key: string]: ActorProperty } = {};
@@ -42,7 +36,10 @@ export class Actor extends Component {
     enemy3_Property : ActorProperty = new ActorProperty("Enemy3",100,5);
     challengeEnemy1_Property : ActorProperty = new ActorProperty("challengeEnemy1",200,10);
     challengeEnemy2_Property : ActorProperty = new ActorProperty("challengeEnemy2",400,10);
-    boss1_Property : ActorProperty = new ActorProperty("Boss1",2000,10);
+    boss1_Property : ActorProperty = new ActorProperty("Boss1",500,10);
+    building_1_Property:ActorProperty=new ActorProperty("building_1",30,0)
+    building_2_Property:ActorProperty=new ActorProperty("building_2",20,0)
+    building_3_Property:ActorProperty=new ActorProperty("building_3",10,0)
     current_ActorProperty:ActorProperty|null=null;
     @property(Sprite)
     mainRenderer: Sprite|null=null;
@@ -77,6 +74,9 @@ export class Actor extends Component {
         this.addActorProperty(this.challengeEnemy1_Property);
         this.addActorProperty(this.challengeEnemy2_Property);
         this.addActorProperty(this.boss1_Property);
+        this.addActorProperty(this.building_1_Property)
+        this.addActorProperty(this.building_2_Property)
+        this.addActorProperty(this.building_3_Property)
         this.current_ActorProperty=this.getActorProperty(this.node.name)
         this.castTime=game.totalTime;
     }
@@ -96,8 +96,10 @@ export class Actor extends Component {
 
     update(deltaTime: number) {
         this.stateMgr.update(deltaTime);
+        
     }
     onProjectileTriggerEnter(ca:Collider2D, cb:Collider2D,contact:IPhysics2DContact){
+      
         if (colliderTag.isProjectileHitable(cb.tag, ca.tag)) {
             if(cb.node.getComponent(Projectile)){
             this.hurtSrc = cb.node.getComponent(Projectile).host;
@@ -117,6 +119,7 @@ export class Actor extends Component {
                 this.damage = 0
                 cb.node.getComponent(PointSkill).onCollisionBegin
             }
+            
             let hitNormal = v3();
             Vec3.subtract(hitNormal, ca.node.worldPosition, cb.node.worldPosition);
             hitNormal.normalize();
@@ -126,6 +129,7 @@ export class Actor extends Component {
             }
         }
     }
+  
     onHurt(damage:number, from:Actor, hurtDirection?:Vec2){
         if (this.dead) {return;}
         if(damage==0){return;}
@@ -166,8 +170,14 @@ export class Actor extends Component {
         this.canvasNode.addChild(node);
         node.worldPosition=this.node.worldPosition;
         },0.1)
-        
-        this.stateMgr.transit(StateDefine.Die)
+        if(this.current_ActorProperty.name=="building_1"||this.current_ActorProperty.name=="building_2"||this.current_ActorProperty.name=="building_3"){
+            this.animation.play("die");
+            this.scheduleOnce(()=>{
+                this.node.destroy();
+        },0.3)
+        }else{
+        this.stateMgr.transit(StateDefine.Die)     
+        }
         assetManager.resources.load("sounds/die1", AudioClip, (err, clip) => {
         // 播放音效
         this.audioSource.playOneShot(clip, 0.5);
