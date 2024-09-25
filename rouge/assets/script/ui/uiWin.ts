@@ -4,7 +4,7 @@ const { ccclass, property } = _decorator;
 @ccclass('uiWin')
 export class uiWin extends Component {
     onBtnRetryClicked(){
-        director.loadScene('game');
+        director.loadScene('MainUI');
     }
     onExitButtonClicked () {
         // 退出游戏

@@ -55,7 +55,7 @@ export class Level extends Component {
 
     totalEnemyCount: number = 0;
     onLoad() {
-        AudioMgr.inst.play('bgm',0.7);
+        AudioMgr.inst.play('bgm',0.3);
     }
 
     start() {
@@ -116,10 +116,11 @@ export class Level extends Component {
             if( this.killedCount == this.totalCount){
                 this.wall.active=true;
                 this.bossWarningCoin.active=true;
-                AudioMgr.inst.playOneShot('Boss_comming_warning',0.4);
+                AudioMgr.inst.stop();
+                AudioMgr.inst.playOneShot('Boss_comming_warning',0.7);
                 setTimeout(() => {
                 this.bossWarningCoin.active=false;
-                AudioMgr.inst.play('Boss_comming_bgm',0.7);
+                AudioMgr.inst.play('Boss_comming_bgm',0.3);
                 this.doBossSpawn(this.spawnPoints[this.spawnPoints.length - 1]);
                 },4000);
             }

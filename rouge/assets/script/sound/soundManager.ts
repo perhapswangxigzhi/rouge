@@ -16,7 +16,7 @@ export class AudioMgr {
     }
 
     private _audioSource: AudioSource;
-   
+
     constructor() {
         //@en create a node as audioMgr
         //@zh 创建一个节点作为 audioMgr
@@ -80,6 +80,7 @@ export class AudioMgr {
             this._audioSource.stop();
             this._audioSource.clip = sound;
             this._audioSource.play();
+            this.audioSource.loop = true;
             this.audioSource.volume = volume;
         }
         else {
@@ -91,6 +92,7 @@ export class AudioMgr {
                     this._audioSource.stop();
                     this._audioSource.clip = clip;
                     this._audioSource.play();
+                    this.audioSource.loop = true;
                     this.audioSource.volume = volume;
                 }
             });
