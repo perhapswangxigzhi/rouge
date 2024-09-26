@@ -14,13 +14,12 @@ export class UIAnnouncement extends Component {
         // 设置公告内容
         this.announcementLabel.string = 
         `
-            版本V1.0.12
+            版本V1.0.13
                   更新内容：
                 1. 新增功能：
-                  - 新增主界面UI
-                  - 新增按钮管理类
-                  - 新增失败胜利动画以及跳转
-                  - 新增加载进度条显示
+                  - 新增背包功能
+                  - 新增装备获得功能
+                  - 新增穿戴装备功能
                2. 优化功能：
                   
                3. 修复BUG:

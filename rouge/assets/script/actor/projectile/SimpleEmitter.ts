@@ -1,7 +1,7 @@
 import { _decorator, CCFloat, Collider2D, Component, find, game, instantiate, Node, Prefab, RigidBody2D, v2, v3, Vec2, Vec3 } from 'cc';
 import { Actor } from '../Actor';
 import { Projectile } from './Projectile';
-import { PoolManager } from '../../PoolManager';
+import { PoolManager } from '../../util/PoolManager';
 import { colliderTag } from '../ColliderTag';
 const { ccclass, property } = _decorator;
 

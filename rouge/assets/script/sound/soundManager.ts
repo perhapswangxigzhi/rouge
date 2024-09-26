@@ -29,7 +29,7 @@ export class AudioMgr {
 
         //@en make it as a persistent node, so it won't be destroied when scene change.
         //@zh 标记为常驻节点，这样场景切换的时候就不会被销毁了
-        director.addPersistRootNode(audioMgr);
+       director.addPersistRootNode(audioMgr);
 
         //@en add AudioSource componrnt to play audios.
         //@zh 添加 AudioSource 组件，用于播放音频。

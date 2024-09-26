@@ -1,6 +1,6 @@
 import { _decorator, Component, Node, Vec3, Collider2D, Contact2DType, IPhysics2DContact, v3, RigidBody2D, CircleCollider2D, AudioSource, assetManager, AudioClip, v2 } from 'cc';
 import { colliderTag } from './ColliderTag';
-import { PoolManager } from '../PoolManager';
+import { PoolManager } from '../util/PoolManager';
 import { Actor } from './Actor';
 const { ccclass, property } = _decorator;
 

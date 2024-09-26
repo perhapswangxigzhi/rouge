@@ -1,7 +1,7 @@
 import { _decorator, assert, assetManager, AudioClip, AudioSource, Collider2D, Component, Contact2DType, find, IPhysics2DContact, Node, Prefab, RigidBody2D, Tween } from 'cc';
 import { Actor } from '../Actor';
 import { colliderTag } from '../ColliderTag';
-import { PoolManager } from '../../PoolManager';
+import { PoolManager } from '../../util/PoolManager';
 const { ccclass, property, requireComponent } = _decorator;
 
 @ccclass('Projectile')

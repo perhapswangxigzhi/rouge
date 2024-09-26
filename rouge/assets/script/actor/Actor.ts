@@ -4,7 +4,7 @@ import { StateDefine } from './StateDefine';
 import { colliderTag } from './ColliderTag';
 import { Projectile } from './projectile/Projectile';
 import { GameEvent } from '../event/GameEvent';
-import { PoolManager } from '../PoolManager';
+import { PoolManager } from '../util/PoolManager';
 import { DamageTextManager } from '../TextManager/DamageTextManager';
 import { ActorProperty } from './ActorProperty';
 import { StrightSkill } from '../skill/StrightSkill';
@@ -174,7 +174,7 @@ export class Actor extends Component {
             this.animation.play("die");
             this.scheduleOnce(()=>{
                 this.node.destroy();
-        },0.3)
+        },0.1)
         }else{
         this.stateMgr.transit(StateDefine.Die)     
         }

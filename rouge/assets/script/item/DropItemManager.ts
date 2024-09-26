@@ -1,5 +1,5 @@
 import { _decorator, Component, Node, Camera, Vec2, v2, Vec3, Prefab, find, Collider2D, Contact2DType, IPhysics2DContact, RigidBody2D, CircleCollider2D } from 'cc';
-import { PoolManager } from '../PoolManager';
+import { PoolManager } from '../util/PoolManager';
 const { ccclass, property } = _decorator;
 
 @ccclass("ItemPrefabType")

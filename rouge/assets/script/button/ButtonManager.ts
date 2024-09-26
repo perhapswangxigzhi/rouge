@@ -1,4 +1,5 @@
 import { _decorator, assetManager, Button, Component, director, Event, find,  Label,  Node, ProgressBar, Sprite, SpriteFrame } from 'cc';
+import { Equipment } from '../bag/Equipment';
 const { ccclass, property } = _decorator;
 
 @ccclass('ButtonManager')
@@ -88,7 +89,73 @@ export class ButtonManager extends Component {
             node.children[1].active=true;
         }
     }
-    
+     //显示装备说明
+     showEquipmentInfo(event:Event){
+         const node = event.target as Node;
+        let equipIndex=node.children[0].getComponent(Sprite).spriteFrame.name
+        let index=Equipment.inst.equipIndex.indexOf(equipIndex)
+        let equipProperty=this.node.getChildByName('equipProperty').getComponent(Label)
+        let equipTitle=this.node.getChildByName('equipTitle').getComponent(Label)
+        console.log(index)
+        if(index!=-1){
+           equipTitle.string=Equipment.inst.equipmentPerporty[index].name;
+           assetManager.resources.load(`equipment/${Equipment.inst.equipmentPerporty[index].Index}/spriteFrame`, SpriteFrame, (err, spriteFrame) => {
+            if (err) {
+                console.error(err);
+                return;
+            }
+            this.node.getChildByName('equipIcon').getComponent(Sprite).spriteFrame=spriteFrame
+            if(Equipment.inst.equipmentPerporty[index].hp!=0){
+                equipProperty.string=`生命值:+${Equipment.inst.equipmentPerporty[index].hp}\n`
+            }
+            if(Equipment.inst.equipmentPerporty[index].attack!=0){
+                equipProperty.string+=`攻击力:+${Equipment.inst.equipmentPerporty[index].attack}\n`
+            }
+            if(Equipment.inst.equipmentPerporty[index].defence!=0){
+                equipProperty.string+=`防御力:+${Equipment.inst.equipmentPerporty[index].defence}\n`
+            }
+            if(Equipment.inst.equipmentPerporty[index].speed!=0){
+                equipProperty.string+=`移速:+${Equipment.inst.equipmentPerporty[index].speed*100}%\n`
+            }
+            if(Equipment.inst.equipmentPerporty[index].attackSpeed!=0){
+                equipProperty.string+=`攻速:+${Equipment.inst.equipmentPerporty[index].attackSpeed*100}%\n`
+            } if(Equipment.inst.equipmentPerporty[index].crit!=0){
+                equipProperty.string+=`暴击率:+${Equipment.inst.equipmentPerporty[index].attackSpeed*100}%\n`
+            }
+        });
+        }
+     }
+     //穿戴装备
+     wearEquipment(event:Event){
+        const node = event.target as Node;
+        let equipIndex=node.parent.getChildByName('equipIcon').getComponent(Sprite).spriteFrame.name
+       
+        let index=Equipment.inst.equipIndex.indexOf(equipIndex)
+        assetManager.resources.load(`equipment/${Equipment.inst.equipmentPerporty[index].Index}/spriteFrame`, SpriteFrame, (err, spriteFrame) => {
+            if (err) {
+                console.error(err);
+                return;
+            }
+            //判断装备类型
+            if(Equipment.inst.equipmentPerporty[index].type==0){
+                node.parent.parent.getChildByName('UIequipBar').children[0].children[0].getComponent(Sprite).spriteFrame=spriteFrame
+            }
+            if(Equipment.inst.equipmentPerporty[index].type==1){
+                node.parent.parent.getChildByName('UIequipBar').children[1].children[0].getComponent(Sprite).spriteFrame=spriteFrame
+            }
+            if(Equipment.inst.equipmentPerporty[index].type==2){
+                node.parent.parent.getChildByName('UIequipBar').children[2].children[0].getComponent(Sprite).spriteFrame=spriteFrame
+            }
+            if(Equipment.inst.equipmentPerporty[index].type==3){
+                node.parent.parent.getChildByName('UIequipBar').children[3].children[0].getComponent(Sprite).spriteFrame=spriteFrame
+            }
+            if(Equipment.inst.equipmentPerporty[index].type==4){
+                node.parent.parent.getChildByName('UIequipBar').children[4].children[0].getComponent(Sprite).spriteFrame=spriteFrame
+            }
+            if(Equipment.inst.equipmentPerporty[index].type==5){
+                node.parent.parent.getChildByName('UIequipBar').children[5].children[0].getComponent(Sprite).spriteFrame=spriteFrame
+            }    
+        })
+      
+     }
 }
-
-
