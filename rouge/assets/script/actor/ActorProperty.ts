@@ -9,13 +9,12 @@ export class ActorProperty {
     /**
      * 最大生命值
      */
-    @property(CCFloat)
+  
     maxHp : number = 100;
     /**
      * 生命
      */
-    @property(CCFloat)
-        hp: number ;
+    hp: number=0 ;
     /**
      * 攻击力
     */
@@ -39,6 +38,26 @@ export class ActorProperty {
      * 击杀数
     */
     killCount: number = 0;
+     /**
+     * 暴击率
+    */
+     crit: number = 0.1;
+     /**
+     * 物理暴击伤害
+    */
+    physicalCritDamage: number = 1.5;
+     /**
+     * 防御力
+    */
+    defence: number = 0;
+    /**
+     * 移动速度
+    */
+    speed: number = 0;
+    /**
+     * 玩家每秒攻击次数
+    */
+    attackSpeed: number = 3;
      /**
      * 设置血量
      * @param value 血量值

@@ -11,6 +11,10 @@ import { StrightSkill } from '../skill/StrightSkill';
 import { FixedSkill } from '../skill/FixedSkill';
 import { PointSkill } from '../skill/PointSkill';
 import { mathutil } from '../util/MathUtil';
+import { AudioMgr } from '../sound/soundManager';
+import { Equipment } from '../bag/Equipment';
+import { AssentManager } from '../bag/AssentManager';
+import { PlayerController } from './PlayControl';
 const { ccclass, property ,requireComponent,disallowMultiple} = _decorator;
 
 @ccclass('Actor')
@@ -43,7 +47,6 @@ export class Actor extends Component {
     current_ActorProperty:ActorProperty|null=null;
     @property(Sprite)
     mainRenderer: Sprite|null=null;
-    audioSource: AudioSource = null;
     dead: boolean = false;
     _input: Vec2 = v2();
     hurtSrc:Actor|null=null;
@@ -59,14 +62,17 @@ export class Actor extends Component {
     ItemPrefab: Prefab | null=null;
     @property(Prefab)
     damageTextPrefab: Prefab = null;
+    cirtTextPrefab:Prefab|null=null;
+    isCriticalHit:boolean=false
+    
     cooldown:number=5 
     castTime:number=0
     
     start() {
+      
         this.rigidbody = this.getComponent(RigidBody2D);
         this.collider = this.getComponent(Collider2D);
         this.collider.on(Contact2DType.BEGIN_CONTACT, this.onProjectileTriggerEnter, this);
-        this.audioSource = this.node.getComponent(AudioSource);
         this.canvasNode=find('LevelCanvas')
         this.addActorProperty(this.playerProperty);
         this.addActorProperty(this.enemy1_Property);
@@ -79,6 +85,21 @@ export class Actor extends Component {
         this.addActorProperty(this.building_3_Property)
         this.current_ActorProperty=this.getActorProperty(this.node.name)
         this.castTime=game.totalTime;
+          //获取暴击预制体
+        assetManager.resources.load(`DamageTest/CirtText`, Prefab, (err, prefab) => {
+            if(err){
+                console.error(err);
+            }
+            this.cirtTextPrefab = prefab;
+        });
+        if(this.current_ActorProperty==this.playerProperty){
+            this.playerProperty.speed=this.linearSpeed
+            this.setEquip();//装备属性
+            this.linearSpeed=this.playerProperty.speed
+            console.log("装备属性设置成功")
+            console.log(this.playerProperty)
+        }
+       
     }
     get isCoolingdown(){
         return game.totalTime-this.castTime>=this.cooldown*1000;
@@ -134,18 +155,39 @@ export class Actor extends Component {
         if (this.dead) {return;}
         if(damage==0){return;}
         if(this.current_ActorProperty!=null){
-        damage=damage*this.current_ActorProperty.hurtCoefficient  
+         //伤害计算
+         damage = Math.max(damage - this.current_ActorProperty.defence, 0) * this.current_ActorProperty.hurtCoefficient;
+        this.isCriticalHit=false;
+        this.isCriticalHit = Math.random() < this.current_ActorProperty.crit; // 判定是否暴击
+        // 如果是暴击，乘以一个暴击倍数
+        if (this.isCriticalHit) {
+            damage =damage*this.current_ActorProperty.physicalCritDamage ; // 乘以暴击伤害
+        
+        }
         this.current_ActorProperty.hp=this.current_ActorProperty.hp-damage
         }
-        const hitPosition = new Vec3(hurtDirection.x, hurtDirection.y+this.getComponent(UITransform).height /2+10 , this.node.position.z);
-        // 显示伤害文字
-        const damageTextNode=instantiate(this.damageTextPrefab);
-        damageTextNode.setParent(this.node);
-        if(this.current_ActorProperty.hurtCoefficient==1){
-        damageTextNode.getComponent(DamageTextManager).showDamage(hitPosition, damage,Color.WHITE);
-        }else{
+
+        const hitPosition = new Vec3(hurtDirection.x, hurtDirection.y+this.getComponent(UITransform).height /2+10 , this.node.position.z)
+        // 判定伤害文字
+        if(this.current_ActorProperty.hurtCoefficient!=1){
+            //附加雷伤文字
+            const damageTextNode=instantiate(this.damageTextPrefab);
+            damageTextNode.setParent(this.node);
             damageTextNode.getComponent(DamageTextManager).showDamage(hitPosition, damage,new Color(125, 249, 255,255));
+        }else if(this.isCriticalHit){
+            //暴击伤害文字
+            const cirtTextNode=instantiate(this.cirtTextPrefab);
+            cirtTextNode.setParent(this.node);
+            cirtTextNode.getComponent(DamageTextManager).showCirtDamage(hitPosition, damage,Color.YELLOW);
         }
+        else{
+            //普通伤害文字
+            const damageTextNode=instantiate(this.damageTextPrefab);
+            damageTextNode.setParent(this.node);
+            damageTextNode.getComponent(DamageTextManager).showDamage(hitPosition, damage,Color.WHITE);
+        }
+
+
         this.rigidbody.applyLinearImpulseToCenter(hurtDirection,true)
         //受伤闪烁
         if(this.mainRenderer!=null){
@@ -158,14 +200,12 @@ export class Actor extends Component {
         this.scheduleOnce(()=>{
             this.dragonBoneAnimation.color=Color.WHITE;
     },0.2)}
-    assetManager.resources.load("sounds/bulletIn", AudioClip, (err, clip) => {
-        // 播放音效
-        this.audioSource.playOneShot(clip, 0.3);
-         });   
+    AudioMgr.inst.playOneShot('bulletIn',0.3);
     if(this.current_ActorProperty.hp<=0){
         this.dead = true; // 设置死亡标志
+        // 移除碰撞事件监听
+        this.onDisable();      
         this.scheduleOnce(()=>{
-       // let node=PoolManager.instance().getNode(this.ItemPrefab,this.canvasNode)
         let node=instantiate(this.ItemPrefab);
         this.canvasNode.addChild(node);
         node.worldPosition=this.node.worldPosition;
@@ -178,12 +218,22 @@ export class Actor extends Component {
         }else{
         this.stateMgr.transit(StateDefine.Die)     
         }
-        assetManager.resources.load("sounds/die1", AudioClip, (err, clip) => {
-        // 播放音效
-        this.audioSource.playOneShot(clip, 0.5);
-         });    
-        // 移除碰撞事件监听
-        this.onDisable();           
+        AudioMgr.inst.playOneShot('die1',0.5);
+             
+    }
+    }
+    //实装装备属性
+    setEquip(){
+        if(AssentManager.instance){
+        for(let i=0;i<AssentManager.instance.barEquipCount.length;i++){
+        this.playerProperty.maxHp+=Equipment.inst.equipmentPerporty[AssentManager.instance.barEquipCount[i]].hp
+        this.playerProperty.hp+=Equipment.inst.equipmentPerporty[AssentManager.instance.barEquipCount[i]].hp
+        this.playerProperty.attack+=Equipment.inst.equipmentPerporty[AssentManager.instance.barEquipCount[i]].attack
+        this.playerProperty.defence+=Equipment.inst.equipmentPerporty[AssentManager.instance.barEquipCount[i]].defence
+        this.playerProperty.speed+= this.playerProperty.speed*Equipment.inst.equipmentPerporty[AssentManager.instance.barEquipCount[i]].speed
+        this.playerProperty.attackSpeed+=this.playerProperty.attackSpeed*Equipment.inst.equipmentPerporty[AssentManager.instance.barEquipCount[i]].attackSpeed
+        this.playerProperty.crit+=Equipment.inst.equipmentPerporty[AssentManager.instance.barEquipCount[i]].crit
+        }
     }
 }
 }

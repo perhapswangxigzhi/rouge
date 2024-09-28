@@ -7,6 +7,7 @@ import { Walk } from './state/Walk';
 import { Die } from './state/Die';
 import { SimpleEmitter } from './projectile/SimpleEmitter';
 import { VirtualInput } from '../input/VirtualInput';
+import { AudioMgr } from '../sound/soundManager';
 
 
 @ccclass('PlayerController')
@@ -17,63 +18,34 @@ export class PlayerController extends Component {
     actor: Actor | null = null;
     @property(Node)
     gun:Node | null = null;
-    @property(AudioSource)
-    audioSource: AudioSource = null;
 
     @property(SimpleEmitter)
     projectileEmitter:SimpleEmitter | null = null;
-    // @property(IndividualSkillEmitter)
-    // skillEmitter:IndividualSkillEmitter | null = null;
-
     static instance:PlayerController | null = null;
     lastAngleRad:number=0;
     direction:number=0;
-    // onLoad() {
-    //     PlayerController.instance = this;
-    // }
-
     start(){
         PlayerController.instance = this;
         this.actor = this.node.getComponent(Actor);
-        this.audioSource = this.node.getComponent(AudioSource);
+
         this.actor.stateMgr.registState(new Idle(StateDefine.Idle, this.actor))
         this.actor.stateMgr.registState(new Walk(StateDefine.Walk, this.actor))
         this.actor.stateMgr.registState(new Die(StateDefine.Die, this.actor))
         this.actor.stateMgr.startWith(StateDefine.Idle);
-        this.audioSource = this.node.getComponent(AudioSource);
         const h=VirtualInput.horizontal;
         const v=VirtualInput.vertical;
-        // this.schedule(()=>{
-        //    this.skillEmitter.skillRealse();
-        // },2,macro.REPEAT_FOREVER,2)
-        this.schedule(() => this.fire(), 0.3, macro.REPEAT_FOREVER, 0);
+
+        this.schedule(() => this.fire(), 1/this.actor.current_ActorProperty.attackSpeed, macro.REPEAT_FOREVER, 0);
   
 
 }
-// onDestory() {
-//     PlayerController.instance = null;
-// }
 
 
 fire(){
     this.projectileEmitter.emit();
-    assetManager.resources.load("sounds/Shoot", AudioClip, (err, clip) => {
-        if (err) {
-            console.error("Failed to load audio clip", err);
-            return;
-        }
-       
-        if (this.audioSource) {
-            // 播放音效
-            this.audioSource.playOneShot(clip, 0.7);
-        } else {
-            console.error("AudioSource is not assigned");
-        }
-        
-  });
+    AudioMgr.inst.playOneShot('Shoot',0.5);
     
-   
-}
+    }
     
     update(deltaTime: number) {
         if(this.actor.dead){

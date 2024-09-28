@@ -68,8 +68,6 @@ export class Equipment  {
             'HolySpring_item_10334',
             'HolySpring_item_10335',
             'HolySpring_item_10336',
-            'HolySpring_item_10411',
-
     ]
     equipName:string[] = [
                 '青铜短剑',

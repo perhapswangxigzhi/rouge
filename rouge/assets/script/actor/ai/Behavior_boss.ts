@@ -89,7 +89,6 @@ export class IsSkillCooldown extends bt.Condition {
     actor: Actor = null;
   
     isSatisfy(result: bt.ExecuteResult): boolean {
-        console.log(this.actor.isCoolingdown);
         return this.actor.isCoolingdown;
     }
 }

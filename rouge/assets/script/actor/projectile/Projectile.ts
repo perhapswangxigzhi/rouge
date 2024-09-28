@@ -14,8 +14,7 @@ export class Projectile extends Component {
     rigidbody: RigidBody2D;
 
     spinTween: Tween<Node> | null = null;
-    @property(AudioSource)
-    audioSource: AudioSource = null;
+   
 
     @property({ type: colliderTag.Define })
     hitTag: colliderTag.Define = colliderTag.Define.PlayerProjectile;
@@ -28,14 +27,17 @@ export class Projectile extends Component {
     start() {
         this.collider = this.node.getComponent(Collider2D);
         this.rigidbody = this.node.getComponent(RigidBody2D);
-         // 将组件赋到全局变量 _audioSource 中
-        this.audioSource = this.node.getComponent(AudioSource);
         this.collider.on(Contact2DType.BEGIN_CONTACT, this.onCollisionBegin, this);
         
     }
 
     onCollisionBegin(self: Collider2D, other: Collider2D, contact: IPhysics2DContact) {
         if ( colliderTag.isProjectileHitable(self.tag, other.tag)) {
+          if(other.node.getComponent(Actor).dead==true){
+            //关闭监听事件
+            console.log("死亡怪物名字",other.node.name);
+            this.collider.off(Contact2DType.BEGIN_CONTACT, this.onCollisionBegin, this);
+          }
           this.scheduleOnce(() => {
             // PoolManager.instance().putNode(this.node);
             this.node.destroy();

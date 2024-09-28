@@ -1,5 +1,9 @@
-import { _decorator, assetManager, Button, Component, director, Event, find,  Label,  Node, ProgressBar, Sprite, SpriteFrame } from 'cc';
+import { _decorator, assetManager, Button, Component, director, Event, EventTouch, find,  Label,  Node, ProgressBar, Sprite, SpriteFrame, v3 } from 'cc';
 import { Equipment } from '../bag/Equipment';
+import { AudioMgr } from '../sound/soundManager';
+import { AssentManager } from '../bag/AssentManager';
+import { BagStorage } from '../bag/BagStorage';
+import { equipBarManager } from '../bag/equipBarManager';
 const { ccclass, property } = _decorator;
 
 @ccclass('ButtonManager')
@@ -13,6 +17,7 @@ export class ButtonManager extends Component {
     close(){
         this.node.active = false;
     }
+   
     //邮件公告切换
     mailNoticeToggle(event:Event,customEventData:string){
        
@@ -60,7 +65,7 @@ export class ButtonManager extends Component {
 
             let progress = completedCount/totalCount;
             progressBar.progress = progress;
-            label.string=`${progress.toFixed(3)}%`;
+            label.string=`${Math.round(progress * 100)}%`;
         },()=>{
             director.loadScene("game");
         });
@@ -89,14 +94,24 @@ export class ButtonManager extends Component {
             node.children[1].active=true;
         }
     }
+    //点击按钮播放音效
+    playSound(event:Event,customEventData:string){
+        AudioMgr.inst.playOneShot('click1',1);
+    }
+    //显示装备操作选项
+     showEquipmentOperation(event:Event,equipCell:number){
+        AssentManager.instance.equipCell=equipCell;
+        const node = event.target as Node;
+        this.node.active=true;
+        this.node.worldPosition=v3(node.worldPosition.x+140,node.worldPosition.y,0)
+     }
      //显示装备说明
      showEquipmentInfo(event:Event){
-         const node = event.target as Node;
-        let equipIndex=node.children[0].getComponent(Sprite).spriteFrame.name
+        const node = event.target as Node;
+        let equipIndex=node.parent.parent.getChildByName('UIbag').getChildByName(`${AssentManager.instance.equipCell}`).children[0].getComponent(Sprite).spriteFrame.name
         let index=Equipment.inst.equipIndex.indexOf(equipIndex)
         let equipProperty=this.node.getChildByName('equipProperty').getComponent(Label)
         let equipTitle=this.node.getChildByName('equipTitle').getComponent(Label)
-        console.log(index)
         if(index!=-1){
            equipTitle.string=Equipment.inst.equipmentPerporty[index].name;
            assetManager.resources.load(`equipment/${Equipment.inst.equipmentPerporty[index].Index}/spriteFrame`, SpriteFrame, (err, spriteFrame) => {
@@ -125,37 +140,126 @@ export class ButtonManager extends Component {
         });
         }
      }
+    
      //穿戴装备
      wearEquipment(event:Event){
         const node = event.target as Node;
-        let equipIndex=node.parent.getChildByName('equipIcon').getComponent(Sprite).spriteFrame.name
-       
+        let equipSprite=node.parent.parent.getChildByName('UIbag').getChildByName(`${AssentManager.instance.equipCell}`).children[0].getComponent(Sprite).spriteFrame
+        let equipIndex=equipSprite.name
         let index=Equipment.inst.equipIndex.indexOf(equipIndex)
-        assetManager.resources.load(`equipment/${Equipment.inst.equipmentPerporty[index].Index}/spriteFrame`, SpriteFrame, (err, spriteFrame) => {
+        AssentManager.instance.barEquipCount.push(index);
+        AssentManager.instance.throwEquip();
+        equipBarManager.instance.waerEquip(Equipment.inst.equipType[index])    
+        assetManager.resources.load(`UIicon/Spring_common_bac_54/spriteFrame`, SpriteFrame, (err, spriteFrame) => {
             if (err) {
                 console.error(err);
                 return;
             }
-            //判断装备类型
-            if(Equipment.inst.equipmentPerporty[index].type==0){
-                node.parent.parent.getChildByName('UIequipBar').children[0].children[0].getComponent(Sprite).spriteFrame=spriteFrame
-            }
-            if(Equipment.inst.equipmentPerporty[index].type==1){
-                node.parent.parent.getChildByName('UIequipBar').children[1].children[0].getComponent(Sprite).spriteFrame=spriteFrame
-            }
-            if(Equipment.inst.equipmentPerporty[index].type==2){
-                node.parent.parent.getChildByName('UIequipBar').children[2].children[0].getComponent(Sprite).spriteFrame=spriteFrame
-            }
-            if(Equipment.inst.equipmentPerporty[index].type==3){
-                node.parent.parent.getChildByName('UIequipBar').children[3].children[0].getComponent(Sprite).spriteFrame=spriteFrame
-            }
-            if(Equipment.inst.equipmentPerporty[index].type==4){
-                node.parent.parent.getChildByName('UIequipBar').children[4].children[0].getComponent(Sprite).spriteFrame=spriteFrame
-            }
-            if(Equipment.inst.equipmentPerporty[index].type==5){
-                node.parent.parent.getChildByName('UIequipBar').children[5].children[0].getComponent(Sprite).spriteFrame=spriteFrame
-            }    
-        })
-      
+            node.parent.parent.getChildByName('UIbag').getChildByName(`${AssentManager.instance.equipCell}`).children[0].getComponent(Sprite).spriteFrame=spriteFrame
+         
+             //刷新背包
+            BagStorage.instance.init()
+        })  
      }
+     //丢弃装备
+     throwEquipment(event:Event){
+        const node = event.target as Node;
+        assetManager.resources.load(`UIicon/Spring_common_bac_54/spriteFrame`, SpriteFrame, (err, spriteFrame) => {
+            if (err) {
+                console.error(err);
+                return;
+            }
+            node.parent.parent.getChildByName('UIbag').getChildByName(`${AssentManager.instance.equipCell}`).children[0].getComponent(Sprite).spriteFrame=spriteFrame
+            AssentManager.instance.throwEquip();
+            //刷新背包
+            BagStorage.instance.init()
+        })
+
+     }
+     //正在穿戴装备显示装备操作选项
+     wearingShowEquipmentOperation(event:Event,equipCell:number){
+        if(AssentManager.instance){
+        AssentManager.instance.wearingEquipCeil=equipCell;
+        }
+        const node = event.target as Node;
+        this.node.active=true;
+        if(equipCell==0||equipCell==1||equipCell==2){
+        this.node.worldPosition=v3(node.worldPosition.x+140,node.worldPosition.y,0)
+        }else{
+            this.node.worldPosition=v3(node.worldPosition.x-140,node.worldPosition.y,0)
+        }
+     }
+      //正在穿戴装备显示装备说明
+      wearingEquipmentShowEquipmentInfo(event:Event){
+        const node = event.target as Node;
+        let equipIndex=node.parent.parent.getChildByName('UIequipBar').children[AssentManager.instance.wearingEquipCeil].children[0].getComponent(Sprite).spriteFrame.name
+        let index=Equipment.inst.equipIndex.indexOf(equipIndex)
+        let equipProperty=this.node.getChildByName('equipProperty').getComponent(Label)
+        let equipTitle=this.node.getChildByName('equipTitle').getComponent(Label)
+        if(index!=-1){
+           equipTitle.string=Equipment.inst.equipmentPerporty[index].name;
+           assetManager.resources.load(`equipment/${Equipment.inst.equipmentPerporty[index].Index}/spriteFrame`, SpriteFrame, (err, spriteFrame) => {
+            if (err) {
+                console.error(err);
+                return;
+            }
+            this.node.getChildByName('equipIcon').getComponent(Sprite).spriteFrame=spriteFrame
+            if(Equipment.inst.equipmentPerporty[index].hp!=0){
+                equipProperty.string=`生命值:+${Equipment.inst.equipmentPerporty[index].hp}\n`
+            }
+            if(Equipment.inst.equipmentPerporty[index].attack!=0){
+                equipProperty.string+=`攻击力:+${Equipment.inst.equipmentPerporty[index].attack}\n`
+            }
+            if(Equipment.inst.equipmentPerporty[index].defence!=0){
+                equipProperty.string+=`防御力:+${Equipment.inst.equipmentPerporty[index].defence}\n`
+            }
+            if(Equipment.inst.equipmentPerporty[index].speed!=0){
+                equipProperty.string+=`移速:+${Equipment.inst.equipmentPerporty[index].speed*100}%\n`
+            }
+            if(Equipment.inst.equipmentPerporty[index].attackSpeed!=0){
+                equipProperty.string+=`攻速:+${Equipment.inst.equipmentPerporty[index].attackSpeed*100}%\n`
+            } if(Equipment.inst.equipmentPerporty[index].crit!=0){
+                equipProperty.string+=`暴击率:+${Equipment.inst.equipmentPerporty[index].attackSpeed*100}%\n`
+            }
+        });
+        }
+     }
+     //取下装备
+     takeOffEquipment(event:Event){
+        const node = event.target as Node;
+        let equipIndex=node.parent.parent.getChildByName('UIequipBar').children[AssentManager.instance.wearingEquipCeil].children[0].getComponent(Sprite).spriteFrame.name
+        let index=Equipment.inst.equipIndex.indexOf(equipIndex)
+        AssentManager.instance.getEquip(index);
+        for(let i=0;i<AssentManager.instance.barEquipCount.length;i++){
+            if(AssentManager.instance.barEquipCount[i]==index){
+                AssentManager.instance.barEquipCount.splice(i,1);
+                break;
+            }
+        }
+        //移除装备栏装备
+        assetManager.resources.load(`UIicon/${AssentManager.instance.wearingEquipCeil}/spriteFrame`, SpriteFrame, (err, spriteFrame) => {
+            if (err) {
+                console.error(err);
+                return;
+            }
+            node.parent.parent.getChildByName('UIequipBar').children[AssentManager.instance.wearingEquipCeil].children[0].getComponent(Sprite).spriteFrame=spriteFrame
+            //对应装备栏装备为空
+            AssentManager.instance.checkEmpty[AssentManager.instance.wearingEquipCeil]=false;
+        })
+        
+        //刷新背包
+        BagStorage.instance.init()
+       
+
+     }
+     
+     
+
+
+
+
+
+
+
+     
 }

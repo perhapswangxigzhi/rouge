@@ -41,13 +41,10 @@
       },
       {
         "__id__": 44
-      },
-      {
-        "__id__": 46
       }
     ],
     "_prefab": {
-      "__id__": 48
+      "__id__": 46
     },
     "_lpos": {
       "__type__": "cc.Vec3",
@@ -976,28 +973,6 @@
   {
     "__type__": "cc.CompPrefabInfo",
     "fileId": "a3tV0jPvVGzJRsbdT/rFK9"
-  },
-  {
-    "__type__": "cc.AudioSource",
-    "_name": "",
-    "_objFlags": 0,
-    "__editorExtras__": {},
-    "node": {
-      "__id__": 1
-    },
-    "_enabled": true,
-    "__prefab": {
-      "__id__": 47
-    },
-    "_clip": null,
-    "_loop": false,
-    "_playOnAwake": false,
-    "_volume": 1,
-    "_id": ""
-  },
-  {
-    "__type__": "cc.CompPrefabInfo",
-    "fileId": "7aL5yTtpBKl4iQCFsIftsX"
   },
   {
     "__type__": "cc.PrefabInfo",

@@ -37,13 +37,10 @@
       },
       {
         "__id__": 12
-      },
-      {
-        "__id__": 14
       }
     ],
     "_prefab": {
-      "__id__": 16
+      "__id__": 14
     },
     "_lpos": {
       "__type__": "cc.Vec3",
@@ -247,28 +244,6 @@
     "fileId": "f3caNwURdLbJwPIKNSCC/f"
   },
   {
-    "__type__": "cc.AudioSource",
-    "_name": "",
-    "_objFlags": 0,
-    "__editorExtras__": {},
-    "node": {
-      "__id__": 1
-    },
-    "_enabled": true,
-    "__prefab": {
-      "__id__": 13
-    },
-    "_clip": null,
-    "_loop": false,
-    "_playOnAwake": true,
-    "_volume": 1,
-    "_id": ""
-  },
-  {
-    "__type__": "cc.CompPrefabInfo",
-    "fileId": "6aycKlQHRO/rCXLlg5AXNK"
-  },
-  {
     "__type__": "6659dbDZtBO+pTz6zk3Zzvr",
     "_name": "",
     "_objFlags": 0,
@@ -278,7 +253,7 @@
     },
     "_enabled": true,
     "__prefab": {
-      "__id__": 15
+      "__id__": 13
     },
     "projectileEmitter": null,
     "skillPrefab": {
@@ -300,6 +275,7 @@
       "__id__": 0
     },
     "fileId": "52Rq51wKlB14c63qErqwvo",
+    "instance": null,
     "targetOverrides": null
   }
 ]

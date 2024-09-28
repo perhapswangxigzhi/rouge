@@ -14,12 +14,14 @@ export class UIAnnouncement extends Component {
         // 设置公告内容
         this.announcementLabel.string = 
         `
-            版本V1.0.13
+            版本V1.1.1
                   更新内容：
                 1. 新增功能：
-                  - 新增背包功能
-                  - 新增装备获得功能
-                  - 新增穿戴装备功能
+                  - 新增bgm
+                  - 新增背包装备丢弃查看穿戴功能
+                  - 新增装备栏查看取下功能
+                  - 实装装备栏属性效果
+                 
                2. 优化功能：
                   
                3. 修复BUG:

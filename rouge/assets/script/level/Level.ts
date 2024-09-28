@@ -1,4 +1,4 @@
-import { CCFloat, CCInteger, Component, Label, Node, Prefab, Vec3, _decorator, assert, director, find, instantiate, screen, sys } from "cc";
+import { CCFloat, CCInteger, Component, Label, Node, Prefab, Vec3, _decorator, assert, director, find, instantiate, macro, screen, sys } from "cc";
 import { GameEvent } from "../event/GameEvent";
 import { PlayerController } from "../actor/PlayControl";
 import { CoinDrop } from "../ani/CoinDrop";
@@ -44,6 +44,7 @@ export class Level extends Component {
     coin_2:Node;
     bossWarningCoin:Node;
     wall:Node;
+    Countdown:number=0;
     @property(Node)
     uiFail: Node = null;
 
@@ -53,9 +54,9 @@ export class Level extends Component {
     @property(Label)
     statictics: Label = null;
 
-    totalEnemyCount: number = 0;
+    totalEnemyCount: number = 600;
     onLoad() {
-        AudioMgr.inst.play('bgm',0.3);
+        AudioMgr.inst.play('bgm',0.5);
     }
 
     start() {
@@ -78,8 +79,8 @@ export class Level extends Component {
         director.on(GameEvent.OnBossDie, this.onBossDead, this);
         director.on(GameEvent.OnCreate1, this.onActorCreate1,  this);
         director.on(GameEvent.OnCreate2, this.onActorCreate2,  this);
-      
-        this.statictics.string = `${this.killedCount}/${this.totalCount}`;
+       // this.schedule(this.updateCountdownTime(this.totalEnemyCount), 1, macro.REPEAT_FOREVER, 1);
+       this.updateCountdownTime(this.totalEnemyCount);
     }
 
     onDestroy() {     
@@ -108,10 +109,11 @@ export class Level extends Component {
     }
     onActorDead(node: Node) {
         if (node && node == PlayerController.instance?.node) {
+            AudioMgr.inst.stop();
             this.uiFail.active = true;
         } else {
             this.killedCount++;
-            this.statictics.string = `${this.killedCount}/${this.totalCount}`; 
+          // this.statictics.string = `${this.killedCount}/${this.totalCount}`; 
             //所有小怪死亡时boss出场
             if( this.killedCount == this.totalCount){
                 this.wall.active=true;
@@ -152,6 +154,7 @@ export class Level extends Component {
     }
     //Boss死亡时游戏胜利
     onBossDead(node: Node) {
+        AudioMgr.inst.stop();
         this.uiWin.active = true;
     }
 
@@ -168,7 +171,7 @@ export class Level extends Component {
             this.schedule(() => {
                 this.doChallengeSpawn1(spawnPoint)
                 this.totalCount +=  1;
-                this.statictics.string = `${this.killedCount}/${this.totalCount}`;
+             //   this.statictics.string = `${this.killedCount}/${this.totalCount}`;
             }, spawnPoint.interval, spawnPoint.repeatCount, 0.0);
         }
     }
@@ -185,8 +188,23 @@ export class Level extends Component {
             this.schedule(() => {
                 this.doChallengeSpawn2(spawnPoint)
                 this.totalCount +=  1;
-                this.statictics.string = `${this.killedCount}/${this.totalCount}`;
+                //this.statictics.string = `${this.killedCount}/${this.totalCount}`;
             }, spawnPoint.interval, spawnPoint.repeatCount, 0.0);
         }
     }
+        //更新截止时间
+         updateCountdownTime(timestamp:number) {
+          
+            let m=timestamp/60;
+            let s=timestamp%60;
+            if(s==0){
+                m--
+                s=59
+            }
+            
+            this.totalCount--
+            this.statictics.string= `${m.toFixed(0)}:${s.toFixed(0)}`
+            this.schedule(this.updateCountdownTime(this.totalCount), 1, macro.REPEAT_FOREVER, 1);
+          
+        }
 }

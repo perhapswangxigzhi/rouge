@@ -67,10 +67,10 @@ export class SimpleEmitter extends Component {
             if(this.actor.current_ActorProperty!=null){
             projectile.damage=this.actor.current_ActorProperty.attack;
             }
-            //4秒后回收节点
+            //7秒后回收节点
             this.scheduleOnce(() => {
                 PoolManager.instance().putNode(node);
-            }, 4);
+            }, 7);
         }
    }
 

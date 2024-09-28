@@ -2,6 +2,7 @@ import { _decorator, Component, Node, Vec3, Collider2D, Contact2DType, IPhysics2
 import { colliderTag } from './ColliderTag';
 import { PoolManager } from '../util/PoolManager';
 import { Actor } from './Actor';
+import { AudioMgr } from '../sound/soundManager';
 const { ccclass, property } = _decorator;
 
 @ccclass('MagnetEffect')
@@ -54,17 +55,15 @@ export class MagnetEffect extends Component {
                         let speed = this.magnetSpeed * dt;
                         item.setPosition(item.position.add(dir.multiplyScalar(speed)));
                     }
-                    if (distance < 5) {
+                    if (distance < 3) {
                         // PoolManager.instance().putNode(item);
+                        this.scheduleOnce(() => {
+                            item.destroy();
+                           });
                         this.actor.playerProperty.ex += this.dropEx;
                         this.actor.playerProperty.killCount += 1;
-                        assetManager.resources.load("sounds/getcoin", AudioClip, (err, clip) => {
-                            // 播放音效
-                            this.audioSource.playOneShot(clip, 0.5);
-                        });    
-                       this.scheduleOnce(() => {
-                        item.destroy();
-                       });
+                        AudioMgr.inst.playOneShot('getcoin',0.5);
+                       
                     }
                 }else{  //如果被摧毁就从数组中移除
                       var index = this.item.indexOf(item);
