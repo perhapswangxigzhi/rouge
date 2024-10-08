@@ -14,6 +14,7 @@ export  class AssentManager extends Component  {
     diamondCount:number=0;
     equipCell:number=0
     wearingEquipCeil:number=0
+    navigator:boolean=true
     checkEmpty:boolean[]=new Array(false,false,false,false,false,false)  
     Count=0;
     static instance: AssentManager | null = null;

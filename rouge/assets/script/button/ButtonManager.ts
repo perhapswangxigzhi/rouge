@@ -1,4 +1,4 @@
-import { _decorator, assetManager, Button, Component, director, Event, EventTouch, find,  Label,  Node, ProgressBar, Sprite, SpriteFrame, v3 } from 'cc';
+import { _decorator, assetManager, Button, Color, Component, director, Event, EventTouch, find,  Label,  Node, ProgressBar, Sprite, SpriteFrame, v3 } from 'cc';
 import { Equipment } from '../bag/Equipment';
 import { AudioMgr } from '../sound/soundManager';
 import { AssentManager } from '../bag/AssentManager';
@@ -22,38 +22,40 @@ export class ButtonManager extends Component {
     mailNoticeToggle(event:Event,customEventData:string){
        
         const node = event.target as Node;
-        const button = node.getComponent(Button);
-    //    console.log(node.name); // 获取当前节点名字
     //当前节点按下时，另一个节点的图标切换至初始状态
        if(node.name=='Mail'){
-        assetManager.resources.load('UIicon/HolySpring_common_btn_9/spriteFrame',SpriteFrame,(err,spriteFrame)=>{
+        assetManager.resources.load('UIicon/HolySpring_common_btn_8/spriteFrame',SpriteFrame,(err,spriteFrame)=>{
             if(err){
                 console.error(err);
                 return;
             }
-            this.node.children[0].getChildByName('Announcement').getComponent(Sprite).spriteFrame=spriteFrame
+            node.getComponent(Sprite).spriteFrame=spriteFrame
+            this.node.getChildByName('text').active=false
         })
        
        }else if(node.name=='Announcement'){
-        assetManager.resources.load('UIicon/HolySpring_common_btn_9/spriteFrame',SpriteFrame,(err,spriteFrame)=>{
+        assetManager.resources.load('UIicon/HolySpring_common_btn_8/spriteFrame',SpriteFrame,(err,spriteFrame)=>{
             if(err){
                 console.error(err);
                 return;
             }
-            this.node.children[0].getChildByName('Mail').getComponent(Sprite).spriteFrame=spriteFrame
+            node.getComponent(Sprite).spriteFrame=spriteFrame
         })
+        node.getChildByName('red').active=false
+        node.getChildByName('text').active=true
+        node.parent.parent.parent.getChildByName('red').active=false
        }
 
 
 
-       assetManager.resources.load(`UIicon/HolySpring_common_btn_8/spriteFrame`, SpriteFrame, (err, spriteFrame ) => {
+       assetManager.resources.load(`UIicon/HolySpring_common_btn_9/spriteFrame`, SpriteFrame, (err, spriteFrame ) => {
         if (err) {
             console.error(err);
             return;
         }
-        node.getComponent(Sprite).spriteFrame=spriteFrame
+        this.node.getComponent(Sprite).spriteFrame=spriteFrame
        })
-        this.node.children[0].getChildByName('Title').children[0].getComponent(Label).string = customEventData;
+        this.node.parent.getChildByName('Title').children[0].getComponent(Label).string = customEventData;
     }
     //切换场景
     chageScence(){
@@ -98,6 +100,50 @@ export class ButtonManager extends Component {
     playSound(event:Event,customEventData:string){
         AudioMgr.inst.playOneShot('click1',1);
     }
+    //设置切换切换开关
+    settingToggle(event:Event,Toggle:string){
+        const node = event.target as Node;
+        node.getComponent(Sprite).color=new Color(255,255,255,255)   //背景显示
+       this.node.getComponent(Sprite).color=new Color(255,255,255,0)   //背景透明
+        if(Toggle=='open'){
+        node.parent.getChildByName('close').getComponent(Label).color=new Color(134,134,134,255)   //文字显示
+        node.parent.getChildByName('open').getComponent(Label).color=new Color(255,255,255,255)   //文字显示
+        }
+        if(Toggle=='close'){
+            node.parent.getChildByName('close').getComponent(Label).color=new Color(255,255,255,255)   //文字显示
+            node.parent.getChildByName('open').getComponent(Label).color=new Color(134,134,134,255)   //文字显示
+        }
+        if(node.parent.getChildByName('Title').getComponent(Label).string=='音乐'){
+            if(Toggle=='open'){
+                AudioMgr.inst.resume();
+                AudioMgr.inst.musicToggle=true;
+            }
+            if(Toggle=='close'){
+                AudioMgr.inst.pause();
+                AudioMgr.inst.musicToggle=false;
+            }
+        }
+        if(node.parent.getChildByName('Title').getComponent(Label).string=='音效'){
+            if(Toggle=='open'){
+                AudioMgr.inst.audioToggle=true;
+                AudioMgr.inst.playOneShot('click1',1);
+            }
+            if(Toggle=='close'){
+                AudioMgr.inst.audioToggle=false;
+            }
+        }
+        if(node.parent.getChildByName('Title').getComponent(Label).string=='震动'){
+            if(Toggle=='open'){
+               AssentManager.instance.navigator=true;
+               navigator.vibrate(100);
+            }
+            if(Toggle=='close'){
+                AssentManager.instance.navigator=false;
+            }
+        }
+
+    }
+
     //显示装备操作选项
      showEquipmentOperation(event:Event,equipCell:number){
         AssentManager.instance.equipCell=equipCell;
@@ -253,13 +299,7 @@ export class ButtonManager extends Component {
 
      }
      
-     
-
-
-
-
-
-
+    
 
      
 }

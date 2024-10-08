@@ -53,8 +53,11 @@ export class Level extends Component {
 
     @property(Label)
     statictics: Label = null;
+    @property(Label)
+    killCount: Label = null;
 
-    totalEnemyCount: number = 600;
+    totalTimeCount: number = 300;
+    delay:number=-6;
     onLoad() {
         AudioMgr.inst.play('bgm',0.5);
     }
@@ -63,12 +66,6 @@ export class Level extends Component {
         if(sys.platform == sys.Platform.MOBILE_BROWSER ){
             screen.requestFullScreen();        
         }         
-        for (let sp of this.spawnPoints) {
-            this.totalCount += sp.repeatCount + 1;
-            this.schedule(() => {
-                this.doSpawn(sp)
-            }, sp.interval, sp.repeatCount, 0.0);
-        }
         this.coin_1=find('UIRoot/GoldChanllengeBg/UIcoin')
         this.coin_2=find('UIRoot/ExpChallengeBg/UIcoin')
         this.bossWarningCoin=find('UIRoot/UIBossWarning')
@@ -79,8 +76,11 @@ export class Level extends Component {
         director.on(GameEvent.OnBossDie, this.onBossDead, this);
         director.on(GameEvent.OnCreate1, this.onActorCreate1,  this);
         director.on(GameEvent.OnCreate2, this.onActorCreate2,  this);
-       // this.schedule(this.updateCountdownTime(this.totalEnemyCount), 1, macro.REPEAT_FOREVER, 1);
-       this.updateCountdownTime(this.totalEnemyCount);
+        this.updateCountdownTime()
+        this.schedule(() => {
+            this.updateCountdownTime()
+        },1, macro.REPEAT_FOREVER, 0);
+        
     }
 
     onDestroy() {     
@@ -113,7 +113,7 @@ export class Level extends Component {
             this.uiFail.active = true;
         } else {
             this.killedCount++;
-          // this.statictics.string = `${this.killedCount}/${this.totalCount}`; 
+            this.killCount.string = `${this.killedCount}`; 
             //所有小怪死亡时boss出场
             if( this.killedCount == this.totalCount){
                 this.wall.active=true;
@@ -193,18 +193,21 @@ export class Level extends Component {
         }
     }
         //更新截止时间
-         updateCountdownTime(timestamp:number) {
-          
-            let m=timestamp/60;
-            let s=timestamp%60;
+         updateCountdownTime() {
+            let m=this.totalTimeCount/60;
+            let s=this.totalTimeCount%60;
             if(s==0){
                 m--
                 s=59
+                for (let sp of this.spawnPoints) {
+                    this.totalCount += sp.repeatCount + 1;
+                    this.schedule(() => {
+                        this.doSpawn(sp)
+                    }, sp.interval, sp.repeatCount, this.delay+=6);
+                }
             }
-            
-            this.totalCount--
-            this.statictics.string= `${m.toFixed(0)}:${s.toFixed(0)}`
-            this.schedule(this.updateCountdownTime(this.totalCount), 1, macro.REPEAT_FOREVER, 1);
+            this.totalTimeCount--
+            this.statictics.string= `${Math.floor(m)}:${s.toFixed(0)}`
           
         }
 }

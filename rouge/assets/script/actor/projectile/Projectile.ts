@@ -35,7 +35,6 @@ export class Projectile extends Component {
         if ( colliderTag.isProjectileHitable(self.tag, other.tag)) {
           if(other.node.getComponent(Actor).dead==true){
             //关闭监听事件
-            console.log("死亡怪物名字",other.node.name);
             this.collider.off(Contact2DType.BEGIN_CONTACT, this.onCollisionBegin, this);
           }
           this.scheduleOnce(() => {

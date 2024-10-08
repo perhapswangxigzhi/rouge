@@ -10,5 +10,10 @@
       "localization-editor": "1.0.3"
     }
   },
-  "description": ""
+  "description": "",
+  "dependencies": {
+    "@microsoft/signalr": "^8.0.7",
+    "@types/node": "^22.7.5",
+    "socket.io-client": "^4.8.0"
+  }
 }

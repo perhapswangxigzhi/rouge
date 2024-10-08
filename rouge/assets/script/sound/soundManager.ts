@@ -8,6 +8,8 @@ import { Node, AudioSource, AudioClip, resources, director } from 'cc';
  */ 
 export class AudioMgr {
     private static _inst: AudioMgr;
+    musicToggle:boolean = true;
+    audioToggle:boolean = true;
     public static get inst(): AudioMgr {
         if (this._inst == null) {
             this._inst = new AudioMgr();
@@ -34,6 +36,7 @@ export class AudioMgr {
         //@en add AudioSource componrnt to play audios.
         //@zh 添加 AudioSource 组件，用于播放音频。
         this._audioSource = audioMgr.addComponent(AudioSource);
+        this._audioSource.playOnAwake = false;
     }
 
     public get audioSource() {
@@ -49,6 +52,9 @@ export class AudioMgr {
      * @param volume 
      */
     playOneShot(sound: AudioClip | string, volume: number = 1.0) {
+        if(this.audioToggle == false){
+            return;
+        }
         if (sound instanceof AudioClip) {
             this._audioSource.playOneShot(sound, volume);
            
@@ -76,6 +82,9 @@ export class AudioMgr {
      * @param volume 
      */
     play(sound: AudioClip | string, volume: number = 1.0) {
+        if(this.musicToggle == false){
+            return;
+        }
         if (sound instanceof AudioClip) {
             this._audioSource.stop();
             this._audioSource.clip = sound;

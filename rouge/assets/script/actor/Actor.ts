@@ -186,9 +186,10 @@ export class Actor extends Component {
             damageTextNode.setParent(this.node);
             damageTextNode.getComponent(DamageTextManager).showDamage(hitPosition, damage,Color.WHITE);
         }
-
-
         this.rigidbody.applyLinearImpulseToCenter(hurtDirection,true)
+        if(this.current_ActorProperty==this.playerProperty&&AssentManager.instance.navigator==true){
+            navigator.vibrate(100);
+        }
         //受伤闪烁
         if(this.mainRenderer!=null){
         this.mainRenderer.color=Color.RED;
@@ -200,7 +201,7 @@ export class Actor extends Component {
         this.scheduleOnce(()=>{
             this.dragonBoneAnimation.color=Color.WHITE;
     },0.2)}
-    AudioMgr.inst.playOneShot('bulletIn',0.3);
+    AudioMgr.inst.playOneShot('bulletIn',0.7);
     if(this.current_ActorProperty.hp<=0){
         this.dead = true; // 设置死亡标志
         // 移除碰撞事件监听
@@ -218,7 +219,7 @@ export class Actor extends Component {
         }else{
         this.stateMgr.transit(StateDefine.Die)     
         }
-        AudioMgr.inst.playOneShot('die1',0.5);
+        AudioMgr.inst.playOneShot('die1',0.8);
              
     }
     }
