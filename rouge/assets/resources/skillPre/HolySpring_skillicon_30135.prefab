@@ -94,7 +94,7 @@
   },
   {
     "__type__": "cc.CompPrefabInfo",
-    "fileId": "a44oEXGUJLlqqDCun2HxoC"
+    "fileId": "aaYamSlWxGyo7yj4CnoGHV"
   },
   {
     "__type__": "dragonBones.ArmatureDisplay",
@@ -142,7 +142,7 @@
   },
   {
     "__type__": "cc.CompPrefabInfo",
-    "fileId": "b0NZ9hkmBG74oRe367nTe0"
+    "fileId": "8d9jkPxcFDLLnYYX7+coRw"
   },
   {
     "__type__": "cc.RigidBody2D",
@@ -176,10 +176,10 @@
   },
   {
     "__type__": "cc.CompPrefabInfo",
-    "fileId": "525mkiJ4RLHK1pi9CkSiuQ"
+    "fileId": "efFnNlY6pMPKPqjcS2kRl0"
   },
   {
-    "__type__": "cc.BoxCollider2D",
+    "__type__": "cc.CircleCollider2D",
     "_name": "",
     "_objFlags": 0,
     "__editorExtras__": {},
@@ -192,7 +192,7 @@
     },
     "tag": 104,
     "_group": 8,
-    "_density": 0,
+    "_density": 1,
     "_sensor": true,
     "_friction": 0.2,
     "_restitution": 0,
@@ -201,16 +201,12 @@
       "x": 0,
       "y": 0
     },
-    "_size": {
-      "__type__": "cc.Size",
-      "width": 430.73,
-      "height": 758.73
-    },
+    "_radius": 332.365,
     "_id": ""
   },
   {
     "__type__": "cc.CompPrefabInfo",
-    "fileId": "caTyCnXLNCiZqC+tqVMNRO"
+    "fileId": "c4I430pspDmKYLYG3vDdqG"
   },
   {
     "__type__": "b149a7lRAxIhLCVAFAFGxjp",
@@ -225,14 +221,15 @@
       "__id__": 11
     },
     "audioSource": null,
-    "skillCoefficient": 0.1,
+    "skillBuffPrefab": null,
+    "skillCoefficient": 0.5,
     "skillContinueTime": 4,
     "playSkillDragonBoneAudio": "skill_1",
     "_id": ""
   },
   {
     "__type__": "cc.CompPrefabInfo",
-    "fileId": "80p/S+hLNJk6c1wuIaNbAZ"
+    "fileId": "bcxPi1ILZFvZvI+OH1rqz7"
   },
   {
     "__type__": "cc.PrefabInfo",
@@ -242,7 +239,7 @@
     "asset": {
       "__id__": 0
     },
-    "fileId": "f1Z6ZmAzlBrqqGcMqC6kA1",
+    "fileId": "beA1sPbM5Ktpe9vriaLjkV",
     "targetOverrides": null
   }
 ]

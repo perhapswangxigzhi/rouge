@@ -8,25 +8,25 @@ export class UItalendRemind extends Component {
     @property(Node)
     talentNode: Node = null;
     @property(Label)
-    talentReflashCount: Label = null;
-    levelCount: number = 0;
-    talentCurrentCount: number = 0;
-    Count:number=0;
+    talentLabel: Label = null;
+    levelCount: number = 0;    //等级
+    talentInitCount: number = 0;   //初始天赋数量
+    reflashCount: number = 0;   //刷新天赋数量
+    Count:number=0;   //天赋总数量
     static instance : UItalendRemind = null;
   onLoad() {
       UItalendRemind.instance = this;
       this.startBtn.node.on(Button.EventType.CLICK, this.onCloseButtonClicked, this);
-      this.talentCurrentCount= parseInt(this.talentReflashCount.string, 10);
+      this.talentInitCount= parseInt(this.talentLabel.string, 10);
   }
   onCloseButtonClicked(){
-     
       this.talentNode.active = true;
-  
+      find('LevelCanvas/Player').pauseSystemEvents(true);
   }
-  update(deltaTime: number){
-    let talentCount=this.talentCurrentCount+this.levelCount
-    this.Count=talentCount;
-    this.talentReflashCount.string = talentCount.toString();
+ 
+  update(dt: number) {
+    this.Count=this.talentInitCount+this.levelCount-this.reflashCount;
+    this.talentLabel.string = this.Count.toString();
   }
 }
 

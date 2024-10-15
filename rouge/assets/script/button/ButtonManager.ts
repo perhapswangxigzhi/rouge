@@ -133,6 +133,7 @@ export class ButtonManager extends Component {
             }
         }
         if(node.parent.getChildByName('Title').getComponent(Label).string=='震动'){
+            if(AssentManager.instance){
             if(Toggle=='open'){
                AssentManager.instance.navigator=true;
                navigator.vibrate(100);
@@ -141,9 +142,16 @@ export class ButtonManager extends Component {
                 AssentManager.instance.navigator=false;
             }
         }
+        }
 
     }
-
+    //点击关闭按钮，恢复游戏
+    onCloseButtonClicked() {
+        // 关闭公告
+        this.node.active=false;
+         // 恢复游戏
+      director.resume();
+    }
     //显示装备操作选项
      showEquipmentOperation(event:Event,equipCell:number){
         AssentManager.instance.equipCell=equipCell;

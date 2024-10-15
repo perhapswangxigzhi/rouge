@@ -56,10 +56,10 @@
         "_option": "physics-2d-box2d"
       },
       "physics-2d-box2d": {
-        "_value": false
+        "_value": "physics-2d-box2d"
       },
       "physics-2d-builtin": {
-        "_value": false
+        "_value": "physics-2d-builtin"
       },
       "intersection-2d": {
         "_value": true

@@ -230,7 +230,7 @@
       "__expectedType__": "cc.Prefab"
     },
     "skillCoefficient": 3,
-    "skillContinueTime": 0.68,
+    "skillContinueTime": 0.673,
     "playSkillDragonBoneAudio": "skill_5",
     "_id": ""
   },
@@ -247,6 +247,7 @@
       "__id__": 0
     },
     "fileId": "a0ZkkTqBROF4Cxvv0B/vT9",
+    "instance": null,
     "targetOverrides": null
   }
 ]

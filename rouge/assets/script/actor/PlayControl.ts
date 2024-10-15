@@ -34,7 +34,6 @@ export class PlayerController extends Component {
         this.actor.stateMgr.startWith(StateDefine.Idle);
         const h=VirtualInput.horizontal;
         const v=VirtualInput.vertical;
-
         this.schedule(() => this.fire(), 1/this.actor.current_ActorProperty.attackSpeed, macro.REPEAT_FOREVER, 0);
   
 
@@ -52,6 +51,11 @@ fire(){
         return;}
         const h=VirtualInput.horizontal;
         const v=VirtualInput.vertical;
+        if(h==0&&v==0){
+            this.node.getChildByName('Gun').getChildByName('point').active=false;
+        }else{
+            this.node.getChildByName('Gun').getChildByName('point').active=true;
+        }
         //计算角度（弧度）
         let angleRad = Math.atan2(v, h);
         // 如果 VirtualInput 为零，使用上一次存储的角度
@@ -72,7 +76,7 @@ fire(){
            // 存储当前角度
        this.lastAngleRad = angleRad;
        this.gun.setRotationFromEuler(0,0,this.direction)
-    }
+        }
        this.actor.input.set(h,v)   
         if(this.actor.input.length()>=math.EPSILON){
             this.actor.stateMgr.transit(StateDefine.Walk);

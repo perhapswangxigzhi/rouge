@@ -1,4 +1,4 @@
-import { Animation, AnimationState, assetManager, AudioClip, director, dragonBones, Vec2 } from "cc";
+import { Animation, AnimationState, assetManager, AudioClip, director, dragonBones, find, Vec2 } from "cc";
 import { ActorState } from "./ActorState";
 import { StateDefine } from "../StateDefine";
 import { GameEvent } from "../../event/GameEvent";
@@ -20,7 +20,7 @@ export class Die extends ActorState {
 		//对某个动画做监听
         if(this.actor.current_ActorProperty.name=="challengeEnemy1"){
         director.emit(GameEvent.OnChallengeDie_1, this.actor.node); 
-            }
+        }
         if(this.actor.current_ActorProperty.name=="challengeEnemy2"){
          director.emit(GameEvent.OnChallengeDie_2, this.actor.node); 
         }
@@ -37,18 +37,31 @@ export class Die extends ActorState {
     onDieEnd(animationType: Animation.EventType, state: AnimationState) {
         if (animationType == Animation.EventType.FINISHED) {
             if (state.name == StateDefine.Die) {
+                if(this.actor.current_ActorProperty.name=="Player"){
+                    this.actor.scheduleOnce(() => {
+                    director.emit(GameEvent.OnDie, this.actor.node); 
+                    }, 0.1); 
+             
                 
+               
+                }else{
                 //删除角色
                 this.actor.scheduleOnce(() => {    
                 this.actor.node.destroy();
                 director.emit(GameEvent.OnDie, this.actor.node); 
-                }, 0.1);   
+                }, 0.1);
+                }   
             }
         }
     }
    
 
     canTransit(to: StateDefine): boolean {
-        return false;
+       
+        if(this.actor.current_ActorProperty.name=="Player"){
+            return true;
+        }else{
+            return false;
+        }
     }
 } 

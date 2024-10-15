@@ -200,10 +200,10 @@ export class SkillEmitter extends Component {
                 case "HolySpring_skillicon_30102":
                     this.schedule(() => {
                         let node=instantiate(this.fixedSkillPrefab1) 
-                        node.position = this.node.parent.position;
+                        node.position = this.node.position;
                         this.node.parent.parent.addChild(node);
                          }
-                        , 6, macro.REPEAT_FOREVER, 0);
+                        , 8, macro.REPEAT_FOREVER, 0);
                     break;
                 case "HolySpring_skillicon_30130":
                     this.schedule(() => {
@@ -232,7 +232,7 @@ export class SkillEmitter extends Component {
                     case "HolySpring_skillicon_30135":
                     this.schedule(() => {
                         let node=instantiate(this.fixedSkillPrefab4) 
-                        node.position = this.node.parent.position;
+                        node.position = this.node.position;
                         this.node.parent.parent.addChild(node);
                         }
                         , 8, macro.REPEAT_FOREVER, 0);
@@ -266,13 +266,13 @@ export class SkillEmitter extends Component {
                     case "HolySpring_skillicon_30310":
             this.schedule(() => {
                     let node=instantiate(this.HealingSkillPrefab) 
-                    node.position = this.node.parent.position;
-                    this.node.parent.parent.addChild(node);
+                        node.position = this.node.position;
+                        this.node.parent.parent.addChild(node);
                     }
                     , 10, macro.REPEAT_FOREVER, 0);
                             break;  
                 default:
-                    console.log("改技能未实现");
+                    console.log("该技能未实现");
                     break;
             }
         }

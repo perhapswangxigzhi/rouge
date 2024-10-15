@@ -31,7 +31,7 @@ export class BossContorl extends Component {
     // MaxfrozenTime:number=3;  //冻结时间上限
     start() {
         this.actor = this.node.getComponent(Actor);
-        this.playerNode=this.node.parent.getChildByName('Player');
+        this.playerNode=this.node?.parent.getChildByName('Player');
         this.playerActor=this.playerNode.getComponent(Actor);
         this.initBlackboard();
         this.createAI();

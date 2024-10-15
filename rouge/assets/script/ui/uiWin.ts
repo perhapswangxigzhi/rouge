@@ -9,7 +9,7 @@ export class uiWin extends Component {
         find('UIRoot/Mask').active = true;
         let progressBar = find('UIRoot/Mask/ProgressBar').getComponent(ProgressBar);;
         let label=find('UIRoot/Mask/ProgressBar/Label').getComponent(Label);
-       
+        
         director.preloadScene("MainUI",(completedCount:number,totalCount:number,item:any) =>{
 
             let progress = completedCount/totalCount;
@@ -24,8 +24,13 @@ export class uiWin extends Component {
         const node = event.target as Node;
         node.parent.active = false;
         this.node.active = true;
-        RewardsManager.instance.getEquipment();
-        RewardsManager.instance.getAssent();
+        try {
+            RewardsManager.instance.getEquipment();    //获取装备
+            RewardsManager.instance.getAssent();      //获取资源
+        } catch (error) {
+            console.error("资源管理器未加载于场景", error.toString())
+        }
+     
         tween(this.node)
                 .to(0.3, { scale: v3(1.2, 1.2, 1) }) // 缩小
                 .to(0.3, { scale: v3(1, 1, 1) })     // 放大

@@ -1,4 +1,4 @@
-import { _decorator, Animation, assert, assetManager, AudioClip, AudioSource, CCFloat, Collider2D, Component, Contact2DType, dragonBones, find, instantiate, IPhysics2DContact, Node, Prefab, RigidBody2D, Tween, v2, v3, Vec2, Vec3 } from 'cc';
+import { _decorator, Animation, assert, assetManager, AudioClip, AudioSource, CCFloat, Collider2D, Component, Contact2DType, dragonBones, find, instantiate, IPhysics2DContact, Node, PhysicsSystem2D, Prefab, rect, RigidBody2D, Tween, v2, v3, Vec2, Vec3 } from 'cc';
 import { colliderTag } from '../actor/ColliderTag';
 import { Actor } from '../actor/Actor';
 
@@ -19,6 +19,8 @@ export class PointSkill extends Component {
     enemyNode:Node|null=null;
     enemyHost:Actor|null=null;
     damage: number = 0;
+      enemyInitWorldPos: Vec3 = v3();
+    colliderList: readonly Collider2D[];
     @property(Prefab)
     skillBuffPrefab: Prefab = null;
     @property(CCFloat)
@@ -49,60 +51,68 @@ export class PointSkill extends Component {
           this.damage=this.host.current_ActorProperty.attack*this.skillCoefficient;
           }
         this.collider.on(Contact2DType.BEGIN_CONTACT, this.onCollisionBegin, this);
-        this.collider.on(Contact2DType.END_CONTACT, this.onCollisionEnd, this);
+        //this.collider.on(Contact2DType.END_CONTACT, this.onCollisionEnd, this);
         this.scheduleOnce(()=>{
             this.node.destroy();
             },this.skillContinueTime)
+        this.colliderList = PhysicsSystem2D.instance.testAABB(rect(0,0,2000,2000));
     }
     onCollisionBegin(self: Collider2D, other: Collider2D, contact: IPhysics2DContact) {
         if ( colliderTag.isProjectileHitable(self.tag, other.tag)) {
-            if (other.node&&other.node.isValid) { // 范围内不存在敌人
+            if (other.node&&other.node.isValid) { // 范围内存在敌人
                 this.isEnemyInRange = true;
                 this.enemyNode=other.node;
                 this.enemyHost=this.enemyNode.getComponent(Actor);
-              
+                this.collider.off(Contact2DType.BEGIN_CONTACT, this.onCollisionBegin, this);
             }
         }
-    }
-    onCollisionEnd(self: Collider2D, other: Collider2D, contact: IPhysics2DContact) {
-        if (colliderTag.isProjectileHitable(self.tag, other.tag)) {
-          //  console.log('敌人离开技能范围');
-            this.isEnemyInRange = false;
-            this.collider.off(Contact2DType.BEGIN_CONTACT, this.onCollisionBegin, this);
-      }
+        
     }
    
     update(dt: number) {
+       try {
         if (this.enemyNode) {
-                if (this.enemyNode.isValid&& this.isEnemyInRange) { // 范围内存在敌人
-                    let dir = v3(); 
-                    Vec3.subtract(dir, this.enemyNode.getPosition(), this.node.getPosition());
-                    let distance = dir.length();
-                    dir.normalize();
-                     // 计算角度并设置节点的旋转
-                    var angle = Vec3.angle(dir, v3(1, 0, 0));
-                    if (dir.y < 0) {
-                        angle = -angle; // 根据 y 轴方向调整角度
-                    }
-                    var degree = angle / Math.PI * 180;
-                    this.node.setRotationFromEuler(0, 0, degree);
-                    let rigid = this.node.getComponent(RigidBody2D);
-                    let velocity: Vec2 = v2();
-                    velocity.x = dir.x;
-                    velocity.y = dir.y;
-                    velocity.multiplyScalar(this.startLinearSpeed);
-                    rigid.linearVelocity = velocity;
-                   if (distance < 5) {
-                       this.scheduleOnce(() => {
-                        if(this.skillBuffPrefab!=null){
-                            const skillBuffNode=instantiate(this.skillBuffPrefab);
-                             skillBuffNode.setParent(this.enemyNode);
-                           }
-                        this.enemyHost.onHurt(this.damage, this.host, new Vec2(0, 0))
-                        this.node.destroy();
-                       });
-                    }
+            if ( this.isEnemyInRange) { // 范围内存在敌人
+                let dir = v3(); 
+                Vec3.subtract(dir, this.enemyNode.worldPosition, this.node.worldPosition);
+                let distance = dir.length();
+                dir.normalize();
+                 // 计算角度并设置节点的旋转
+                var angle = Vec3.angle(dir, v3(1, 0, 0));
+                if (dir.y < 0) {
+                    angle = -angle; // 根据 y 轴方向调整角度
                 }
+                var degree = angle / Math.PI * 180;
+                this.node.setRotationFromEuler(0, 0, degree);
+                let rigid = this.node.getComponent(RigidBody2D);
+                let velocity: Vec2 = v2();
+                velocity.x = dir.x;
+                velocity.y = dir.y;
+                velocity.multiplyScalar(this.startLinearSpeed);
+                rigid.linearVelocity = velocity;
+                console.log(distance)
+                if(distance < 5) {
+                   this.scheduleOnce(() => {
+                    if(this.skillBuffPrefab!=null){
+                        const skillBuffNode=instantiate(this.skillBuffPrefab);
+                         skillBuffNode.setParent(this.enemyNode);
+                       }
+                    this.enemyHost.onHurt(this.damage, this.host, new Vec2(0, 0))
+                    this.node.destroy();
+                   });
+                }
+               
             }
+        }else{
+                this.scheduleOnce(() => {
+                this.node.destroy();
+                },1)
         }
+       } catch (err) {
+             console.error("属性管理器未记载在场景", err.toString())
+       }
+        
     }
+}
+        
+    

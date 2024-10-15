@@ -3,6 +3,7 @@ import { colliderTag } from './ColliderTag';
 import { PoolManager } from '../util/PoolManager';
 import { Actor } from './Actor';
 import { AudioMgr } from '../sound/soundManager';
+import { ActorStage } from './ActorStage';
 const { ccclass, property } = _decorator;
 
 @ccclass('MagnetEffect')
@@ -55,13 +56,15 @@ export class MagnetEffect extends Component {
                         let speed = this.magnetSpeed * dt;
                         item.setPosition(item.position.add(dir.multiplyScalar(speed)));
                     }
-                    if (distance < 3) {
+                    if (distance < 5) {
                         // PoolManager.instance().putNode(item);
                         this.scheduleOnce(() => {
                             item.destroy();
                            });
-                        this.actor.playerProperty.ex += this.dropEx;
-                        this.actor.playerProperty.killCount += 1;
+                        // this.actor.playerProperty.ex += this.dropEx;
+                        // this.actor.playerProperty.killCount += 1;
+                        ActorStage.instance.playerProperty.ex += this.dropEx;
+                        ActorStage.instance.playerProperty.killCount += 1;
                         AudioMgr.inst.playOneShot('getcoin',0.5);
                        
                     }

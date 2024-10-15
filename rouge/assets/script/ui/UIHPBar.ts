@@ -1,5 +1,6 @@
 import { _decorator, Component, Label, Node, ProgressBar, RichText } from 'cc';
 import { PlayerController } from '../actor/PlayControl';
+import { ActorStage } from '../actor/ActorStage';
 const { ccclass, property } = _decorator;
 
 @ccclass('UIHPBar')
@@ -13,11 +14,16 @@ export class UIHPBar extends Component {
     }
 
     update(deltaTime: number) {
-        if (!PlayerController.instance || !PlayerController.instance.actor) {
+        // if (!PlayerController.instance || !PlayerController.instance.actor) {
+        //     return;
+        // }
+        if(!ActorStage.instance){
             return;
         }
-        const hp = PlayerController.instance.actor.playerProperty.hp;
-        const maxHp = PlayerController.instance.actor.playerProperty.maxHp;
+        // const hp = PlayerController.instance.actor.playerProperty.hp;
+        // const maxHp = PlayerController.instance.actor.playerProperty.maxHp;
+        const hp = ActorStage.instance.playerProperty.hp;
+        const maxHp = ActorStage.instance.playerProperty.maxHp;
         
         this.progressBar!.progress = hp / maxHp;
         this.richTextLabel!.string = `${hp}/${maxHp}`;

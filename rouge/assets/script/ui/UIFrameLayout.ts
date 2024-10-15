@@ -1,4 +1,4 @@
-import { _decorator, Button, Component, director, find, Label, Node, Sprite, SpriteFrame, tween } from 'cc';
+import { _decorator, Button, Color, Component, director, find, Label, Node, Sprite, SpriteFrame, tween, UI, Vec3 } from 'cc';
 import { Reflash } from '../ani/Reflash';
 import { SkillManager } from '../skill/SkillManager';
 import { Skill } from '../skill/Skill';
@@ -45,7 +45,6 @@ export class UIFrameLayout extends Component {
     dialog: Node | null = null;
     @property(Node)
     dialog1: Node | null = null;
-    choseTalentSwitch:boolean=true;
     choseReflash:boolean=true;
     skillIndex1:number=0;
     skillIndex2:number=0;
@@ -74,12 +73,8 @@ export class UIFrameLayout extends Component {
         Reflash.instance.filpCard(this.UIFrame_001);
         Reflash.instance.filpCard(this.UIFrame_002);   
         Reflash.instance.filpCard(this.UIFrame_003);
-        this.choseTalentSwitch=true;
         this.dialog.active=false;
-        UItalendRemind.instance.talentCurrentCount-=1;
-        // if(UItalendRemind.instance.talentCurrentCount==0){
-        //     this.choseReflash=false;
-        // }
+        UItalendRemind.instance.reflashCount+=1;
         this.scheduleOnce(()=>{
         this.skillIndex1= SkillManager.instance.skillIconName.indexOf(this.skillName1.string)
         this.skillIndex2= SkillManager.instance.skillIconName.indexOf(this.skillName2.string)
@@ -87,64 +82,72 @@ export class UIFrameLayout extends Component {
         },0.5)
         }else{
             this.dialog1.active=true;
-            const labelComponent = this.dialog1.getChildByName('Label').getComponent(Label);
-            tween(labelComponent)
-            .to(0.5, { fontSize: 40 }) 
-            .to(0.5, { fontSize: 20 }) 
-            .start();
-        }
+            const colorTween = tween(this.dialog1.getComponent(Sprite))
+            .to(0.75, { color: new Color(255, 255, 255, 255) }) // 恢复颜色
+            .delay(0.5)
+            .to(0.75, { color: new Color(255, 255, 255, 0) }); // 渐隐
+            colorTween.start();
+       
     }
+}
     onchoseTalent_1(){
         // 选择第一个天赋框
-        if(this.choseTalentSwitch==true){
+        if( UItalendRemind.instance.Count!=0){
         Skill.instance.initSkill(this.skillIndex1)
-        this.choseTalentSwitch=false;
         this.scheduleOnce(()=>{
             this.node.active=false;
+            if(UItalendRemind.instance.Count>0){
+                this.onReflashFrmae();
+            }
            },0.1)
-        }else{
-            this.dialog.active=true;
-            const labelComponent = this.dialog.getChildByName('Label').getComponent(Label);
-            tween(labelComponent)
-            .to(0.5, { fontSize: 40 }) 
-            .to(0.5, { fontSize: 20 }) 
-            .start();
+        } 
+        else {
+        this.dialog.active=true;
+        const colorTween = tween(this.dialog.getComponent(Sprite))
+            .to(0.75, { color: new Color(255, 255, 255, 255) }) // 恢复颜色
+            .delay(0.5)
+            .to(0.75, { color: new Color(255, 255, 255, 0) }); // 渐隐
+        colorTween.start();
         }
        
     }
     onchoseTalent_2(){
         // 选择第二个天赋框
-        if(this.choseTalentSwitch==true){
+        if(UItalendRemind.instance.Count!=0){
         Skill.instance.initSkill(this.skillIndex2)
-        this.choseTalentSwitch=false;
         this.scheduleOnce(()=>{
             this.node.active=false;
+            if(UItalendRemind.instance.Count>0){
+                this.onReflashFrmae();
+            }
            },0.1)
         }else{
             this.dialog.active=true;
-            const labelComponent = this.dialog.getChildByName('Label').getComponent(Label);
-            tween(labelComponent)
-            .to(0.5, { fontSize: 40 }) 
-            .to(0.5, { fontSize: 20 }) 
-            .start();
+            const colorTween = tween(this.dialog.getComponent(Sprite))
+                .to(0.75, { color: new Color(255, 255, 255, 255) }) // 恢复颜色
+                .delay(0.5)
+                .to(0.75, { color: new Color(255, 255, 255, 0) }); // 渐隐
+            colorTween.start();
         }
        
     }
     onchoseTalent_3(){
         // 选择第三个天赋框
-        if(this.choseTalentSwitch==true){
+        if(UItalendRemind.instance.Count!=0){
         Skill.instance.initSkill(this.skillIndex3)
-        this.choseTalentSwitch=false;
         this.scheduleOnce(()=>{
-        this.node.active=false;
-        },0.1)
+            this.node.active=false;
+            if(UItalendRemind.instance.Count>0){
+                this.onReflashFrmae();
+            }
+           },0.1)
      }else{
         this.dialog.active=true;
-        const labelComponent = this.dialog.getChildByName('Label').getComponent(Label);
-         tween(labelComponent)
-         .to(0.5, { fontSize: 40 }) 
-         .to(0.5, { fontSize: 20 }) 
-         .start();
+        const colorTween = tween(this.dialog.getComponent(Sprite))
+            .to(0.75, { color: new Color(255, 255, 255, 255) }) // 恢复颜色
+            .delay(0.5)
+            .to(0.75, { color: new Color(255, 255, 255, 0) }); // 渐隐
+        colorTween.start();
     }
        
        

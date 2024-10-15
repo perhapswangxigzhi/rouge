@@ -30,7 +30,8 @@ export class EnemyControl extends Component {
     start() {
         this.actor = this.node.getComponent(Actor);
         this.playerNode=this.node.parent.getChildByName('Player');
-        this.playerActor=this.playerNode.getComponent(Actor);
+        if(this.playerNode){
+        this.playerActor=this.playerNode.getComponent(Actor);}
         if(this.node.getComponentInChildren(SimpleEmitter)){
             this.enemyTag=0  //远程敌人
         }else{
@@ -49,9 +50,13 @@ export class EnemyControl extends Component {
     update(deltaTime: number) {
         if (this.frozenTime<=0) {
         this.ai.update(deltaTime);
+        if(!this.playerNode){
+            return;
+        }
         if(this.playerNode.isValid){
             this.moveDest=this.playerActor.node?.worldPosition.clone();
         }
+       
         this.distance= Vec3.subtract(this.dir, this.moveDest, this.node.worldPosition).length();
         this.ai.setData(BlackboardKey.MoveDest, this.moveDest);
         this.ai.setData(BlackboardKey.Dir, this.dir);

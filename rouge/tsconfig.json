@@ -4,6 +4,14 @@
 
   /* Add your custom configuration here. */
   "compilerOptions": {
-    "strict": false
-  }
+    
+    "module": "es6",
+    "strict": false,
+    "allowSyntheticDefaultImports": true,
+    "forceConsistentCasingInFileNames": true,
+  },
+//  "exclude": [
+//     "node_modules"
+//   ]
+
 }

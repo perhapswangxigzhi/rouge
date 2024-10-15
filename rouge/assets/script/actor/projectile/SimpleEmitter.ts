@@ -24,14 +24,16 @@ export class SimpleEmitter extends Component {
     castTime:number=0
     start() {
         this.canvasNode=find('LevelCanvas')
-       if(this.node.name=="Emitter01"){
+       if(this.node.name=="Emitter_Player"){
         const playerNode=find('LevelCanvas/Player')
         this.actor=playerNode.getComponent(Actor)
        // console.log(this.actor.node)
-       }else if(this.node.name=="Emitter4Dir"){
+       }else if(this.node.name=="Emitter_Enemy1"){
         const ememyNode=find('LevelCanvas/Enemy1')
         this.actor=ememyNode.getComponent(Actor)
-      //  console.log(this.actor.node)
+       }else if(this.node.name=="Emitter_Enemy3"){
+        const ememyNode=find('LevelCanvas/Enemy3')
+        this.actor=ememyNode.getComponent(Actor)
        }
        
     } 
@@ -46,7 +48,7 @@ export class SimpleEmitter extends Component {
             const wr=emiterNode.worldRotation;
             //可以用内存池优化
             let node=PoolManager.instance().getNode(this.projectilePrefab,this.canvasNode)
-
+            
             //旋转x轴
             let left = Vec3.UNIT_X;
             let velocityV3 = v3();

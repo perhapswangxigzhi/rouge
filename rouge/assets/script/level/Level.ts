@@ -1,8 +1,9 @@
-import { CCFloat, CCInteger, Component, Label, Node, Prefab, Vec3, _decorator, assert, director, find, instantiate, macro, screen, sys } from "cc";
+import { CCFloat, CCInteger, Color, Component, Label, Node, Prefab, Tween, Vec3, _decorator, assert, director, dragonBones, find, instantiate, macro, screen, sp, sys, tween, v3 } from "cc";
 import { GameEvent } from "../event/GameEvent";
 import { PlayerController } from "../actor/PlayControl";
 import { CoinDrop } from "../ani/CoinDrop";
 import { AudioMgr } from "../sound/soundManager";
+import { DrangonAni } from "../ani/DrangonAni";
 const { ccclass, property, requireComponent } = _decorator;
 
 /**
@@ -36,8 +37,9 @@ export class Level extends Component {
     challengeEnemyPrefab2: Prefab | null = null;
     @property(Prefab)
     bossPrefab: Prefab | null = null;
-    totalCount = 2;
+    totalCount = 3;
     killedCount: number = 0;
+    currentEnemyCount: number = 0;
     challengeKilledCount_1: number = 0;
     challengeKilledCount_2: number = 0;
     coin_1:Node;
@@ -45,6 +47,11 @@ export class Level extends Component {
     bossWarningCoin:Node;
     wall:Node;
     Countdown:number=0;
+    EnemyLimited:number=30;
+    currentTween=null;
+    @property(Node)
+    bossNode : Node = null;
+
     @property(Node)
     uiFail: Node = null;
 
@@ -54,7 +61,7 @@ export class Level extends Component {
     @property(Label)
     statictics: Label = null;
     @property(Label)
-    killCount: Label = null;
+    currentEnemyCountLabel: Label = null;
 
     totalTimeCount: number = 300;
     delay:number=-6;
@@ -69,11 +76,11 @@ export class Level extends Component {
         this.coin_1=find('UIRoot/GoldChanllengeBg/UIcoin')
         this.coin_2=find('UIRoot/ExpChallengeBg/UIcoin')
         this.bossWarningCoin=find('UIRoot/UIBossWarning')
-        this.wall=find('LevelCanvas/Wall')
+        this.wall=find('LevelCanvas/Player/Wall')
         director.on(GameEvent.OnDie, this.onActorDead, this);
         director.on(GameEvent.OnChallengeDie_1, this.onChallengeDead_1, this);
         director.on(GameEvent.OnChallengeDie_2, this.onChallengeDead_2, this);
-        director.on(GameEvent.OnBossDie, this.onBossDead, this);
+        director.on(GameEvent.OnBossDie, this.onWin, this);
         director.on(GameEvent.OnCreate1, this.onActorCreate1,  this);
         director.on(GameEvent.OnCreate2, this.onActorCreate2,  this);
         this.updateCountdownTime()
@@ -82,7 +89,33 @@ export class Level extends Component {
         },1, macro.REPEAT_FOREVER, 0);
         
     }
-
+    update(dt: number)  {
+        this.currentEnemyCount=this.totalCount-this.killedCount
+        this.currentEnemyCountLabel.string = `${this.currentEnemyCount}/${this.EnemyLimited}`;
+        if(this.currentEnemyCount>=20){
+            if(this.currentTween!=null){
+                return;
+            }
+            this.currentEnemyCountLabel.color=new Color(255,0,0,255);
+            this.currentTween=tween(this.currentEnemyCountLabel.node)
+            .to(0.5, { scale: v3(0.3, 0.4, 1) }) // 缩小
+            .to(0.5, { scale: v3(0.4, 0.5, 1) })     // 放大
+            .union()                             // 合并
+            .repeatForever()                     // 循环执行
+            .start();                            // 开始执行
+        }else if(this.currentEnemyCount<20){
+           if(this.currentTween!=null){
+               this.currentTween.stop();
+               this.currentEnemyCountLabel.color=new Color(255,255,255,255);
+               this.currentEnemyCountLabel.node.scale = new Vec3(0.3, 0.4, 1);
+               this.currentTween=null;
+           }
+        }else if(this.currentEnemyCount==30){
+            this.onLose();
+        }else if(this.currentEnemyCount>30){
+            return;
+        }   
+   }
     onDestroy() {     
         director.off(GameEvent.OnDie, this.onActorDead, this);
     }
@@ -109,26 +142,12 @@ export class Level extends Component {
     }
     onActorDead(node: Node) {
         if (node && node == PlayerController.instance?.node) {
-            AudioMgr.inst.stop();
-            this.uiFail.active = true;
-        } else {
-            this.killedCount++;
-            this.killCount.string = `${this.killedCount}`; 
-            //所有小怪死亡时boss出场
-            if( this.killedCount == this.totalCount){
-                this.wall.active=true;
-                this.bossWarningCoin.active=true;
-                AudioMgr.inst.stop();
-                AudioMgr.inst.playOneShot('Boss_comming_warning',0.7);
-                setTimeout(() => {
-                this.bossWarningCoin.active=false;
-                AudioMgr.inst.play('Boss_comming_bgm',0.3);
-                this.doBossSpawn(this.spawnPoints[this.spawnPoints.length - 1]);
-                },4000);
-            }
-           
-        }
+            this.onLose();
+        } 
+        this.killedCount++;
+      
     }
+  
     //第一种挑战怪全部死亡时触发
     onChallengeDead_1(){
         this.challengeKilledCount_1++;
@@ -137,6 +156,7 @@ export class Level extends Component {
             this.coin_1.worldPosition=this.spawnPoints[this.spawnPoints.length - 1].spawnNode.worldPosition;
             this.coin_1.active=true;
             this.coin_1.getComponent(CoinDrop).drop();
+            this.challengeKilledCount_1=0;
         }
 
 
@@ -149,15 +169,27 @@ export class Level extends Component {
             this.coin_2.worldPosition=this.spawnPoints[this.spawnPoints.length - 1].spawnNode.worldPosition;
             this.coin_2.active=true;
             this.coin_2.getComponent(CoinDrop).drop();
+            this.challengeKilledCount_2=0;
         }
    
     }
     //Boss死亡时游戏胜利
-    onBossDead(node: Node) {
+    onWin(node: Node) {
         AudioMgr.inst.stop();
         this.uiWin.active = true;
+        this.uiWin.parent.getChildByName('UIMask').active = true;
     }
-
+    //游戏失败
+    onLose(){
+        AudioMgr.inst.stop();
+        this.uiFail.active = true;
+        this.uiFail.parent.getChildByName('UIMask').active = true;
+        const failAnimation = this.uiFail.getChildByName('Fail Animation').getComponent(dragonBones.ArmatureDisplay)
+        failAnimation.playAnimation('effect',1)
+        failAnimation.addEventListener(dragonBones.EventObject.COMPLETE, ()=>{
+            director.pause();  
+        }, this)
+    }
     onActorCreate1(node: Node) {
         if( node &&node == PlayerController.instance?.node){
             const playerNode = PlayerController.instance.node;
@@ -171,7 +203,7 @@ export class Level extends Component {
             this.schedule(() => {
                 this.doChallengeSpawn1(spawnPoint)
                 this.totalCount +=  1;
-             //   this.statictics.string = `${this.killedCount}/${this.totalCount}`;
+             
             }, spawnPoint.interval, spawnPoint.repeatCount, 0.0);
         }
     }
@@ -188,7 +220,6 @@ export class Level extends Component {
             this.schedule(() => {
                 this.doChallengeSpawn2(spawnPoint)
                 this.totalCount +=  1;
-                //this.statictics.string = `${this.killedCount}/${this.totalCount}`;
             }, spawnPoint.interval, spawnPoint.repeatCount, 0.0);
         }
     }
@@ -196,18 +227,45 @@ export class Level extends Component {
          updateCountdownTime() {
             let m=this.totalTimeCount/60;
             let s=this.totalTimeCount%60;
+            this.currentEnemyCount=this.totalCount-parseInt(this.currentEnemyCountLabel.string);
             if(s==0){
                 m--
                 s=59
-                for (let sp of this.spawnPoints) {
-                    this.totalCount += sp.repeatCount + 1;
+                this.delay=-6;
+            for (let sp of this.spawnPoints) {
+                   
                     this.schedule(() => {
                         this.doSpawn(sp)
+                        this.totalCount +=  1;
                     }, sp.interval, sp.repeatCount, this.delay+=6);
                 }
             }
             this.totalTimeCount--
             this.statictics.string= `${Math.floor(m)}:${s.toFixed(0)}`
-          
+            
+              //最后一分钟时boss出场
+        if( this.totalTimeCount==60){
+            this.wall.active=true;
+            this.bossWarningCoin.active=true;
+            AudioMgr.inst.stop();
+            AudioMgr.inst.playOneShot('Boss_comming_warning',0.7);
+            setTimeout(() => {
+                this.bossWarningCoin.active=false;
+                AudioMgr.inst.play('Boss_comming_bgm',0.3);
+                const spawnPoint = new SpawnPoint();
+                spawnPoint.spawnNode=this.bossNode
+                spawnPoint.interval = 0;
+                spawnPoint.repeatCount = 1;
+                this.spawnPoints.push(spawnPoint);
+                this.doBossSpawn(spawnPoint);
+            },4000);
         }
+        if(this.totalTimeCount==0){
+            this.uiFail.getChildByName('Button').active =false;
+            this.uiFail.getChildByName('Button-001').active = false;
+            this.uiFail.getChildByName('Button-002').active = true;
+            this.onLose();
+        }
+    }
+   
 }

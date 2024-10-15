@@ -52,9 +52,9 @@ export class CoinDrop extends Component {
                     finishedCount++;
                     if(finishedCount>=this.coinCount){ 
                          if(coinPfb==this.node.getChildByName('coin')){
-                            UIGold.instance.coinCount+=this.coinCount*2;
+                            UIGold.instance.coinCount+=this.coinCount*5;
                         } if(coinPfb==this.node.getChildByName('exp')){
-                            UIExBar.instance.ExpDrop+=this.coinCount*10;
+                            UIExBar.instance.ExpDrop+=this.coinCount*15;
                         }
                         assetManager.resources.load("sounds/getcoin", AudioClip, (err, clip) => {
                             // 播放音效

@@ -1,6 +1,8 @@
 import { _decorator, assetManager, AssetManager, Component, director, Label, random, Sprite, SpriteFrame } from "cc";
 import { Equipment } from "./Equipment";
 import { AssentManager } from "./AssentManager";
+import { Client } from "socket.io/dist/client";
+import { SignalrClient } from "../signalr/SignalrClient";
 
 const{ccclass,property}=_decorator
 @ccclass('RewardsManager')
@@ -80,7 +82,9 @@ export class RewardsManager extends Component{
        this.gold.string=`+${this.rewardsGoldCount}`
        this.engry.string=`+${this.rewardsEngryCount}`
        this.diamond.string=`+${this.rewardsDiamondCount}`
-       AssentManager.instance.getAssent(this.rewardsGoldCount,this.rewardsEngryCount,this.rewardsDiamondCount)
+        SignalrClient.instance.setAssent(AssentManager.instance.goldCount+this.rewardsGoldCount,AssentManager.instance.energyCount
+        +this.rewardsEngryCount,AssentManager.instance.diamondCount+this.rewardsDiamondCount)
+        SignalrClient.instance.getAssent();
     }
 
 }

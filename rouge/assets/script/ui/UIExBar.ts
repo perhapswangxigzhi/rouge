@@ -1,6 +1,7 @@
 import { _decorator, Component, Node, ProgressBar, RichText } from 'cc';
 import { PlayerController } from '../actor/PlayControl';
 import { UItalendRemind } from './UItalendRemind';
+import { ActorStage } from '../actor/ActorStage';
 const { ccclass, property } = _decorator;
 
 @ccclass('UIExBar')
@@ -18,16 +19,16 @@ export class UIExBar extends Component {
     }
 
     update(deltaTime: number) {
-        if (!PlayerController.instance || !PlayerController.instance.actor) {
+         if (!ActorStage.instance ) {
             return;
         }
-        this.ExpCount=this.ExpDrop+PlayerController.instance.actor.playerProperty.ex;;
-        const maxEx = PlayerController.instance.actor.playerProperty.maxEx;
+        this.ExpCount=ActorStage.instance.playerProperty.ex+this.ExpDrop;
+        const maxEx = ActorStage.instance.playerProperty.maxEx;
          // 计算商和余数
         const quotient = Math.floor(this.ExpCount / maxEx);
         this.progressBar.progress = (this.ExpCount % maxEx) / maxEx;
-        UItalendRemind.instance.levelCount=quotient;
-        PlayerController.instance.actor.playerProperty.level=quotient;
+        UItalendRemind.instance.levelCount=quotient; 
+        ActorStage.instance.playerProperty.level=quotient;
         this.richTextLabel.string = `LV:${quotient}`;
         
     }

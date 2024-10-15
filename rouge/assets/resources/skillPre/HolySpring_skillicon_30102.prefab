@@ -41,8 +41,8 @@
     },
     "_lpos": {
       "__type__": "cc.Vec3",
-      "x": -1544.924,
-      "y": -1399.745,
+      "x": 0,
+      "y": 0,
       "z": 0
     },
     "_lrot": {
@@ -130,8 +130,8 @@
       "__expectedType__": "dragonBones.DragonBonesAtlasAsset"
     },
     "_armatureName": "Armature",
-    "_animationName": "",
-    "_animationIndexValue": 0,
+    "_animationName": "skill_5",
+    "_animationIndexValue": 3,
     "_defaultCacheModeValue": 0,
     "_timeScale": 1,
     "_playTimes": -1,
@@ -201,7 +201,7 @@
       "x": 0,
       "y": 0
     },
-    "_radius": 96.07,
+    "_radius": 200.47,
     "_id": ""
   },
   {
@@ -221,9 +221,10 @@
       "__id__": 11
     },
     "audioSource": null,
-    "skillCoefficient": 0.1,
+    "skillBuffPrefab": null,
+    "skillCoefficient": 0.3,
     "skillContinueTime": 4,
-    "playSkillDragonBoneAudio": "skill_1",
+    "playSkillDragonBoneAudio": "skill_5",
     "_id": ""
   },
   {

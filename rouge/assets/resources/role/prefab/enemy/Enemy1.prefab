@@ -134,7 +134,7 @@
   },
   {
     "__type__": "cc.Node",
-    "_name": "Emitter4Dir",
+    "_name": "Emitter_Enemy1",
     "_objFlags": 0,
     "__editorExtras__": {},
     "_parent": {
@@ -590,7 +590,7 @@
     "startLinearSpeed": 5,
     "startAngularSpeed": 20,
     "projectilePrefab": {
-      "__uuid__": "f112bd1a-b9ea-4f93-95c3-ab548ac45eda",
+      "__uuid__": "25962fed-e7e4-4120-b631-3fb910924ad5",
       "__expectedType__": "cc.Prefab"
     },
     "emitterRoot": {

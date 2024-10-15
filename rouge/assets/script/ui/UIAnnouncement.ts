@@ -14,20 +14,20 @@ export class UIAnnouncement extends Component {
         // 设置公告内容
         this.announcementLabel.string = 
         `
-            版本V1.1.2
+            版本V1.1.3
                   更新内容：
                 1. 新增功能：
-                  - 新增计时器
-                  - 新增怪物波次
-                  - 新增设置音效，音乐，震动开关
+                  - 新增signalrt通信框架
+                  - 新增怪物上限玩法
+                  - 新增获取的资源存储服务端中
                  
                2. 优化功能：
                   
                3. 修复BUG:
-                  - 修复怪物实体吞弹bug `;
-        // 监听关闭按钮点击事件
-        this.closeButton1.node.on(Button.EventType.CLICK, this.onCloseButtonClicked, this);
-        this.closeButton2.node.on(Button.EventType.CLICK, this.onCloseButtonClicked, this);
+                  - 修复技能索敌bug `;
+        // // 监听关闭按钮点击事件
+        // this.closeButton1.node.on(Button.EventType.CLICK, this.onCloseButtonClicked, this);
+        // this.closeButton2.node.on(Button.EventType.CLICK, this.onCloseButtonClicked, this);
     }
 
     onCloseButtonClicked() {

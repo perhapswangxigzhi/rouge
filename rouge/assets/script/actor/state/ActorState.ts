@@ -14,7 +14,9 @@ export abstract class ActorState implements IState<StateDefine> {
         this.id = id;
         this.animation = actor.animation;
         this.dragonBoneAnimation = actor.dragonBoneAnimation;
+        if(find('LevelCanvas/Player')){
         this.playerActor=find('LevelCanvas/Player').getComponent(Actor)
+        }
     }
 
     onEnter() { }

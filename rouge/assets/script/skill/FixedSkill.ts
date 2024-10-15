@@ -17,7 +17,7 @@ export class FixedSkill extends Component {
     host: Actor | null = null;
     enemHost: Actor[] = [];
     damage: number = 0;
-    isEnemyInRange: boolean = false;
+    Count:number=0;
     @property(Prefab)
     skillBuffPrefab: Prefab = null;
     @property(CCFloat)
@@ -50,8 +50,7 @@ export class FixedSkill extends Component {
 
     onCollisionBegin(self: Collider2D, other: Collider2D, contact: IPhysics2DContact) {
         if ( colliderTag.isProjectileHitable(self.tag, other.tag)) {
-          //console.log('敌人进入技能范围');
-          this.isEnemyInRange = true;
+          //console.log('敌人进入技能范围')
           this.enemHost.push(other.node.getComponent(Actor));
         }
     }
@@ -59,7 +58,6 @@ export class FixedSkill extends Component {
     onCollisionEnd(self: Collider2D, other: Collider2D, contact: IPhysics2DContact) {
       if (colliderTag.isProjectileHitable(self.tag, other.tag)) {
         //  console.log('敌人离开技能范围');
-          this.isEnemyInRange = false;
           var index = this.enemHost.indexOf(other.node.getComponent(Actor));
           if (index > -1) {
             this.enemHost.splice(index, 1);
@@ -67,8 +65,7 @@ export class FixedSkill extends Component {
     }
   }
     onAnimationComplete() {
-     // console.log("动画播放完成");
-      if (this.isEnemyInRange==true) {
+        console.log('动画播放完成次数：', this.Count++)
         const v2HitNormal = v2(0,0);
         this.enemHost.forEach((enemy) => {
           if(this.skillBuffPrefab!=null){
@@ -78,7 +75,7 @@ export class FixedSkill extends Component {
           enemy.onHurt(this.damage, this.host, v2HitNormal)
         })
      
-      }
+      
       
    }
    

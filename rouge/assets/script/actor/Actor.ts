@@ -1,4 +1,4 @@
-import { _decorator, Component, Node, RigidBody,RigidBody2D,CircleCollider2D,Collider2D, Sprite, CCFloat, Vec2, v2, IPhysics2DContact, Contact2DType, Animation, v3, Vec3, math, Color, Quat, assetManager, AudioClip, AudioSource, dragonBones, resources, Prefab, instantiate, find, UITransform, color, game } from 'cc';
+import { _decorator, Component, Node, RigidBody,RigidBody2D,CircleCollider2D,Collider2D, Sprite, CCFloat, Vec2, v2, IPhysics2DContact, Contact2DType, Animation, v3, Vec3, math, Color, Quat, assetManager, AudioClip, AudioSource, dragonBones, resources, Prefab, instantiate, find, UITransform, color, game, director, sys } from 'cc';
 import { StateMachine } from '../fsm/StateMachine';
 import { StateDefine } from './StateDefine';
 import { colliderTag } from './ColliderTag';
@@ -15,6 +15,7 @@ import { AudioMgr } from '../sound/soundManager';
 import { Equipment } from '../bag/Equipment';
 import { AssentManager } from '../bag/AssentManager';
 import { PlayerController } from './PlayControl';
+import { ActorStage } from './ActorStage';
 const { ccclass, property ,requireComponent,disallowMultiple} = _decorator;
 
 @ccclass('Actor')
@@ -32,18 +33,6 @@ export class Actor extends Component {
     animation: Animation|null=null;
     @property(dragonBones.ArmatureDisplay)
     dragonBoneAnimation:dragonBones.ArmatureDisplay|null = null;
-    damage:number=0;
-    // 使用字典存储多个ActorProperty对象
-    actorProperties: { [key: string]: ActorProperty } = {};
-    playerProperty : ActorProperty = new ActorProperty("Player",100,10);
-    enemy1_Property : ActorProperty = new ActorProperty("Enemy1",50,5);
-    enemy3_Property : ActorProperty = new ActorProperty("Enemy3",100,5);
-    challengeEnemy1_Property : ActorProperty = new ActorProperty("challengeEnemy1",200,10);
-    challengeEnemy2_Property : ActorProperty = new ActorProperty("challengeEnemy2",400,10);
-    boss1_Property : ActorProperty = new ActorProperty("Boss1",500,10);
-    building_1_Property:ActorProperty=new ActorProperty("building_1",30,0)
-    building_2_Property:ActorProperty=new ActorProperty("building_2",20,0)
-    building_3_Property:ActorProperty=new ActorProperty("building_3",10,0)
     current_ActorProperty:ActorProperty|null=null;
     @property(Sprite)
     mainRenderer: Sprite|null=null;
@@ -64,7 +53,7 @@ export class Actor extends Component {
     damageTextPrefab: Prefab = null;
     cirtTextPrefab:Prefab|null=null;
     isCriticalHit:boolean=false
-    
+    damageQueue = [];
     cooldown:number=5 
     castTime:number=0
     
@@ -74,16 +63,9 @@ export class Actor extends Component {
         this.collider = this.getComponent(Collider2D);
         this.collider.on(Contact2DType.BEGIN_CONTACT, this.onProjectileTriggerEnter, this);
         this.canvasNode=find('LevelCanvas')
-        this.addActorProperty(this.playerProperty);
-        this.addActorProperty(this.enemy1_Property);
-        this.addActorProperty(this.enemy3_Property);
-        this.addActorProperty(this.challengeEnemy1_Property);
-        this.addActorProperty(this.challengeEnemy2_Property);
-        this.addActorProperty(this.boss1_Property);
-        this.addActorProperty(this.building_1_Property)
-        this.addActorProperty(this.building_2_Property)
-        this.addActorProperty(this.building_3_Property)
-        this.current_ActorProperty=this.getActorProperty(this.node.name)
+        this.current_ActorProperty=ActorStage.instance.getActorProperty(this.node.name)
+       
+       
         this.castTime=game.totalTime;
           //获取暴击预制体
         assetManager.resources.load(`DamageTest/CirtText`, Prefab, (err, prefab) => {
@@ -92,52 +74,53 @@ export class Actor extends Component {
             }
             this.cirtTextPrefab = prefab;
         });
-        if(this.current_ActorProperty==this.playerProperty){
-            this.playerProperty.speed=this.linearSpeed
+        if(this.current_ActorProperty==ActorStage.instance.playerProperty){
+            ActorStage.instance.playerProperty.speed=this.linearSpeed
             this.setEquip();//装备属性
-            this.linearSpeed=this.playerProperty.speed
+            this.linearSpeed=ActorStage.instance.playerProperty.speed
             console.log("装备属性设置成功")
-            console.log(this.playerProperty)
+            console.log(ActorStage.instance.playerProperty)
         }
        
     }
     get isCoolingdown(){
         return game.totalTime-this.castTime>=this.cooldown*1000;
     }
-      // 根据名字获取ActorProperty对象
-    getActorProperty(name: string): ActorProperty | undefined {
-        return this.actorProperties[name];
-    }
-    addActorProperty(actorProperty: ActorProperty) {
-        this.actorProperties[actorProperty.name] = actorProperty;
-    }
     onDisable() {
         this.collider.off(Contact2DType.BEGIN_CONTACT, this.onProjectileTriggerEnter, this);
     }
-
+    onListenable() {
+        this.collider.on(Contact2DType.BEGIN_CONTACT, this.onProjectileTriggerEnter, this);
+    }
     update(deltaTime: number) {
         this.stateMgr.update(deltaTime);
-        
+           // 在每帧处理所有累积的伤害
+        while (this.damageQueue.length > 0) {
+            const { damage, hurtSrc, hitNormal } = this.damageQueue.shift();
+            this.onHurt(damage, hurtSrc, hitNormal);
+        }
     }
     onProjectileTriggerEnter(ca:Collider2D, cb:Collider2D,contact:IPhysics2DContact){
       
         if (colliderTag.isProjectileHitable(cb.tag, ca.tag)) {
+            let hurtSrc;
+            let damage = 0;
             if(cb.node.getComponent(Projectile)){
-            this.hurtSrc = cb.node.getComponent(Projectile).host;
-            this.damage = cb.node.getComponent(Projectile).damage;
+                hurtSrc = cb.node.getComponent(Projectile).host;
+                damage = cb.node.getComponent(Projectile).damage;
             }
             if(cb.node.getComponent(StrightSkill)){
-                this.hurtSrc = cb.node.getComponent(StrightSkill).host;
-                this.damage = cb.node.getComponent(StrightSkill).damage;
+                hurtSrc = cb.node.getComponent(StrightSkill).host;
+                damage = cb.node.getComponent(StrightSkill).damage;
             }
             if(cb.node.getComponent(FixedSkill)){
-                this.hurtSrc = cb.node.getComponent(FixedSkill).host;
-                this.damage = 0
+                hurtSrc = cb.node.getComponent(FixedSkill).host;
+                damage = 0;
                 cb.node.getComponent(FixedSkill).onCollisionBegin
             }
             if(cb.node.getComponent(PointSkill)){
-                this.hurtSrc = cb.node.getComponent(PointSkill).host;
-                this.damage = 0
+                hurtSrc = cb.node.getComponent(PointSkill).host;
+                damage = 0;
                 cb.node.getComponent(PointSkill).onCollisionBegin
             }
             
@@ -145,9 +128,13 @@ export class Actor extends Component {
             Vec3.subtract(hitNormal, ca.node.worldPosition, cb.node.worldPosition);
             hitNormal.normalize();
             const v2HitNormal = v2(hitNormal.x, hitNormal.y);
-            if(this.hurtSrc.current_ActorProperty!=null){
-            this.onHurt(this.damage, this.hurtSrc, v2HitNormal);
-            }
+              // 将伤害信息加入队列
+            this.damageQueue.push(
+                { damage, hurtSrc, hitNormal: v2HitNormal }
+            );
+            // if(this.hurtSrc.current_ActorProperty!=null){
+            // this.onHurt(this.damage, this.hurtSrc, v2HitNormal);
+            // }
         }
     }
   
@@ -187,9 +174,11 @@ export class Actor extends Component {
             damageTextNode.getComponent(DamageTextManager).showDamage(hitPosition, damage,Color.WHITE);
         }
         this.rigidbody.applyLinearImpulseToCenter(hurtDirection,true)
-        if(this.current_ActorProperty==this.playerProperty&&AssentManager.instance.navigator==true){
+        if(sys.isMobile==true){  //当前环境为手机
+        if(this.current_ActorProperty==ActorStage.instance.playerProperty&&AssentManager.instance.navigator==true){
             navigator.vibrate(100);
         }
+    }
         //受伤闪烁
         if(this.mainRenderer!=null){
         this.mainRenderer.color=Color.RED;
@@ -227,13 +216,13 @@ export class Actor extends Component {
     setEquip(){
         if(AssentManager.instance){
         for(let i=0;i<AssentManager.instance.barEquipCount.length;i++){
-        this.playerProperty.maxHp+=Equipment.inst.equipmentPerporty[AssentManager.instance.barEquipCount[i]].hp
-        this.playerProperty.hp+=Equipment.inst.equipmentPerporty[AssentManager.instance.barEquipCount[i]].hp
-        this.playerProperty.attack+=Equipment.inst.equipmentPerporty[AssentManager.instance.barEquipCount[i]].attack
-        this.playerProperty.defence+=Equipment.inst.equipmentPerporty[AssentManager.instance.barEquipCount[i]].defence
-        this.playerProperty.speed+= this.playerProperty.speed*Equipment.inst.equipmentPerporty[AssentManager.instance.barEquipCount[i]].speed
-        this.playerProperty.attackSpeed+=this.playerProperty.attackSpeed*Equipment.inst.equipmentPerporty[AssentManager.instance.barEquipCount[i]].attackSpeed
-        this.playerProperty.crit+=Equipment.inst.equipmentPerporty[AssentManager.instance.barEquipCount[i]].crit
+        ActorStage.instance.playerProperty.maxHp+=Equipment.inst.equipmentPerporty[AssentManager.instance.barEquipCount[i]].hp
+        ActorStage.instance.playerProperty.hp+=Equipment.inst.equipmentPerporty[AssentManager.instance.barEquipCount[i]].hp
+        ActorStage.instance.playerProperty.attack+=Equipment.inst.equipmentPerporty[AssentManager.instance.barEquipCount[i]].attack
+        ActorStage.instance.playerProperty.defence+=Equipment.inst.equipmentPerporty[AssentManager.instance.barEquipCount[i]].defence
+        ActorStage.instance.playerProperty.speed+= ActorStage.instance.playerProperty.speed*Equipment.inst.equipmentPerporty[AssentManager.instance.barEquipCount[i]].speed
+        ActorStage.instance.playerProperty.attackSpeed+=ActorStage.instance.playerProperty.attackSpeed*Equipment.inst.equipmentPerporty[AssentManager.instance.barEquipCount[i]].attackSpeed
+        ActorStage.instance.playerProperty.crit+=Equipment.inst.equipmentPerporty[AssentManager.instance.barEquipCount[i]].crit
         }
     }
 }
