@@ -1,7 +1,7 @@
 [
   {
     "__type__": "cc.Prefab",
-    "_name": "challengeEnemy1",
+    "_name": "ChallengeEnemy1",
     "_objFlags": 0,
     "__editorExtras__": {},
     "_native": "",
@@ -13,7 +13,7 @@
   },
   {
     "__type__": "cc.Node",
-    "_name": "challengeEnemy1",
+    "_name": "ChallengeEnemy1",
     "_objFlags": 0,
     "__editorExtras__": {},
     "_parent": null,
@@ -228,7 +228,7 @@
       "__id__": 4
     },
     "mainRenderer": null,
-    "linearSpeed": 1,
+    "linearSpeed": 3,
     "ItemPrefab": {
       "__uuid__": "0f05e22e-9abf-487f-a64f-2c55f764222d",
       "__expectedType__": "cc.Prefab"
@@ -271,6 +271,7 @@
       "__id__": 0
     },
     "fileId": "68OS/n/mVCuq2AN0pPTVv8",
+    "instance": null,
     "targetOverrides": null
   }
 ]

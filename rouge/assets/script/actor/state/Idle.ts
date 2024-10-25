@@ -4,9 +4,10 @@ import { StateDefine } from "../StateDefine";
 
 export class Idle extends ActorState {
     onEnter(): void {
-        this.actor.rigidbody.linearVelocity=Vec2.ZERO;
-       // let hasIdle = this.animation.getState(StateDefine.Idle);
-       
+            if(this.actor.rigidbody){
+                this.actor.rigidbody.linearVelocity=Vec2.ZERO;
+            }
+    
             if(this.dragonBoneAnimation){
                 this.dragonBoneAnimation.playAnimation(StateDefine.Idle,-1);
                 //console.log("the dragon bone play idle animation");

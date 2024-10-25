@@ -82,9 +82,11 @@ export class RewardsManager extends Component{
        this.gold.string=`+${this.rewardsGoldCount}`
        this.engry.string=`+${this.rewardsEngryCount}`
        this.diamond.string=`+${this.rewardsDiamondCount}`
+       if(SignalrClient.opend==true){
         SignalrClient.instance.setAssent(AssentManager.instance.goldCount+this.rewardsGoldCount,AssentManager.instance.energyCount
         +this.rewardsEngryCount,AssentManager.instance.diamondCount+this.rewardsDiamondCount)
         SignalrClient.instance.getAssent();
+       }
     }
 
 }

@@ -49,7 +49,7 @@ export class EnemyControl extends Component {
 
     update(deltaTime: number) {
         if (this.frozenTime<=0) {
-        this.ai.update(deltaTime);
+            this.ai.update(deltaTime);
         if(!this.playerNode){
             return;
         }

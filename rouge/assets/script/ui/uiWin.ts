@@ -1,6 +1,7 @@
 import { _decorator, Component, director, Event, find, Label, Node, ProgressBar, tween, Tween, v3 } from 'cc';
 import { RewardsManager } from '../bag/RewardsManager';
 import { AudioMgr } from '../sound/soundManager';
+import { PreStageNode } from '../signalr/PreStageNode';
 const { ccclass, property } = _decorator;
 
 @ccclass('uiWin')
@@ -36,6 +37,10 @@ export class uiWin extends Component {
                 .to(0.3, { scale: v3(1, 1, 1) })     // 放大
                 .union()                             // 合并
                 .start();                  
+    }
+    onBtnPreloadClicked(event:Event){
+        PreStageNode.instance.isPrelood=true
+        this.onBtnReturnClicked();
     }
       //点击按钮播放音效
       playSound(event:Event,customEventData:string){

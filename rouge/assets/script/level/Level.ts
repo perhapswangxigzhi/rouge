@@ -4,6 +4,9 @@ import { PlayerController } from "../actor/PlayControl";
 import { CoinDrop } from "../ani/CoinDrop";
 import { AudioMgr } from "../sound/soundManager";
 import { DrangonAni } from "../ani/DrangonAni";
+import { PreStageNode } from "../signalr/PreStageNode";
+import { AssentManager } from "../bag/AssentManager";
+import { ActorStage } from "../actor/ActorStage";
 const { ccclass, property, requireComponent } = _decorator;
 
 /**
@@ -22,7 +25,13 @@ export class SpawnPoint {
     repeatCount: number = 0;
     
 }
-
+enum LevelState {
+    "第一关",
+    "第二关",
+    "第三关",
+    "第四关",
+    "第五关"
+}
 @ccclass("Level")
 export class Level extends Component {   
 
@@ -30,14 +39,18 @@ export class Level extends Component {
     spawnPoints: Array<SpawnPoint> = [];
 
     @property(Prefab)
-    enemyPrefab: Prefab | null = null;
+    enemyPrefab1: Prefab | null = null;
+    @property(Prefab)
+    enemyPrefab2: Prefab | null = null;
+    @property(Prefab)
+    enemyPrefab3: Prefab | null = null;
     @property(Prefab)
     challengeEnemyPrefab1: Prefab | null = null;
     @property(Prefab)
     challengeEnemyPrefab2: Prefab | null = null;
     @property(Prefab)
     bossPrefab: Prefab | null = null;
-    totalCount = 3;
+    totalCount = 0;
     killedCount: number = 0;
     currentEnemyCount: number = 0;
     challengeKilledCount_1: number = 0;
@@ -47,8 +60,9 @@ export class Level extends Component {
     bossWarningCoin:Node;
     wall:Node;
     Countdown:number=0;
-    EnemyLimited:number=30;
+    EnemyLimited:number=40;
     currentTween=null;
+    sp:number=0;
     @property(Node)
     bossNode : Node = null;
 
@@ -65,11 +79,13 @@ export class Level extends Component {
 
     totalTimeCount: number = 300;
     delay:number=-6;
+    WavePick:number=0;
     onLoad() {
         AudioMgr.inst.play('bgm',0.5);
     }
-
+    static instance: Level |null=null;
     start() {
+        Level.instance=this;
         if(sys.platform == sys.Platform.MOBILE_BROWSER ){
             screen.requestFullScreen();        
         }         
@@ -83,16 +99,36 @@ export class Level extends Component {
         director.on(GameEvent.OnBossDie, this.onWin, this);
         director.on(GameEvent.OnCreate1, this.onActorCreate1,  this);
         director.on(GameEvent.OnCreate2, this.onActorCreate2,  this);
-        this.updateCountdownTime()
+        //this.updateCountdownTime()
+        //如果不需要加载保存场景，正常执行
+        if(PreStageNode.instance==null||PreStageNode.instance.isPrelood==false){
+            console.log('load stage scene为空')
+            this.schedule(() => {
+                this.createEnemy();
+                this.updateCountdownTime()
+                this.onEnemyLimitedWarning();
+            },1, macro.REPEAT_FOREVER, 0);
+            return;
+        }else{
+            this.scheduleOnce(() => {
+            PreStageNode.instance.loadStageScence();   
+            },0.3)
         this.schedule(() => {
+            this.createEnemy();
             this.updateCountdownTime()
+            this.onEnemyLimitedWarning();
         },1, macro.REPEAT_FOREVER, 0);
-        
+
     }
+}
+
     update(dt: number)  {
         this.currentEnemyCount=this.totalCount-this.killedCount
         this.currentEnemyCountLabel.string = `${this.currentEnemyCount}/${this.EnemyLimited}`;
-        if(this.currentEnemyCount>=20){
+   }
+   //敌人上限警告
+    onEnemyLimitedWarning(){
+        if(this.currentEnemyCount>=30&&this.currentEnemyCount<40){
             if(this.currentTween!=null){
                 return;
             }
@@ -103,28 +139,39 @@ export class Level extends Component {
             .union()                             // 合并
             .repeatForever()                     // 循环执行
             .start();                            // 开始执行
-        }else if(this.currentEnemyCount<20){
+        }else if(this.currentEnemyCount<30){
            if(this.currentTween!=null){
                this.currentTween.stop();
                this.currentEnemyCountLabel.color=new Color(255,255,255,255);
                this.currentEnemyCountLabel.node.scale = new Vec3(0.3, 0.4, 1);
                this.currentTween=null;
            }
-        }else if(this.currentEnemyCount==30){
-            this.onLose();
-        }else if(this.currentEnemyCount>30){
+        }
+        if(this.currentEnemyCount>=40){
+            this.UIlimitedWarning();
             return;
-        }   
-   }
+        }
+    }
     onDestroy() {     
         director.off(GameEvent.OnDie, this.onActorDead, this);
     }
 
-    doSpawn(sp: SpawnPoint) {
-        let node = instantiate(this.enemyPrefab);
+    doEnemy1Spawn(sp: SpawnPoint) {
+        let node = instantiate(this.enemyPrefab1);
         this.node.addChild(node);
         node.worldPosition = sp.spawnNode.worldPosition;
     }
+    doEnemy2Spawn(sp: SpawnPoint) {
+        let node = instantiate(this.enemyPrefab2);
+        this.node.addChild(node);
+        node.worldPosition = sp.spawnNode.worldPosition;
+    }
+    doEnemy3Spawn(sp: SpawnPoint) {
+        let node = instantiate(this.enemyPrefab3);
+        this.node.addChild(node);
+        node.worldPosition = sp.spawnNode.worldPosition;
+    }
+
     doBossSpawn(sp: SpawnPoint) {
         let node = instantiate(this.bossPrefab);
         this.node.addChild(node);
@@ -158,7 +205,9 @@ export class Level extends Component {
             this.coin_1.getComponent(CoinDrop).drop();
             this.challengeKilledCount_1=0;
         }
-
+        //挑战怪属性增加
+        ActorStage.instance.challengeEnemy1_Property.maxHp*=2
+        ActorStage.instance.challengeEnemy1_Property.attack*=2
 
     }
      //第二种挑战怪全部死亡时触发
@@ -171,13 +220,15 @@ export class Level extends Component {
             this.coin_2.getComponent(CoinDrop).drop();
             this.challengeKilledCount_2=0;
         }
-   
+        ActorStage.instance.challengeEnemy2_Property.maxHp*=2
+        ActorStage.instance.challengeEnemy2_Property.attack*=2
     }
     //Boss死亡时游戏胜利
     onWin(node: Node) {
         AudioMgr.inst.stop();
         this.uiWin.active = true;
         this.uiWin.parent.getChildByName('UIMask').active = true;
+       
     }
     //游戏失败
     onLose(){
@@ -227,18 +278,9 @@ export class Level extends Component {
          updateCountdownTime() {
             let m=this.totalTimeCount/60;
             let s=this.totalTimeCount%60;
-            this.currentEnemyCount=this.totalCount-parseInt(this.currentEnemyCountLabel.string);
             if(s==0){
                 m--
                 s=59
-                this.delay=-6;
-            for (let sp of this.spawnPoints) {
-                   
-                    this.schedule(() => {
-                        this.doSpawn(sp)
-                        this.totalCount +=  1;
-                    }, sp.interval, sp.repeatCount, this.delay+=6);
-                }
             }
             this.totalTimeCount--
             this.statictics.string= `${Math.floor(m)}:${s.toFixed(0)}`
@@ -267,5 +309,79 @@ export class Level extends Component {
             this.onLose();
         }
     }
+    createEnemy(){
+        let s=this.totalTimeCount%60;
+        var randomNum = Math.floor(Math.random() * 10);
+        if(this.totalTimeCount==66){  
+            return;
+        }
+       
+        if(s==0){//每分钟刷新一论波数
+            this.WavePick+=1
+            this.chageWaveEnemy();
+        }
+        //每6秒生成两处敌人
+        if(s%6==0){
+        this.schedule(() => {
+                this.doEnemy1Spawn(this.spawnPoints[randomNum])
+                this.totalCount +=  1;
+            }, this.spawnPoints[randomNum].interval, this.spawnPoints[randomNum].repeatCount,0);
+           
+        this.schedule(() => {
+            this.doEnemy2Spawn(this.spawnPoints[this.sp])
+            this.totalCount +=  1;
+        }, this.spawnPoints[this.sp].interval, this.spawnPoints[this.sp].repeatCount,0);
+            this.sp++
+        }
+        
+       if(this.sp==10){
+        this.sp=0
+       }
+    }
+    chageWaveEnemy(){
+       if(this.WavePick==2){
+            this.setEnemyProperty(2)
+       }
+       if(this.WavePick==3){
+            this.setEnemyProperty(1.5)
+        }
+        if(this.WavePick==3){
+            this.setEnemyProperty(1.5)
+        }
+        if(this.WavePick==4){
+            this.setEnemyProperty(2)
+        }
+        if(this.WavePick>=2){
+            var randomNum = Math.floor(Math.random() * 10);
+            this.schedule(() => {
+                this.doEnemy3Spawn(this.spawnPoints[randomNum])
+                this.totalCount +=  1;
+            }, this.spawnPoints[randomNum].interval, this.spawnPoints[randomNum].repeatCount,0);
+        }
+    }
+    setEnemyProperty(coefficient:number){
+        ActorStage.instance.enemy1_Property.maxHp=Math.floor(ActorStage.instance.enemy1_Property.maxHp*coefficient)
+        ActorStage.instance.enemy1_Property.attack=Math.floor(ActorStage.instance.enemy1_Property.attack*1.5)
+        ActorStage.instance.enemy2_Property.maxHp=Math.floor(ActorStage.instance.enemy2_Property.maxHp*coefficient)
+        ActorStage.instance.enemy2_Property.attack=Math.floor(ActorStage.instance.enemy2_Property.attack*1.5)
+        ActorStage.instance.enemy3_Property.maxHp=Math.floor(ActorStage.instance.enemy3_Property.maxHp*coefficient)
+        ActorStage.instance.enemy3_Property.attack=Math.floor(ActorStage.instance.enemy3_Property.attack*1.5)
+
+    }
+   UIlimitedWarning(){
+    find("UIRoot/UIlimitedWarning").active=true;
+    const label=find("UIRoot/UIlimitedWarning/Label-001").getComponent(Label)
+    const time=parseInt(label.string);
+    let count=parseInt(label.string);
+    this.schedule(()=>{ 
+        count--;
+        label.string=count.toString();
+        },1,time,1)
+        if(count==0){
+            this.onLose();
+            return;
+        }
+    }
    
+
 }

@@ -27,6 +27,8 @@ export class StrightSkill extends Component {
     skillCoefficient: number = 0;  //技能伤害系数
     @property(Number)
     skillContinueTime: number = 0;  //技能持续时间
+    @property(Number)
+    skillPerporty: number = 0;  //技能属性
     start() {
         this.collider = this.node.getComponent(Collider2D);
         this.rigidbody = this.node.getComponent(RigidBody2D);

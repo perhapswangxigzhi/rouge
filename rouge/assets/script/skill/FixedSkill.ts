@@ -26,6 +26,8 @@ export class FixedSkill extends Component {
     skillContinueTime: number = 0;  //技能持续时间
     @property(String)
     playSkillDragonBoneAudio: string = '';  //播放技能龙骨动画名
+    @property(Number)
+    skillPerporty: number = 0;  //技能属性
     start() {
         this.collider = this.node.getComponent(Collider2D);
         this.rigidbody = this.node.getComponent(RigidBody2D);

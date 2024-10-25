@@ -1,7 +1,8 @@
-import { _decorator, assert, assetManager, AudioClip, AudioSource, Collider2D, Component, Contact2DType, find, instantiate, IPhysics2DContact, Node, Prefab, RigidBody2D, Tween } from 'cc';
+import { _decorator, assert, assetManager, AudioClip, AudioSource, Collider2D, Component, Contact2DType, find, instantiate, IPhysics2DContact, Node, NodePool, Prefab, RigidBody2D, Tween } from 'cc';
 import { Actor } from '../Actor';
 import { colliderTag } from '../ColliderTag';
 import { PoolManager } from '../../util/PoolManager';
+
 const { ccclass, property, requireComponent } = _decorator;
 
 @ccclass('Projectile')
@@ -37,10 +38,14 @@ export class Projectile extends Component {
             return;
           }
           this.scheduleOnce(() => {
-            //PoolManager.instance().putNode(this.node);
-             this.node.destroy();
+            PoolManager.instance().putNode(this.node);
+           this.unscheduleAllCallbacks();
           });
           
+        }else{
+          this.scheduleOnce(() => {
+          PoolManager.instance().putNode(this.node);
+    }, 5);
         }
     }
 }

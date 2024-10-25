@@ -1,0 +1,134 @@
+{
+  "ver": "1.0.27",
+  "importer": "image",
+  "imported": true,
+  "uuid": "71c45de7-9a04-4320-8543-633503ee15ab",
+  "files": [
+    ".json",
+    ".png"
+  ],
+  "subMetas": {
+    "6c48a": {
+      "importer": "texture",
+      "uuid": "71c45de7-9a04-4320-8543-633503ee15ab@6c48a",
+      "displayName": "HolySpring_shop_icon_201448",
+      "id": "6c48a",
+      "name": "texture",
+      "userData": {
+        "wrapModeS": "clamp-to-edge",
+        "wrapModeT": "clamp-to-edge",
+        "imageUuidOrDatabaseUri": "71c45de7-9a04-4320-8543-633503ee15ab",
+        "isUuid": true,
+        "visible": false,
+        "minfilter": "linear",
+        "magfilter": "linear",
+        "mipfilter": "none",
+        "anisotropy": 0
+      },
+      "ver": "1.0.22",
+      "imported": true,
+      "files": [
+        ".json"
+      ],
+      "subMetas": {}
+    },
+    "f9941": {
+      "importer": "sprite-frame",
+      "uuid": "71c45de7-9a04-4320-8543-633503ee15ab@f9941",
+      "displayName": "HolySpring_shop_icon_201448",
+      "id": "f9941",
+      "name": "spriteFrame",
+      "userData": {
+        "trimType": "auto",
+        "trimThreshold": 1,
+        "rotated": false,
+        "offsetX": 0.5,
+        "offsetY": -0.5,
+        "trimX": 54,
+        "trimY": 15,
+        "width": 76,
+        "height": 134,
+        "rawWidth": 183,
+        "rawHeight": 163,
+        "borderTop": 0,
+        "borderBottom": 0,
+        "borderLeft": 0,
+        "borderRight": 0,
+        "packable": true,
+        "pixelsToUnit": 100,
+        "pivotX": 0.5,
+        "pivotY": 0.5,
+        "meshType": 0,
+        "vertices": {
+          "rawPosition": [
+            -38,
+            -67,
+            0,
+            38,
+            -67,
+            0,
+            -38,
+            67,
+            0,
+            38,
+            67,
+            0
+          ],
+          "indexes": [
+            0,
+            1,
+            2,
+            2,
+            1,
+            3
+          ],
+          "uv": [
+            54,
+            148,
+            130,
+            148,
+            54,
+            14,
+            130,
+            14
+          ],
+          "nuv": [
+            0.29508196721311475,
+            0.08588957055214724,
+            0.7103825136612022,
+            0.08588957055214724,
+            0.29508196721311475,
+            0.9079754601226994,
+            0.7103825136612022,
+            0.9079754601226994
+          ],
+          "minPos": [
+            -38,
+            -67,
+            0
+          ],
+          "maxPos": [
+            38,
+            67,
+            0
+          ]
+        },
+        "isUuid": true,
+        "imageUuidOrDatabaseUri": "71c45de7-9a04-4320-8543-633503ee15ab@6c48a",
+        "atlasUuid": ""
+      },
+      "ver": "1.0.12",
+      "imported": true,
+      "files": [
+        ".json"
+      ],
+      "subMetas": {}
+    }
+  },
+  "userData": {
+    "type": "sprite-frame",
+    "hasAlpha": true,
+    "fixAlphaTransparencyArtifacts": false,
+    "redirect": "71c45de7-9a04-4320-8543-633503ee15ab@6c48a"
+  }
+}

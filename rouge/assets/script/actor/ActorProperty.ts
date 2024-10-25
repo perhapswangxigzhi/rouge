@@ -41,7 +41,7 @@ export class ActorProperty {
      /**
      * 暴击率
     */
-     crit: number = 0.1;
+    crit: number = 0.1;
      /**
      * 物理暴击伤害
     */
@@ -53,12 +53,49 @@ export class ActorProperty {
     /**
      * 移动速度
     */
-    speed: number = 0;
+    speed: number = 10;
     /**
      * 玩家每秒攻击次数
     */
     attackSpeed: number = 3;
+    /**
+     * 火属性增伤
+    */
+    fireAttack: number = 0;
+    /**
+     * 雷属性增伤
+    */
+    thunderAttack: number = 0;
+    /**
+     * 水属性增伤
+     */
+    waterAttack: number = 0;
      /**
+     * 木属性增伤
+     */
+     woodAttack: number = 0;
+      /**
+     * 金属性增伤
+     */
+     goldAttack: number = 0;
+      /**
+     * 金属性附加伤害
+     */
+    goldAddition: number = 0;
+      /**
+     * 生命恢复
+     */
+    LifeRecovery: number = 0;
+     /**
+     * 技能冷却
+     */
+    cd: number = 0;
+    /**
+     * 护盾量
+     */
+    shield: number = 0;
+
+    /**
      * 设置血量
      * @param value 血量值
      */

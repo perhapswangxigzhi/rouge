@@ -1,9 +1,11 @@
-import { _decorator, assetManager, Button, Color, Component, director, Event, EventTouch, find,  Label,  Node, ProgressBar, Sprite, SpriteFrame, v3 } from 'cc';
+import { _decorator, assetManager, Button, Color, Component, director, Event, EventTouch, find,  Label,  Node, ProgressBar, Sprite, SpriteFrame, tween, UI, v3 } from 'cc';
 import { Equipment } from '../bag/Equipment';
 import { AudioMgr } from '../sound/soundManager';
 import { AssentManager } from '../bag/AssentManager';
 import { BagStorage } from '../bag/BagStorage';
 import { equipBarManager } from '../bag/equipBarManager';
+import { PreStageNode } from '../signalr/PreStageNode';
+import { UIFont } from '../ui/UIFont';
 const { ccclass, property } = _decorator;
 
 @ccclass('ButtonManager')
@@ -59,21 +61,37 @@ export class ButtonManager extends Component {
     }
     //切换场景
     chageScence(){
+        if(UIFont.canOpenLevel[UIFont.MiddleIndex]==true){
         find('LevelCanvas/Mask').active = true;
         let progressBar = find('LevelCanvas/Mask/ProgressBar').getComponent(ProgressBar);;
         let label=find('LevelCanvas/Mask/ProgressBar/Label').getComponent(Label);
-       
         director.preloadScene("game",(completedCount:number,totalCount:number,item:any) =>{
 
             let progress = completedCount/totalCount;
             progressBar.progress = progress;
             label.string=`${Math.round(progress * 100)}%`;
-        },()=>{
+                },()=>{
             director.loadScene("game");
-        });
-
+            director.resume();
+            });
+        }else{
+            const dialog=find("LevelCanvas/UIMain/UIBackGround/dialog1")
+            dialog.active=true
+            const colorTween = tween(dialog.getComponent(Sprite))
+            .to(0.75, { color: new Color(255, 255, 255, 255) }) // 恢复颜色
+            .delay(0.5)
+            .to(0.75, { color: new Color(255, 255, 255, 0) }); // 渐隐
+            colorTween.start();
+        }
     }
-
+    //继续战斗
+    continueFight(){
+        this.chageScence()
+    }
+     //取消战斗
+     cancelFight(){
+        PreStageNode.instance.isPrelood=false;
+    }
     //切换主界面
     chageMainInterface(event:Event){
         const node = event.target as Node;
@@ -150,7 +168,7 @@ export class ButtonManager extends Component {
         // 关闭公告
         this.node.active=false;
          // 恢复游戏
-      director.resume();
+        director.resume();
     }
     //显示装备操作选项
      showEquipmentOperation(event:Event,equipCell:number){

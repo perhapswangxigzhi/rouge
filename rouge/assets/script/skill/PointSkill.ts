@@ -31,6 +31,8 @@ export class PointSkill extends Component {
     skillCoefficient: number = 0;  //技能伤害系数
     @property(Number)
     skillContinueTime: number = 0;  //技能持续时间
+    @property(Number)
+    skillPerporty: number = 0;  //技能属性
     isEnemyInRange: boolean = false;
     start() {
         this.collider = this.node.getComponent(Collider2D);
@@ -90,12 +92,11 @@ export class PointSkill extends Component {
                 velocity.y = dir.y;
                 velocity.multiplyScalar(this.startLinearSpeed);
                 rigid.linearVelocity = velocity;
-                console.log(distance)
                 if(distance < 5) {
                    this.scheduleOnce(() => {
                     if(this.skillBuffPrefab!=null){
                         const skillBuffNode=instantiate(this.skillBuffPrefab);
-                         skillBuffNode.setParent(this.enemyNode);
+                        skillBuffNode.setParent(this.enemyNode);
                        }
                     this.enemyHost.onHurt(this.damage, this.host, new Vec2(0, 0))
                     this.node.destroy();
@@ -109,7 +110,8 @@ export class PointSkill extends Component {
                 },1)
         }
        } catch (err) {
-             console.error("属性管理器未记载在场景", err.toString())
+             console.error("未追踪到敌人", err.toString())
+             this.node.destroy();
        }
         
     }

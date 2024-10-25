@@ -4,7 +4,19 @@ import { Projectile } from './Projectile';
 import { PoolManager } from '../../util/PoolManager';
 import { colliderTag } from '../ColliderTag';
 import { AudioMgr } from '../../sound/soundManager';
+import { StageNode } from '../../signalr/StageNode';
 const { ccclass, property } = _decorator;
+enum NodeType {
+    Player,
+    Enemy1,
+    Enemy2,
+    Enemy3,
+    ChallengeEnemy1,
+    ChallengeEnemy2,
+    Boss1,
+    Item,
+    Other
+}
 
 @ccclass('PointEmitter')
 export class PointEmitter extends Component {
@@ -14,12 +26,12 @@ export class PointEmitter extends Component {
     startAngularSpeed: number = 0;
     @property(Prefab)
     projectilePrefab: Prefab | null=null;
-
     actor:Actor|null=null;
     @property(Node)
     emitterRoot:Node=null;
     canvasNode:Node=null;
-    colliderList: readonly Collider2D[];
+    colliderList: Collider2D[];
+    enemyNode:Node;
     cooldown:number=5 
     castTime:number=0
     start() {
@@ -39,11 +51,11 @@ export class PointEmitter extends Component {
             this.actor=playerNode.getComponent(Actor)
         }
        
-        // this.emit()
+        
         this.schedule(() =>{
-                 this.colliderList = PhysicsSystem2D.instance.testAABB(rect(0,0,1000,1000));
-                 this.emit()
-                 AudioMgr.inst.playOneShot('Shoot',0.5);
+                this.getEnemyList()
+                this.emit();
+                AudioMgr.inst.playOneShot('Shoot',0.5);
         }, 1/this.actor.current_ActorProperty.attackSpeed, macro.REPEAT_FOREVER, 0);
     } 
     
@@ -51,20 +63,26 @@ export class PointEmitter extends Component {
         return game.totalTime-this.castTime>=this.cooldown*1000;
     }
     
-    
+    getEnemyList(): void {
+        for(let i=0;i<=2;i++){
+            this.enemyNode=find('LevelCanvas').getChildByName(`Enemy${i}`)
+            if(this.enemyNode!=null){
+                return;
+            }
+        }
+    }
    emit(){
         this.castTime=game.totalTime;
-            for(let i=0;i<this.colliderList.length;i++){
-                if(this.colliderList[i].tag==102&&this.colliderList[i].node&&this.colliderList[i].node.isValid){
+            if(this.enemyNode!=null){
                     let node=PoolManager.instance().getNode(this.projectilePrefab,this.canvasNode)
                     let dir=v3();
-                    Vec3.subtract(dir,this.colliderList[i].node.worldPosition,this.emitterRoot.worldPosition)
+                    Vec3.subtract(dir,this.enemyNode.worldPosition,this.emitterRoot.worldPosition)
                     dir.normalize();
                     // 计算角度并设置节点的旋转
                     var angle = Vec3.angle(dir, v3(1, 0, 0));
-                if (dir.y < 0) {
-                    angle = -angle; // 根据 y 轴方向调整角度
-                }
+                    if (dir.y < 0) {
+                        angle = -angle; // 根据 y 轴方向调整角度
+                    }
                     var degree = angle / Math.PI * 180;
                     this.node.parent.setRotationFromEuler(0, 0, degree);
                     
@@ -81,18 +99,12 @@ export class PointEmitter extends Component {
                 if(this.actor.current_ActorProperty!=null){
                     projectile.damage=this.actor.current_ActorProperty.attack;
                 }
-                    
-                    //7秒后回收节点
-                    this.scheduleOnce(() => {
-                        PoolManager.instance().putNode(node);
-                    }, 7);
-                break;
-                }  
-
+              
             }
-           
         }
-   }
+           
+    }
+   
 
    
 

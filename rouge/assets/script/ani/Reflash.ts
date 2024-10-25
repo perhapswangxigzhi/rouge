@@ -19,7 +19,7 @@ export class Reflash extends Component {
         
         .call(() => {
             // 在半翻时更换精灵帧
-        SkillManager.instance.randomSkill(changeSprite, chanegSkillName,changeSkillExplain);
+        SkillManager.instance().randomSkill(changeSprite, chanegSkillName,changeSkillExplain);
         UIFrame.getChildByName('SkillBg').getChildByName('SkillIcon').getComponent(Sprite).spriteFrame = changeSprite.spriteFrame;  
         })
         .to(filpDuration/ 2, { eulerAngles: new Vec3(0,  -180, 0) })

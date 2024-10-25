@@ -8,16 +8,33 @@ enum SkillType {
     PointSkill=3,    // 指向技能
     HealingSkill=4,    // 治疗技能
 }
+enum SkillProperty {
+    NONE=0,
+    GoldSkill=1,    //金属性
+    WoodSkill=2,  // 木属性
+    WaterSkill=3,    // 水属性
+    FireSkill=4,    // 火属性
+    thunderSkill=5,   //雷属性
+}
 @ccclass('SkillManager')
-export class SkillManager extends Component {
-    static instance: SkillManager | null = null;
+export class SkillManager {
+    static _instance: SkillManager;
     skillIconFileName: string[] = [];
     skillIconName: string[] = [];
     skillExplain: string[] = [];
     skillType: number[] = [];
-    
-    onLoad() {
-        SkillManager.instance = this;
+    skillProperty: number[] = [];
+     constructor() {
+        this.initSkill();
+    }
+     // 静态方法，获取唯一实例
+     static instance(): SkillManager {
+        if (!SkillManager._instance) {
+            SkillManager._instance = new SkillManager();
+        }
+        return SkillManager._instance;
+    }
+    initSkill() {
         this.skillIconFileName = [
             'HolySpring_skillicon_30011',
             'HolySpring_skillicon_30011a',
@@ -310,6 +327,80 @@ export class SkillManager extends Component {
                 2,
                 2,
         ];
+        this.skillProperty=[
+                0,
+                0,
+                5,
+                0,
+                0,
+                0,
+                1,
+                5,
+                0,
+                0,
+                5,
+                0,
+                4,
+                0,
+                3,
+                0,
+                0,
+                0,
+                0,
+                0,
+                0,
+                0,
+                0,
+                0,
+                3,
+                0,
+                0,
+                0,
+                0,
+                0,
+                4,
+                0,
+                1,
+                0,
+                0,
+                2,
+                0,
+                0,
+                0,
+                0,
+                0,
+                0,
+                0,
+                0,
+                0,
+                0,
+                0,
+                0,
+                0,
+                0,
+                0,
+                0,
+                0,
+                0,
+                0,
+                0,
+                0,
+                0,
+                0,
+                0,
+                0,
+                0,
+                0,
+                0,
+                0,
+                1,
+                0,
+                0,
+                0,
+                1,
+                3,
+
+        ]
     }
 
    
@@ -318,10 +409,17 @@ export class SkillManager extends Component {
 
     randomSkill(skillIcon:Sprite, skillName:Label, skillExplain:Label):number{
         let randomIndex=0
-        let skillType=0
-        for(var i=0;skillType==0;i++){
-            randomIndex = Math.floor(Math.random() * this.skillIconFileName.length);
-            skillType=this.skillType[randomIndex];
+        let hasSkill:number[]=[]
+        for(let i=0;i<this.skillProperty.length;i++){
+            if(this.skillType[i]!=0){
+                hasSkill.push(i)
+            }
+        }
+        if (hasSkill.length > 0) {
+        // 从 hasSkill 数组中随机获取一个索引
+        let random = Math.floor(Math.random() * hasSkill.length);
+        // 获取随机的技能索引
+         randomIndex = hasSkill[random];
         }
         assetManager.resources.load(`skill/${this.skillIconFileName[randomIndex]}/spriteFrame`, SpriteFrame, (err, spriteFrame ) => {
             if (err) {
@@ -333,8 +431,6 @@ export class SkillManager extends Component {
         skillExplain.string = this.skillExplain[randomIndex];
         // console.log("获取的图片序号",randomIndex)
         })
-        return randomIndex;
-   
-        
-}
+        return randomIndex;   
+    }
 }

@@ -1,5 +1,4 @@
-import { _decorator, Component, Label, Node, ProgressBar, RichText } from 'cc';
-import { PlayerController } from '../actor/PlayControl';
+import { _decorator, Color, Component, find, Label, Node, ProgressBar, RichText, Sprite } from 'cc';
 import { ActorStage } from '../actor/ActorStage';
 const { ccclass, property } = _decorator;
 
@@ -7,26 +6,38 @@ const { ccclass, property } = _decorator;
 export class UIHPBar extends Component {
 
     progressBar: ProgressBar | null = null;
-    richTextLabel:RichText | null = null;
+    label:Label | null = null;
+    openShield:boolean=false;   //开启护盾
+    static instance: UIHPBar | null = null;
     start() {
         this.progressBar = this.node.getComponent(ProgressBar);
-        this.richTextLabel = this.node.getChildByName('RichText').getComponent(RichText);
+        this.label = this.node.getChildByName('Label').getComponent(Label);
+        UIHPBar.instance = this;
     }
 
     update(deltaTime: number) {
-        // if (!PlayerController.instance || !PlayerController.instance.actor) {
-        //     return;
-        // }
         if(!ActorStage.instance){
             return;
         }
-        // const hp = PlayerController.instance.actor.playerProperty.hp;
-        // const maxHp = PlayerController.instance.actor.playerProperty.maxHp;
         const hp = ActorStage.instance.playerProperty.hp;
         const maxHp = ActorStage.instance.playerProperty.maxHp;
-        
-        this.progressBar!.progress = hp / maxHp;
-        this.richTextLabel!.string = `${hp}/${maxHp}`;
+        const shield=ActorStage.instance.playerProperty.shield
+        if(this.openShield==false){
+            this.progressBar!.progress = hp / maxHp;
+            this.label!.string = `${hp}/${maxHp}`;
+        }else{
+            this.progressBar!.progress = shield / maxHp;
+            this.label!.string = `${shield}`;
+            if(shield<=0){
+                this.openShield=false
+                const hp_bar=this.node.getChildByName('Bar');
+                this.progressBar.barSprite=hp_bar.getComponent(Sprite)
+                this.node.getChildByName("Shield_Bar").active=false;
+                find("LevelCanvas/Player/Shield").active=false;
+                this.label.color=Color.WHITE;
+            }
+        }
+
     }
 }
 

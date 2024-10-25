@@ -9,12 +9,15 @@ export  class AssentManager extends Component  {
     equip:Equipment[]=[]
     equipCount:number[]=[]
     barEquipCount:number[]=[]
+    _nodeStage:any[]=[];
     goldCount:number=0;
     energyCount:number=0;
     diamondCount:number=0;
     equipCell:number=0
     wearingEquipCeil:number=0
     navigator:boolean=true
+    nodeStage: any[] = [];
+    isPrelood:boolean=false
     checkEmpty:boolean[]=new Array(false,false,false,false,false,false)  
     Count=0;
     static instance: AssentManager | null = null;

@@ -261,6 +261,7 @@
     "playSkillDragonBoneAudio": "",
     "skillCoefficient": 2,
     "skillContinueTime": 4,
+    "skillPerporty": 0,
     "_id": ""
   },
   {
@@ -298,6 +299,7 @@
       "__id__": 0
     },
     "fileId": "8eAqpJQ+hLxph2IARdHMgi",
+    "instance": null,
     "targetOverrides": null
   }
 ]

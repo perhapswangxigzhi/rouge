@@ -6,11 +6,9 @@ const { ccclass, property } = _decorator;
 
 @ccclass('UIFail')
 export class UIFail extends Component {
- 
+    // private sceneLoading: boolean = false; // 添加一个状态标志
     onReturn() {
-        //返回游戏
-        director.loadScene("MainUI");
-        ActorStage.instance.playerProperty=new ActorProperty("Player",100,10);
+            director.loadScene("MainUI");
     }
     onRevive () {
         //继续游戏

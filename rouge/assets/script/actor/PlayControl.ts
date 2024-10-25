@@ -8,6 +8,7 @@ import { Die } from './state/Die';
 import { SimpleEmitter } from './projectile/SimpleEmitter';
 import { VirtualInput } from '../input/VirtualInput';
 import { AudioMgr } from '../sound/soundManager';
+import { ActorStage } from './ActorStage';
 
 
 @ccclass('PlayerController')
@@ -24,18 +25,18 @@ export class PlayerController extends Component {
     static instance:PlayerController | null = null;
     lastAngleRad:number=0;
     direction:number=0;
+   
     start(){
         PlayerController.instance = this;
         this.actor = this.node.getComponent(Actor);
-
         this.actor.stateMgr.registState(new Idle(StateDefine.Idle, this.actor))
         this.actor.stateMgr.registState(new Walk(StateDefine.Walk, this.actor))
         this.actor.stateMgr.registState(new Die(StateDefine.Die, this.actor))
         this.actor.stateMgr.startWith(StateDefine.Idle);
         const h=VirtualInput.horizontal;
         const v=VirtualInput.vertical;
-        this.schedule(() => this.fire(), 1/this.actor.current_ActorProperty.attackSpeed, macro.REPEAT_FOREVER, 0);
-  
+        this.schedule(() => this.fire(), 1/ActorStage.instance.playerProperty.attackSpeed, macro.REPEAT_FOREVER, 0);
+       
 
 }
 

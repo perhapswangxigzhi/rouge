@@ -21,6 +21,8 @@ export class HealingSkill extends Component {
     playSkillDragonBoneAudio: string = '';  //播放技能龙骨动画名
     @property(Prefab)
     cureTextPrefab: Prefab | null = null;  //播放技能龙骨动画名
+    @property(Number)
+    skillPerporty: number = 0;  //技能属性
     start() {
          // 将组件赋到全局变量 _audioSource 中
         this.audioSource = this.node.getComponent(AudioSource);
@@ -42,8 +44,10 @@ export class HealingSkill extends Component {
 
    
     onAnimationComplete() {
-      this.host.current_ActorProperty.setHp(95)
       this.host.current_ActorProperty.hp+=this.cure
+      if(this.host.current_ActorProperty.hp>this.host.current_ActorProperty.maxHp){
+        this.host.current_ActorProperty.hp=this.host.current_ActorProperty.maxHp;
+      }
        //显示伤害文字
        const cureTextNode=instantiate(this.cureTextPrefab);
        cureTextNode.setParent(this.node);

@@ -96,8 +96,11 @@ export class Emit extends bt.Action {
     emitter: SimpleEmitter = null;
     execute(dt: number, result: bt.ExecuteResult) {
         bt.markSuccess(result);
-        
-        this.emitter.emit();
+        let actor = result.blackboard.get(BlackboardKey.Actor) as Actor;
+        if(actor.current_ActorProperty.name=='Enemy1'){
+        this.emitter.emit();}
+        if(actor.current_ActorProperty.name=='Enemy3'){
+        this.emitter.pointEmit();}    
     }
 }
 

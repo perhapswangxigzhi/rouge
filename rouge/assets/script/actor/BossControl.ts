@@ -26,9 +26,9 @@ export class BossContorl extends Component {
     projectileEmitter:SimpleEmitter | null = null;
     @property(Prefab)
     skillPrefab:Prefab|null=null;
-    // frozenTag:boolean=false;//冻结敌人
-    // frozenTime:number=0;//冻结时间
-    // MaxfrozenTime:number=3;  //冻结时间上限
+    frozenTag:boolean=false;//冻结敌人
+    frozenTime:number=0;//冻结时间
+    MaxfrozenTime:number=1;  //冻结时间上限
     start() {
         this.actor = this.node.getComponent(Actor);
         this.playerNode=this.node?.parent.getChildByName('Player');
@@ -45,7 +45,7 @@ export class BossContorl extends Component {
     }
 
     update(deltaTime: number) {
-    
+        if (this.frozenTime<=0) {
         this.ai.update(deltaTime);
         if(this.playerNode.isValid){
             this.moveDest=this.playerActor.node?.worldPosition.clone();
@@ -54,7 +54,15 @@ export class BossContorl extends Component {
        // this.ai.setData(BlackboardKey.MoveDest, this.moveDest);
         this.ai.setData(BlackboardKey.Dir, this.dir);
         this.ai.setData(BlackboardKey.Distance, this.distance);
-        
+        }
+        if (this.frozenTime>0&&this.frozenTime<=this.MaxfrozenTime) {
+            this.frozenTime-=deltaTime;
+            this.actor.stateMgr.transit(StateDefine.Idle);
+            
+        } if (this.frozenTime>this.MaxfrozenTime) {
+            this.frozenTime=this.MaxfrozenTime
+            
+        }
        
 
     }
