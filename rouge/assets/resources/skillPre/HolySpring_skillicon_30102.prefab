@@ -223,9 +223,10 @@
     "audioSource": null,
     "skillBuffPrefab": null,
     "skillCoefficient": 0.3,
-    "skillContinueTime": 4,
+    "skillReleaseCount": 10,
     "playSkillDragonBoneAudio": "skill_5",
     "skillPerporty": 1,
+    "skillIsEnemy": false,
     "_id": ""
   },
   {

@@ -263,6 +263,7 @@
       "__uuid__": "928afa92-60ce-4819-9ee7-92531d490bda",
       "__expectedType__": "cc.Prefab"
     },
+    "traceProfab": null,
     "emitterRoot": {
       "__id__": 2
     },
@@ -339,16 +340,16 @@
     "premultipliedAlpha": false,
     "_defaultArmatureIndexValue": 0,
     "_dragonAsset": {
-      "__uuid__": "78d4f71f-6259-4be8-959d-8adc2b0a0db8",
+      "__uuid__": "c76b6d47-7443-4899-86b7-6cb9171cdfdd",
       "__expectedType__": "dragonBones.DragonBonesAsset"
     },
     "_dragonAtlasAsset": {
-      "__uuid__": "317f7cb1-3017-4539-a346-c27ee389f25e",
+      "__uuid__": "f0a4421d-52f3-4095-9611-39792d52f508",
       "__expectedType__": "dragonBones.DragonBonesAtlasAsset"
     },
     "_armatureName": "Armature",
-    "_animationName": "skill_1",
-    "_animationIndexValue": 4,
+    "_animationName": "",
+    "_animationIndexValue": 0,
     "_defaultCacheModeValue": 0,
     "_timeScale": 1,
     "_playTimes": -1,
@@ -443,10 +444,6 @@
     },
     "mainRenderer": null,
     "linearSpeed": 2.5,
-    "ItemPrefab": {
-      "__uuid__": "0f05e22e-9abf-487f-a64f-2c55f764222d",
-      "__expectedType__": "cc.Prefab"
-    },
     "damageTextPrefab": {
       "__uuid__": "7492ab80-b3fc-4296-9a0b-84c757d07c3d",
       "__expectedType__": "cc.Prefab"
@@ -458,7 +455,7 @@
     "fileId": "32OZcIa2dEcLo1zywUY7I0"
   },
   {
-    "__type__": "d3f79gtzYVBDYxwNMAQiRTx",
+    "__type__": "accd3QhhqtOoqwxoes7NZWy",
     "_name": "",
     "_objFlags": 0,
     "__editorExtras__": {},
@@ -472,11 +469,12 @@
     "projectileEmitter": {
       "__id__": 9
     },
+    "skillPrefab": null,
     "_id": ""
   },
   {
     "__type__": "cc.CompPrefabInfo",
-    "fileId": "afrdjsv+BPV43gkjPSbrun"
+    "fileId": "d2GwDG9k5BOJMJ0cY21Xdq"
   },
   {
     "__type__": "cc.PrefabInfo",

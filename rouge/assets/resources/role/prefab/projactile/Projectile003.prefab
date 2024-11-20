@@ -42,7 +42,7 @@
     },
     "_lpos": {
       "__type__": "cc.Vec3",
-      "x": -99.484,
+      "x": -238.77,
       "y": -263.053,
       "z": -1000
     },
@@ -170,7 +170,7 @@
       "a": 255
     },
     "_spriteFrame": {
-      "__uuid__": "6a83266e-2789-4f7f-97a5-bf3c5c09575f@f9941",
+      "__uuid__": "4f19e97c-eb03-40d7-a058-bb6849e7bbeb@f9941",
       "__expectedType__": "cc.SpriteFrame"
     },
     "_type": 0,
@@ -310,7 +310,6 @@
       "__id__": 15
     },
     "hitTag": 105,
-    "host": null,
     "_id": ""
   },
   {

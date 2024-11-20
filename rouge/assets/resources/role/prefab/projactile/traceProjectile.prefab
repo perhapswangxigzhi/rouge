@@ -41,7 +41,7 @@
     },
     "_lpos": {
       "__type__": "cc.Vec3",
-      "x": 46.509,
+      "x": -67.777,
       "y": 10.792,
       "z": 0
     },
@@ -223,7 +223,7 @@
     },
     "audioSource": null,
     "skillBuffPrefab": null,
-    "startLinearSpeed": 20,
+    "startLinearSpeed": 10,
     "skillCoefficient": 2,
     "_id": ""
   },

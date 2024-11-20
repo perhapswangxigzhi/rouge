@@ -17,7 +17,6 @@ export class Walk extends ActorState {
     onEnter(): void {
         if (this.dragonBoneAnimation) {
             this.dragonBoneAnimation.playAnimation(StateDefine.Walk,-1);
-            console.log("play walk animation");
         } else {
             this.animation.play(StateDefine.Walk);
         }

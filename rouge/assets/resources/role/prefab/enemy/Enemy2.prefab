@@ -125,11 +125,11 @@
     "premultipliedAlpha": false,
     "_defaultArmatureIndexValue": 0,
     "_dragonAsset": {
-      "__uuid__": "b72dac3a-252d-4577-a030-90ba512a9b85",
+      "__uuid__": "18df2e39-0138-468f-9beb-5d84168b6c62",
       "__expectedType__": "dragonBones.DragonBonesAsset"
     },
     "_dragonAtlasAsset": {
-      "__uuid__": "710e1a41-10fb-41bb-b37d-7821b82699f3",
+      "__uuid__": "663e95db-c314-4905-b6ff-64a0e27bf00e",
       "__expectedType__": "dragonBones.DragonBonesAtlasAsset"
     },
     "_armatureName": "Armature",
@@ -229,10 +229,6 @@
     },
     "mainRenderer": null,
     "linearSpeed": 3,
-    "ItemPrefab": {
-      "__uuid__": "0f05e22e-9abf-487f-a64f-2c55f764222d",
-      "__expectedType__": "cc.Prefab"
-    },
     "damageTextPrefab": {
       "__uuid__": "7492ab80-b3fc-4296-9a0b-84c757d07c3d",
       "__expectedType__": "cc.Prefab"
@@ -244,7 +240,7 @@
     "fileId": "e5OWAzwdhNO71AlwJVyl0g"
   },
   {
-    "__type__": "d3f79gtzYVBDYxwNMAQiRTx",
+    "__type__": "accd3QhhqtOoqwxoes7NZWy",
     "_name": "",
     "_objFlags": 0,
     "__editorExtras__": {},
@@ -256,11 +252,12 @@
       "__id__": 13
     },
     "projectileEmitter": null,
+    "skillPrefab": null,
     "_id": ""
   },
   {
     "__type__": "cc.CompPrefabInfo",
-    "fileId": "3fUlT6zJJNC6ov5ZrGyqdZ"
+    "fileId": "72GXQbKu9LH54CrRxse+DG"
   },
   {
     "__type__": "cc.PrefabInfo",
@@ -272,6 +269,6 @@
     },
     "fileId": "8a7HZjpxdIcpIez8HIYOfC",
     "instance": null,
-    "targetOverrides": null
+    "targetOverrides": []
   }
 ]

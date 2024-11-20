@@ -1,5 +1,5 @@
-import { _decorator, Animation, assert, assetManager, AudioClip, AudioSource, CCFloat, Collider2D, Component, Contact2DType, dragonBones, find, instantiate, IPhysics2DContact, Node, Prefab, RigidBody2D, Tween, v2, v3, Vec2, Vec3 } from 'cc';
-import { colliderTag } from '../actor/ColliderTag';
+import { _decorator, Animation, assert, assetManager, AudioClip, AudioSource, CCFloat, CCInteger, Collider2D, Component, Contact2DType, dragonBones, find, instantiate, IPhysics2DContact, Node, Prefab, RigidBody2D, Tween, v2, v3, Vec2, Vec3 } from 'cc';
+import { colliderTag } from '../actor/projectile/ColliderTag';
 import { Actor } from '../actor/Actor';
 import { DamageTextManager } from '../TextManager/DamageTextManager';
 import { CureTextManager } from '../TextManager/CureTextManager';
@@ -15,8 +15,8 @@ export class HealingSkill extends Component {
     cure: number = 0;
     @property(CCFloat)
     skillCoefficient: number = 0;  //技能治疗系数
-    @property(Number)
-    skillContinueTime: number = 0;  //技能持续时间
+    @property(CCInteger)
+    skillReleaseCount: number = 0;  //技能释放次数
     @property(String)
     playSkillDragonBoneAudio: string = '';  //播放技能龙骨动画名
     @property(Prefab)
@@ -28,7 +28,10 @@ export class HealingSkill extends Component {
         this.audioSource = this.node.getComponent(AudioSource);
 
         this.skillDragonBoneAnimation=this.node.getComponent(dragonBones.ArmatureDisplay)
-        this.skillDragonBoneAnimation.playAnimation(this.playSkillDragonBoneAudio,0);
+        if(this.skillDragonBoneAnimation){
+          this.skillDragonBoneAnimation.playAnimation(this.playSkillDragonBoneAudio,0);
+        }
+        const skillRealseTime= this.skillDragonBoneAnimation.playAnimation(this.playSkillDragonBoneAudio,0).totalTime
         const playerNode=find('LevelCanvas/Player')
         this.host=playerNode.getComponent(Actor)
         if(this.host.current_ActorProperty!=null){
@@ -39,7 +42,7 @@ export class HealingSkill extends Component {
        this.skillDragonBoneAnimation.addEventListener(dragonBones.EventObject.LOOP_COMPLETE, this.onAnimationComplete, this);
        this.scheduleOnce(()=>{
         this.node.destroy();
-        },this.skillContinueTime)
+        },skillRealseTime*this.skillReleaseCount)
     }
 
    

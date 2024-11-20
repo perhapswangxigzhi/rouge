@@ -1,5 +1,5 @@
 import { _decorator, Animation, assert, assetManager, AudioClip, AudioSource, CCFloat, Collider2D, Component, Contact2DType, dragonBones, find, instantiate, IPhysics2DContact, Node, PhysicsSystem2D, Prefab, rect, RigidBody2D, Tween, v2, v3, Vec2, Vec3 } from 'cc';
-import { colliderTag } from '../actor/ColliderTag';
+import { colliderTag } from '../actor/projectile/ColliderTag';
 import { Actor } from '../actor/Actor';
 
 const { ccclass, property, requireComponent } = _decorator;

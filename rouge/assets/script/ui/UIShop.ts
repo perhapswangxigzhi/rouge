@@ -1,37 +1,44 @@
 import { _decorator, Color, Component, Event, Label, Node, Sprite, tween } from 'cc';
 import { ActorStage } from '../actor/ActorStage';
 import { UIGold } from './UIGold';
+import { Level } from '../level/Level';
 const { ccclass, property } = _decorator;
 
 @ccclass('UIShop')
 export class UIShop extends Component {
-    buyNormalStr = ['提高10点生命值','提高5点攻击力','提高5点防御力','提高1%暴击率','提高2%爆伤','提高1%金属性伤害','提高1%木属性伤害','提高1%水属性伤害',
+    buyNormalStr = ['提高30点生命值','提高5点攻击力','提高5点防御力','提高1%暴击率','提高2%爆伤','提高1%金属性伤害','提高1%木属性伤害','提高1%水属性伤害',
         '提高1%雷属性伤害','提高1%火属性伤害'];
-    buyRareStr = ['提高20点生命值','提高10点攻击力','提高10点防御力','提高2%暴击率','提高4%爆伤','提高2%金属性伤害','提高2%木属性伤害','提高2%水属性伤害',
+    buyRareStr = ['提高60点生命值','提高10点攻击力','提高10点防御力','提高2%暴击率','提高4%爆伤','提高2%金属性伤害','提高2%木属性伤害','提高2%水属性伤害',
         '提高2%雷属性伤害','提高2%火属性伤害'];
-    buyEpicStr = ['提高50点生命值','提高25点攻击力','提高25点防御力','提高5%暴击率','提高10%爆伤','提高5%金属性伤害','提高5%木属性伤害','提高5%水属性伤害',
+    buyEpicStr = ['提高300点生命值','提高25点攻击力','提高25点防御力','提高5%暴击率','提高10%爆伤','提高5%金属性伤害','提高5%木属性伤害','提高5%水属性伤害',
         '提高5%雷属性伤害','提高5%火属性伤害'];
     dialog:Node|null=null  ;  
     start() {
         this.dialog=this.node.getChildByName('DiaLog');
+    }
+    protected onEnable(): void {
         this.initProperty();
+        Level.pause();
+    }
+    protected onDisable(): void {
+        Level.resume();
     }
     initProperty(){
         const property=this.node.getChildByName('Property');
         property.children[0].getComponent(Label).string=`生命:${ActorStage.instance.playerProperty.maxHp.toString()}`;
         property.children[1].getComponent(Label).string=`攻击力:${ActorStage.instance.playerProperty.attack.toString()}`;
         property.children[2].getComponent(Label).string=`防御力:${ActorStage.instance.playerProperty.defence.toString()}`;
-        property.children[3].getComponent(Label).string=`暴击率:${(ActorStage.instance.playerProperty.crit*100).toString()}%`;
-        property.children[4].getComponent(Label).string=`爆伤:${(ActorStage.instance.playerProperty.physicalCritDamage*100).toString()}%`;
+        property.children[3].getComponent(Label).string=`暴击率:${Math.round(ActorStage.instance.playerProperty.crit*100).toString()}%`;
+        property.children[4].getComponent(Label).string=`爆伤:${Math.round(ActorStage.instance.playerProperty.physicalCritDamage*100).toString()}%`;
         property.children[5].getComponent(Label).string=`移速:${ActorStage.instance.playerProperty.speed.toString()}`;
         property.children[6].getComponent(Label).string=`攻速:${ActorStage.instance.playerProperty.attackSpeed.toString()}`;
-        property.children[7].getComponent(Label).string=`金属性增伤:${(ActorStage.instance.playerProperty.goldAttack*100).toString()}%`;
-        property.children[8].getComponent(Label).string=`木属性增伤:${(ActorStage.instance.playerProperty.woodAttack*100).toString()}%`;
-        property.children[9].getComponent(Label).string=`水属性增伤:${(ActorStage.instance.playerProperty.waterAttack*100).toString()}%`;
-        property.children[10].getComponent(Label).string=`火属性增伤:${(ActorStage.instance.playerProperty.fireAttack*100).toString()}%`;
-        property.children[11].getComponent(Label).string=`雷属性增伤:${(ActorStage.instance.playerProperty.thunderAttack*100).toString()}%`;
-        property.children[12].getComponent(Label).string=`生命恢复:${(ActorStage.instance.playerProperty.LifeRecovery*100).toString()}%`;
-        property.children[13].getComponent(Label).string=`技能冷却:${ActorStage.instance.playerProperty.cd.toString()}`; 
+        property.children[7].getComponent(Label).string=`金属性增伤:${Math.round(ActorStage.instance.playerProperty.goldAttack*100).toString()}%`;
+        property.children[8].getComponent(Label).string=`木属性增伤:${Math.round(ActorStage.instance.playerProperty.woodAttack*100).toString()}%`;
+        property.children[9].getComponent(Label).string=`水属性增伤:${Math.round(ActorStage.instance.playerProperty.waterAttack*100).toString()}%`;
+        property.children[10].getComponent(Label).string=`火属性增伤:${Math.round(ActorStage.instance.playerProperty.fireAttack*100).toString()}%`;
+        property.children[11].getComponent(Label).string=`雷属性增伤:${Math.round(ActorStage.instance.playerProperty.thunderAttack*100).toString()}%`;
+        property.children[12].getComponent(Label).string=`生命恢复:${Math.round(ActorStage.instance.playerProperty.LifeRecovery*100).toString()}%`;
+        property.children[13].getComponent(Label).string=`技能冷却:${Math.round(ActorStage.instance.playerProperty.cd*100).toString()}`; 
     }
     buyPerperty(event:Event){
         if(UIGold.instance.Count<10){

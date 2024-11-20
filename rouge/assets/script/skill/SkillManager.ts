@@ -105,8 +105,7 @@ export class SkillManager {
             'HolySpring_skillicon_50107',
             'HolySpring_skillicon_50208',
             'HolySpring_skillicon_50210',
-            'HolySpring_skillicon_30135',
-            'HolySpring_skillicon_30236',               
+            'HolySpring_skillicon_30135',               
         ];
         this.skillIconName = [
             '冰刃斩击',
@@ -179,7 +178,6 @@ export class SkillManager {
             '霜冻扩散',
             '多重箭雨',
             '极旋光轮',
-            '冰晶轰击',
         ];
         this.skillExplain = [
             '召唤寒冰之力，挥舞武器进行冰刃斩击，对敌人造成寒冰伤害，并可能使目标冻结。',
@@ -252,7 +250,6 @@ export class SkillManager {
             '释放霜冻之力，对周围敌人进行扩散攻击，造成减速与冰霜伤害。',
             '快速射出多发箭矢，形成箭雨，对范围内敌人造成多次打击。',
             '能够释放出高速旋转的光束,形成一个持续旋转的光轮,当激光穿透敌人时造成切割伤害',
-            '在角色前后生成大量冰晶轰击敌人，敌人短时间内受到大量攻击',
         ];
         this.skillType=[
                 0,     
@@ -324,7 +321,6 @@ export class SkillManager {
                 0,
                 0,
                 0,
-                2,
                 2,
         ];
         this.skillProperty=[
@@ -398,7 +394,6 @@ export class SkillManager {
                 0,
                 0,
                 1,
-                3,
 
         ]
     }

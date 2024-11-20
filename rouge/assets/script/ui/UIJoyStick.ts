@@ -30,13 +30,18 @@ export class UIJoyStick extends Component {
      * 摇杆初始化的位置
      */
     initJoyStickBgPosition: Vec3 = v3()
-
+    JoySprtite: Sprite =null
+    selfColor: math.Color = new math.Color(255,255,255,255); //自身颜色
+    transparentColor: math.Color = new math.Color(255,255,255,0);//透明颜色
+    
     start() {
+        this.JoySprtite = this.thumbnail.getComponent(Sprite);
         this.node.on(Input.EventType.TOUCH_MOVE, this.onTouchMove, this);
         this.node.on(Input.EventType.TOUCH_END, this.onTouchEnd, this);
         this.node.on(Input.EventType.TOUCH_CANCEL, this.onTouchEnd, this);
         this.node.on(Input.EventType.TOUCH_START, this.onTouchStart, this);
         this.initJoyStickBgPosition = this.joyStickBg.node.worldPosition.clone();
+        this.joyStickBg.color=this.transparentColor;
     }
 
     onDestroy() {
@@ -50,6 +55,7 @@ export class UIJoyStick extends Component {
         let x = eventTouch.touch.getUILocationX();
         let y = eventTouch.touch.getUILocationY();
         this.joyStickBg.node.setWorldPosition(x, y, 0);
+        this.joyStickBg.color=this.selfColor;
     }
 
     /**
@@ -89,6 +95,7 @@ export class UIJoyStick extends Component {
 
         // 摇杆的位置回归到初始化位置
         this.joyStickBg.node.worldPosition = this.initJoyStickBgPosition;
+        this.joyStickBg.color=this.transparentColor;
     }
 }
 

@@ -225,10 +225,12 @@
     },
     "audioSource": null,
     "skillBuffPrefab": null,
-    "startLinearSpeed": 30,
+    "startLinearSpeed": 10,
     "playSkillDragonBoneAudio": "skill_1",
-    "skillCoefficient": 1,
+    "skillCoefficient": 3,
     "skillContinueTime": 4,
+    "skillPerporty": 0,
+    "skillIsEnemy": true,
     "_id": ""
   },
   {
@@ -266,6 +268,7 @@
       "__id__": 0
     },
     "fileId": "b8h+4PwIlOQbmI1fMkV2Oc",
+    "instance": null,
     "targetOverrides": null
   }
 ]

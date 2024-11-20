@@ -3,6 +3,7 @@ import { Reflash } from '../ani/Reflash';
 import { SkillManager } from '../skill/SkillManager';
 import { Skill } from '../skill/Skill';
 import { UItalendRemind } from './UItalendRemind';
+import { Level } from '../level/Level';
 const { ccclass, property } = _decorator;
 
 @ccclass('UIFrameLayout')
@@ -70,12 +71,19 @@ export class UIFrameLayout extends Component {
         this.skillIndex[2]=SkillManager.instance().randomSkill(this.skillIcon3, this.skillName3,this.skillExplain3)
         this.chageNameColor();
     }
+    protected onEnable(): void {
+        Level.pause();
+    }
+    protected onDisable(): void {
+        Level.resume();
+    }
+   
     onCloseButtonClicked() {
         // 关闭界面
         this.dialog.active=false;
         this.dialog1.active=false;
         this.node.active=false;
-        
+        find('UIRoot/UIMask').active = false;
     }
     onReflashFrmae(){
         // 刷新界面
@@ -102,12 +110,14 @@ export class UIFrameLayout extends Component {
     }
     onchoseTalent_1(){
         // 选择第一个天赋框
+        console.log("选择第一个天赋框")
         if( UItalendRemind.instance.Count!=0){
             if(this.skillChose<UIFrameLayout.skillChoseLimited){
                 Skill.instance.initSkill(this.skillIndex[0])
                 this.skillChose+=1
                 this.scheduleOnce(()=>{
                     this.node.active=false;
+                    find('UIRoot/UIMask').active = false;
                         if(UItalendRemind.instance.Count>0){
                             this.onReflashFrmae();
                         }
@@ -139,6 +149,7 @@ export class UIFrameLayout extends Component {
                 this.skillChose+=1
                 this.scheduleOnce(()=>{
                     this.node.active=false;
+                    find('UIRoot/UIMask').active = false;
                     if(UItalendRemind.instance.Count>0){
                         this.onReflashFrmae();
                     }
@@ -169,6 +180,7 @@ export class UIFrameLayout extends Component {
                 this.skillChose+=1
                 this.scheduleOnce(()=>{
                     this.node.active=false;
+                    find('UIRoot/UIMask').active = false;
                     if(UItalendRemind.instance.Count>0){
                         this.onReflashFrmae();
                     }

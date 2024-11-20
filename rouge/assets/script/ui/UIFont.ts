@@ -1,4 +1,5 @@
 import { _decorator, Component, Label, Node, Vec2, Vec3, EventTouch, UITransform, v3, UI, Color } from 'cc';
+import { SignalrClient } from '../signalr/SignalrClient';
 
 const { ccclass, property } = _decorator;
 
@@ -13,32 +14,50 @@ export class UIFont extends Component {
     MiddleLabel: Label = null; // 引用 Label 组件
     LeftLabel: Label = null; // 引用 Label 组件
     RightLabel: Label = null; // 引用 Label 组件
-    static MiddleIndex:number=0  //当前管卡的索引
+    static MiddleIndex:number=0  //当前关卡的索引
     static canOpenLevel:boolean[]=[true,false,false,false,false]  //是否可以打开关卡
-    LeftIndex:number=4
-    RightIndex:number=1
+    LeftIndex:number=0
+    RightIndex:number=0
     currentDirection:number=0;  //0:不移动 1:向左移动 2:向右移动
     LevelTest:string[]=["第一关","第二关","第三关","第四关","第五关"]
-    private MiddlePosition: Vec3 = new Vec3(); // 存储起始位置
-    private LeftPosition: Vec3 = new Vec3(); // 存储起始位置
-    private RightPosition: Vec3 = new Vec3(); // 存储起始位置
+    private MiddlePosition: Vec3 = new Vec3(0,0,0); // 存储起始位置
+    private LeftPosition: Vec3 = new Vec3(-250,0,0); // 存储起始位置
+    private RightPosition: Vec3 = new Vec3(250,0,0); // 存储起始位置
     private startTouchX: number = 0; // 记录触摸开始时的X坐标
-
-    start() {
-        // 监听触摸事件
-        this.MiddlePosition =v3(0,0,0)
-        this.LeftPosition =v3(-250,0,0)
-        this.RightPosition =v3(250,0,0)
+    static _instance: UIFont = null; // 单例引用
+      // 静态方法，获取唯一实例
+    static get instance(): UIFont {
+    if (!UIFont._instance) {
+        UIFont._instance = new UIFont();
+    }
+    return UIFont._instance;
+    }
+     start() {
         this.node.on(Node.EventType.TOUCH_START, this.onTouchStart, this);
         this.node.on(Node.EventType.TOUCH_MOVE, this.onTouchMove, this);
         this.node.on(Node.EventType.TOUCH_CANCEL, this.onTouchCancel, this);
         this.node.on(Node.EventType.TOUCH_END, this.onTouchCancel, this);
+        this.MiddleLabel = this.label_002;
+        this.LeftLabel = this.label_001;
+        this.RightLabel = this.label_003;  
+        UIFont._instance = this;
+        this.init();
+    }
+    init(){
+        for(let i=0;i<=UIFont.MiddleIndex;i++){
+            UIFont.canOpenLevel[i]=true
+        }
+        this.LeftIndex=UIFont.MiddleIndex-1
+        this.RightIndex=UIFont.MiddleIndex+1
+        if(this.LeftIndex<0){
+            this.LeftIndex=this.LevelTest.length-1
+        }
+        if(this.RightIndex>this.LevelTest.length-1){
+            this.RightIndex=0
+        }
         this.label_001.string = this.LevelTest[this.LeftIndex];
         this.label_002.string = this.LevelTest[UIFont.MiddleIndex];
         this.label_003.string = this.LevelTest[this.RightIndex];
-        this.MiddleLabel = this.label_002;
-        this.LeftLabel = this.label_001;
-        this.RightLabel = this.label_003;
     }
     onTouchStart(event: EventTouch) {
         // 记录触摸开始位置

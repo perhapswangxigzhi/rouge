@@ -171,6 +171,46 @@ export namespace bt {
             selectedChild.execute(dt, result);
         }
     }
+    /**
+     * 带权重的随机选择器
+     */
+    export class WeightedRandomSelector extends ControlNode {
+        private weights: number[] = [];
+
+        /**
+         * 设置每个子节点的权重
+         * @param weights 权重数组
+         */
+        setWeights(weights: number[]) {
+            if (weights.length !== this.children.length) {
+                throw new Error("权重数组长度必须与子节点数量一致");
+            }
+            this.weights = weights;
+        }
+
+        execute(dt: number, result: ExecuteResult) {
+            markFail(result);
+
+            // 计算总权重
+            const totalWeight = this.weights.reduce((sum, weight) => sum + weight, 0);
+
+            // 生成一个 [0, totalWeight) 的随机数
+            const randomValue = Math.random() * totalWeight;
+
+            // 根据随机数选择子节点
+            let cumulativeWeight = 0;
+            for (let i = 0; i < this.children.length; i++) {
+                cumulativeWeight += this.weights[i];
+                if (randomValue < cumulativeWeight) {
+                    this.children[i].execute(dt, result);
+                    if (result.executeState == ExecuteState.Success) {
+                        markSuccess(result);
+                    }
+                    return;
+                }
+            }
+        }
+    }
 
     /**
      * 翻转节点的结果
@@ -191,7 +231,7 @@ export namespace bt {
     export class Wait extends Action {
 
         elapsed: number = 0;   // 已经执行的时间
-        interval: number = 1;    // 等待的时间
+        interval: number = 0.5;    // 等待的时间
         start: boolean = false;
 
         execute(dt: number, result: ExecuteResult) {

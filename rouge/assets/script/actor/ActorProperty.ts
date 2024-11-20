@@ -45,7 +45,7 @@ export class ActorProperty {
      /**
      * 物理暴击伤害
     */
-    physicalCritDamage: number = 1.5;
+    physicalCritDamage: number = 0.5;
      /**
      * 防御力
     */

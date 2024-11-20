@@ -11,10 +11,10 @@ import { AudioMgr } from '../sound/soundManager';
 import { ActorStage } from './ActorStage';
 
 
-@ccclass('PlayerController')
+@ccclass('PlayControl')
 @requireComponent(Actor)
 
-export class PlayerController extends Component {
+export class PlayControl extends Component {
 
     actor: Actor | null = null;
     @property(Node)
@@ -22,12 +22,12 @@ export class PlayerController extends Component {
 
     @property(SimpleEmitter)
     projectileEmitter:SimpleEmitter | null = null;
-    static instance:PlayerController | null = null;
+    static instance:PlayControl | null = null;
     lastAngleRad:number=0;
     direction:number=0;
-   
+    static isPause:boolean=false;
     start(){
-        PlayerController.instance = this;
+        PlayControl.instance = this;
         this.actor = this.node.getComponent(Actor);
         this.actor.stateMgr.registState(new Idle(StateDefine.Idle, this.actor))
         this.actor.stateMgr.registState(new Walk(StateDefine.Walk, this.actor))
@@ -35,7 +35,12 @@ export class PlayerController extends Component {
         this.actor.stateMgr.startWith(StateDefine.Idle);
         const h=VirtualInput.horizontal;
         const v=VirtualInput.vertical;
-        this.schedule(() => this.fire(), 1/ActorStage.instance.playerProperty.attackSpeed, macro.REPEAT_FOREVER, 0);
+        this.schedule(() =>{
+        if(PlayControl.isPause==true){
+            return;
+        }
+         this.fire()
+    }, 1/ActorStage.instance.playerProperty.attackSpeed, macro.REPEAT_FOREVER, 0);
        
 
 }
@@ -84,7 +89,7 @@ fire(){
         }else{
             this.actor.stateMgr.transit(StateDefine.Idle);
         }
-    
-}
+        }
+
 }
 

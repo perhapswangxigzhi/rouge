@@ -537,7 +537,7 @@ export class Equipment  {
      
         for (let i = 0; i < this.equipIndex.length; i++) {
            this.equipmentPerporty[i] = new EquipmentPerporty();
-           this.equipmentPerporty[i].Index = this.equipIndex[i];
+           this.equipmentPerporty[i].indexIcon = this.equipIndex[i];
            this.equipmentPerporty[i].name = this.equipName[i];
            this.equipmentPerporty[i].attack=this.equipAtk[i];
            this.equipmentPerporty[i].hp=this.equipHp[i];
@@ -546,6 +546,7 @@ export class Equipment  {
            this.equipmentPerporty[i].speed=this.equipSpeed[i];
            this.equipmentPerporty[i].attackSpeed=this.equipAttackSpeed[i];
            this.equipmentPerporty[i].type=this.equipType[i];
+           
     }
 }
 }

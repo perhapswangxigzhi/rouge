@@ -593,6 +593,7 @@
       "__uuid__": "25962fed-e7e4-4120-b631-3fb910924ad5",
       "__expectedType__": "cc.Prefab"
     },
+    "traceProfab": null,
     "emitterRoot": {
       "__id__": 3
     },
@@ -939,10 +940,6 @@
       "__id__": 27
     },
     "linearSpeed": 2.5,
-    "ItemPrefab": {
-      "__uuid__": "0f05e22e-9abf-487f-a64f-2c55f764222d",
-      "__expectedType__": "cc.Prefab"
-    },
     "damageTextPrefab": {
       "__uuid__": "7492ab80-b3fc-4296-9a0b-84c757d07c3d",
       "__expectedType__": "cc.Prefab"
@@ -954,7 +951,7 @@
     "fileId": "ad8ajXd8VLg56I9TTdEmwU"
   },
   {
-    "__type__": "d3f79gtzYVBDYxwNMAQiRTx",
+    "__type__": "accd3QhhqtOoqwxoes7NZWy",
     "_name": "",
     "_objFlags": 0,
     "__editorExtras__": {},
@@ -968,11 +965,12 @@
     "projectileEmitter": {
       "__id__": 22
     },
+    "skillPrefab": null,
     "_id": ""
   },
   {
     "__type__": "cc.CompPrefabInfo",
-    "fileId": "a3tV0jPvVGzJRsbdT/rFK9"
+    "fileId": "28Qf7wfSxC77+KfQ4wQpxh"
   },
   {
     "__type__": "cc.PrefabInfo",

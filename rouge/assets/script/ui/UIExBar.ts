@@ -1,5 +1,5 @@
 import { _decorator, Component, Label, Node, ProgressBar, RichText } from 'cc';
-import { PlayerController } from '../actor/PlayControl';
+import { PlayControl } from '../actor/PlayControl';
 import { UItalendRemind } from './UItalendRemind';
 import { ActorStage } from '../actor/ActorStage';
 const { ccclass, property } = _decorator;

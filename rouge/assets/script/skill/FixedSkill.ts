@@ -1,5 +1,5 @@
-import { _decorator, Animation, assert, assetManager, AudioClip, AudioSource, CCFloat, Collider2D, Component, Contact2DType, dragonBones, find, instantiate, IPhysics2DContact, Node, Prefab, RigidBody2D, Tween, v2, v3, Vec2, Vec3 } from 'cc';
-import { colliderTag } from '../actor/ColliderTag';
+import { _decorator, Animation, assert, assetManager, AudioClip, AudioSource, CCFloat, CCInteger, Collider2D, Component, Contact2DType, dragonBones, find, instantiate, IPhysics2DContact, macro, Node, PhysicsSystem2D, Prefab, Rect, rect, RigidBody2D, Tween, v2, v3, Vec2, Vec3 } from 'cc';
+import { colliderTag } from '../actor/projectile/ColliderTag';
 import { Actor } from '../actor/Actor';
 
 const { ccclass, property, requireComponent } = _decorator;
@@ -22,12 +22,15 @@ export class FixedSkill extends Component {
     skillBuffPrefab: Prefab = null;
     @property(CCFloat)
     skillCoefficient: number = 0;  //技能伤害系数
-    @property(Number)
-    skillContinueTime: number = 0;  //技能持续时间
+    @property(CCInteger)
+    skillReleaseCount: number = 0;  //技能释放次数
     @property(String)
     playSkillDragonBoneAudio: string = '';  //播放技能龙骨动画名
     @property(Number)
     skillPerporty: number = 0;  //技能属性
+    @property(Boolean)
+    skillIsEnemy: boolean = false;  //是否为敌人技能
+    skillRealseTime:number=0;
     start() {
         this.collider = this.node.getComponent(Collider2D);
         this.rigidbody = this.node.getComponent(RigidBody2D);
@@ -35,31 +38,35 @@ export class FixedSkill extends Component {
         this.audioSource = this.node.getComponent(AudioSource);
         this.skillDragonBoneAnimation=this.node.getComponent(dragonBones.ArmatureDisplay)
         this.skillDragonBoneAnimation.playAnimation(this.playSkillDragonBoneAudio,0);
+        this.skillRealseTime= this.skillDragonBoneAnimation.playAnimation(this.playSkillDragonBoneAudio,0).totalTime
         const playerNode=find('LevelCanvas/Player')
-        this.host=playerNode.getComponent(Actor)
+        if(this.skillIsEnemy==true){
+         this.host=this.node.parent.getComponent(Actor)
+        }else{
+          this.host=playerNode.getComponent(Actor)
+        }
         if(this.host.current_ActorProperty!=null){
           this.damage=this.host.current_ActorProperty.attack*this.skillCoefficient;
         }
-
-        this.collider.on(Contact2DType.BEGIN_CONTACT, this.onCollisionBegin, this);
+         this.collider.on(Contact2DType.BEGIN_CONTACT, this.onCollisionBegin, this);
         this.collider.on(Contact2DType.END_CONTACT, this.onCollisionEnd, this);
         //监听动画播放完成事件
        this.skillDragonBoneAnimation.addEventListener(dragonBones.EventObject.LOOP_COMPLETE, this.onAnimationComplete, this);
        this.scheduleOnce(()=>{
         this.node.destroy();
-        },this.skillContinueTime)
+      },this.skillRealseTime*this.skillReleaseCount)
     }
 
     onCollisionBegin(self: Collider2D, other: Collider2D, contact: IPhysics2DContact) {
         if ( colliderTag.isProjectileHitable(self.tag, other.tag)) {
-          //console.log('敌人进入技能范围')
           this.enemHost.push(other.node.getComponent(Actor));
         }
+    
     }
     
     onCollisionEnd(self: Collider2D, other: Collider2D, contact: IPhysics2DContact) {
       if (colliderTag.isProjectileHitable(self.tag, other.tag)) {
-        //  console.log('敌人离开技能范围');
+      
           var index = this.enemHost.indexOf(other.node.getComponent(Actor));
           if (index > -1) {
             this.enemHost.splice(index, 1);
@@ -67,7 +74,6 @@ export class FixedSkill extends Component {
     }
   }
     onAnimationComplete() {
-        console.log('动画播放完成次数：', this.Count++)
         const v2HitNormal = v2(0,0);
         this.enemHost.forEach((enemy) => {
           if(this.skillBuffPrefab!=null){
@@ -77,9 +83,6 @@ export class FixedSkill extends Component {
           enemy.onHurt(this.damage, this.host, v2HitNormal)
         })
      
-      
-      
    }
-   
-    
+
 }

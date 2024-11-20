@@ -4,8 +4,8 @@ import { StateDefine } from "../StateDefine";
 
 export class Dash extends ActorState {
     time: number = 0;
-    duration: number = 0.8;
-    dashFactor: number = 3.0;
+    duration: number = 0.5;
+    dashFactor: number = 5;
     dashVelocity: Vec2 = v2();
 
     onEnter() {
@@ -35,7 +35,7 @@ export class Dash extends ActorState {
 
     }
 
-    canTransit(wto: StateDefine): boolean {
+    canTransit(to: StateDefine): boolean {
         if (this.time < this.duration) {
             return false;
         }

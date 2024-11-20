@@ -7,19 +7,9 @@ import { ActorStage } from "../actor/ActorStage";
 import { Actor } from "../actor/Actor";
 import { Skill } from "../skill/Skill";
 import { UItalendRemind } from "../ui/UItalendRemind";
+import { NodeType } from "./StageNode";
 
 const { ccclass, property } = _decorator;
-enum NodeType {
-    Player,
-    Enemy1,
-    Enemy2,
-    Enemy3,
-    ChallengeEnemy1,
-    ChallengeEnemy2,
-    Boss1,
-    Item,
-    Other
-}
 
 
 @ccclass("PreStageNode")
@@ -31,29 +21,78 @@ export class PreStageNode extends Component {
     @property(Prefab)
     Enemy3Prefab: Prefab = null;
     @property(Prefab)
+    Enemy4Prefab: Prefab = null;
+    @property(Prefab)
+    Enemy5Prefab: Prefab = null;
+    @property(Prefab)
+    Enemy6Prefab: Prefab = null;
+    @property(Prefab)
+    Enemy7Prefab: Prefab = null;
+    @property(Prefab)
+    Enemy8Prefab: Prefab = null;
+    @property(Prefab)
+    Enemy9refab: Prefab = null;
+    @property(Prefab)
+    Enemy10Prefab: Prefab = null;
+    @property(Prefab)
+    Enemy11Prefab: Prefab = null;
+    @property(Prefab)
     ChallengeEnemy1Prefab: Prefab = null;
     @property(Prefab)
     ChallengeEnemy2Prefab: Prefab = null;
     @property(Prefab)
-    Boos1Prefab: Prefab = null;
+    Boss1Prefab: Prefab = null;
+    @property(Prefab)
+    Boss2Prefab: Prefab = null;
+    @property(Prefab)
+    Boss3Prefab: Prefab = null;
+    @property(Prefab)
+    Boss4Prefab: Prefab = null;
+    @property(Prefab)
+    Boss5Prefab: Prefab = null;
     @property(Prefab)
     ItemPrefab: Prefab = null;
+    @property(Prefab)
+    MagnetPrefab: Prefab = null;
     isPrelood:boolean=false;
     _nodeStage:any[]=[];
     canvasNode: Node;
+
+    private prefabMap: Map<NodeType, Prefab> = new Map<NodeType, Prefab>();
+
     static instance:PreStageNode;
      start(): void {
-        director.addPersistRootNode(this.node);   //置为常驻节点
-        PreStageNode.instance=this;
+          director.addPersistRootNode(this.node);   //置为常驻节点
+          PreStageNode.instance=this;
+          this.prefabMap.set(NodeType.Enemy1, this.Enemy1Prefab);
+          this.prefabMap.set(NodeType.Enemy2, this.Enemy2Prefab);
+          this.prefabMap.set(NodeType.Enemy3, this.Enemy3Prefab);
+          this.prefabMap.set(NodeType.Enemy4, this.Enemy4Prefab);
+          this.prefabMap.set(NodeType.Enemy5, this.Enemy5Prefab);
+          this.prefabMap.set(NodeType.Enemy6, this.Enemy6Prefab);
+          this.prefabMap.set(NodeType.Enemy7, this.Enemy7Prefab);
+          this.prefabMap.set(NodeType.Enemy8, this.Enemy8Prefab);
+          this.prefabMap.set(NodeType.Enemy9, this.Enemy9refab);
+          this.prefabMap.set(NodeType.Enemy10, this.Enemy10Prefab);
+          this.prefabMap.set(NodeType.Enemy11, this.Enemy11Prefab);
+          this.prefabMap.set(NodeType.ChallengeEnemy1, this.ChallengeEnemy1Prefab);
+          this.prefabMap.set(NodeType.ChallengeEnemy2, this.ChallengeEnemy2Prefab);
+          this.prefabMap.set(NodeType.Boss1, this.Boss1Prefab);
+          this.prefabMap.set(NodeType.Boss2, this.Boss2Prefab);
+          this.prefabMap.set(NodeType.Boss3, this.Boss3Prefab);
+          this.prefabMap.set(NodeType.Boss4, this.Boss4Prefab);
+          this.prefabMap.set(NodeType.Boss5, this.Boss5Prefab);
+          this.prefabMap.set(NodeType.Item, this.ItemPrefab);
+          this.prefabMap.set(NodeType.Magnet, this.MagnetPrefab);
     }
     //加载保存场景
     loadStageScence(){
-        this.canvasNode=find('LevelCanvas');
-        this.preOtherNode(0);
-        this.prePlayerNode(1);
-        for(let i=2;i<this._nodeStage.length;i++){
-            this.preNode(i);
-        }
+          this.canvasNode=find('LevelCanvas');
+          this.preOtherNode(0);
+          this.prePlayerNode(1);
+          for(let i=2;i<this._nodeStage.length;i++){
+               this.preNode(i);
+          }
     }
     //加载其他节点
     preOtherNode(index:number){
@@ -75,53 +114,47 @@ export class PreStageNode extends Component {
        
         
     }
-    //加载玩家界定
-    prePlayerNode(index:number){
-        find("LevelCanvas/Player").setPosition(new Vec3(this._nodeStage[index].nodePostion[0], this._nodeStage[index].nodePostion[1], this._nodeStage[index].nodePostion[2]));
-        ActorStage.instance.playerProperty.hp=this._nodeStage[index].hp;
-        ActorStage.instance.playerProperty.ex=this._nodeStage[index].ex;
-        ActorStage.instance.playerProperty.level=this._nodeStage[index].level;
-        ActorStage.instance.playerProperty.killCount=this._nodeStage[index].killCount;
-    }
-    //加载敌人，物品等节点
-    preNode(index:number){
-       if(this._nodeStage[index]._nodeType==NodeType.Enemy1){
-            let node=instantiate(this.Enemy1Prefab) 
-            node.parent=this.canvasNode;
-            this.initPrefab(index,node);
-       } 
-       if(this._nodeStage[index]._nodeType==NodeType.Enemy2){
-            let node=instantiate(this.Enemy2Prefab) 
-            this.initPrefab(index,node);
-       }
-       if(this._nodeStage[index]._nodeType==NodeType.Enemy3){           
-            let node=instantiate(this.Enemy3Prefab)             
-            this.initPrefab(index,node);    
-       }
-       if(this._nodeStage[index]._nodeType==NodeType.ChallengeEnemy1){
-            let node=instantiate(this.ChallengeEnemy1Prefab) 
-            this.initPrefab(index,node);
-       }
-       if(this._nodeStage[index]._nodeType==NodeType.ChallengeEnemy2){
-            let node=instantiate(this.ChallengeEnemy2Prefab) 
-            this.initPrefab(index,node);
-       }
-       if(this._nodeStage[index]._nodeType==NodeType.Boss1){
-            let node=instantiate(this.Boos1Prefab) 
-            this.initPrefab(index,node);
-       }
-       if(this._nodeStage[index]._nodeType==NodeType.Item){
-            let node=instantiate(this.ItemPrefab) 
-            node.setPosition(new Vec3(this._nodeStage[index].nodePostion[0], this._nodeStage[index].nodePostion[1], this._nodeStage[index].nodePostion[2]));
-       }
-       
-    }
+     // 加载玩家节点
+     prePlayerNode(index: number): void {
+          const playerData = this._nodeStage[index];
+          const playerNode = find("LevelCanvas/Player");
 
-    initPrefab(index:number,node:Node){
-        node.parent=this.canvasNode;
-        node.setPosition(new Vec3(this._nodeStage[index].nodePostion[0], this._nodeStage[index].nodePostion[1], this._nodeStage[index].nodePostion[2]));
-        this.scheduleOnce(()=>{
-            node.getComponent(Actor).current_ActorProperty.hp=this._nodeStage[index].hp;
-        },0.1);
-    }
+          playerNode.setPosition(new Vec3(...playerData.nodePostion));
+          const playerProps = ActorStage.instance.playerProperty;
+          playerProps.hp = playerData.hp;
+          playerProps.ex = playerData.ex;
+          playerProps.level = playerData.level;
+          playerProps.killCount = playerData.killCount;
+     }
+     // 加载敌人、物品等节点
+     preNode(index: number): void {
+          const stageData = this._nodeStage[index];
+          const prefab = this.prefabMap.get(stageData._nodeType);
+          const node = instantiate(prefab);
+          if (prefab) {
+               this.preEnemyNode(index, node);
+          } else if (stageData._nodeType === NodeType.Item || stageData._nodeType === NodeType.Magnet) {
+               this.preNormalNode(index, node);
+          }
+      }
+       
+    
+     // 加载敌人节点
+     preEnemyNode(index: number, node: Node): void {
+          const stageData = this._nodeStage[index];
+          node.parent = this.canvasNode;
+          node.setPosition(new Vec3(...stageData.nodePostion));
+          this.scheduleOnce(() => {
+          const actor = node.getComponent(Actor);
+          if (actor) {
+               actor.current_ActorProperty.hp = stageData.hp;
+          }
+          }, 0.1);
+     }
+        // 加载一般节点
+        preNormalNode(index: number, node: Node): void {
+          const stageData = this._nodeStage[index];
+          node.parent = this.canvasNode;
+          node.setPosition(new Vec3(...stageData.nodePostion))
+     }
 }

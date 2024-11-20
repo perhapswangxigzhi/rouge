@@ -1,4 +1,5 @@
 import { _decorator, Collider, Collider2D, Component, instantiate, Node, NodePool, Prefab } from 'cc';
+import { ActorStage } from '../actor/ActorStage';
 const { ccclass, property } = _decorator;
 interface IDictPool{
     [name:string]:NodePool;
@@ -27,7 +28,8 @@ export class PoolManager{
         if(pool){
             if(pool.size() > 0){
                 node=pool.get();
-            }else{
+            }
+            else{
                 node=instantiate(prefab);
             }
         }else{
@@ -48,7 +50,6 @@ export class PoolManager{
         node.active = false;
         if(!this._dictPool[name]){
             this._dictPool[name] = new NodePool();
-            
         }
         this._dictPool[name].put(node);
     }

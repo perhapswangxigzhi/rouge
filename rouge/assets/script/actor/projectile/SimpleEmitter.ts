@@ -2,7 +2,7 @@ import { _decorator, CCFloat, Collider2D, Component, find, game, instantiate, No
 import { Actor } from '../Actor';
 import { Projectile } from './Projectile';
 import { PoolManager } from '../../util/PoolManager';
-import { colliderTag } from '../ColliderTag';
+import { colliderTag } from './ColliderTag';
 const { ccclass, property } = _decorator;
 
 @ccclass('SimpleEmitter')
@@ -31,10 +31,9 @@ export class SimpleEmitter extends Component {
         this.actor=find('LevelCanvas/Player').getComponent(Actor)
        }else if(this.node.name=="Emitter_Enemy1"){
         this.actor=find('LevelCanvas/Enemy1').getComponent(Actor)
-       }else if(this.node.name=="Emitter_Enemy3"){
-        this.actor=find('LevelCanvas/Enemy3').getComponent(Actor)
+       }else{
+        this.actor=this.node.parent.getComponent(Actor)
        }
-       
     } 
     get isCoolingdown(){
         return game.totalTime-this.castTime>=this.cooldown*1000;

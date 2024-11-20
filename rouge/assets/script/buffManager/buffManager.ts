@@ -1,8 +1,8 @@
 import { _decorator, Color, Component, instantiate, macro, Prefab, Vec3 } from "cc";
 import { DamageTextManager } from "../TextManager/DamageTextManager";
 import { Actor } from "../actor/Actor";
-import { EnemyControl } from "../actor/EnemyControl";
-import { BossContorl } from "../actor/BossControl";
+import { EnemyControl } from "../actor/enemy/EnemyControl";
+import { BossContorl } from "../actor/enemy/BossControl";
 const { ccclass, property ,requireComponent,disallowMultiple} = _decorator;
 
 @ccclass('buffManager')

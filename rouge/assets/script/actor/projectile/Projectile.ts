@@ -1,6 +1,6 @@
 import { _decorator, assert, assetManager, AudioClip, AudioSource, Collider2D, Component, Contact2DType, find, instantiate, IPhysics2DContact, Node, NodePool, Prefab, RigidBody2D, Tween } from 'cc';
 import { Actor } from '../Actor';
-import { colliderTag } from '../ColliderTag';
+import { colliderTag } from './ColliderTag';
 import { PoolManager } from '../../util/PoolManager';
 
 const { ccclass, property, requireComponent } = _decorator;
@@ -21,15 +21,15 @@ export class Projectile extends Component {
     hitTag: colliderTag.Define = colliderTag.Define.PlayerProjectile;
 
     isDie: boolean = false;
-   
-
-
     damage: number = 0;
 
     start() {
         this.collider = this.node.getComponent(Collider2D);
         this.rigidbody = this.node.getComponent(RigidBody2D);
         this.collider.on(Contact2DType.BEGIN_CONTACT, this.onCollisionBegin, this);
+        this.schedule(() => {
+          PoolManager.instance().putNode(this.node);
+        }, 3);
     }
 
     onCollisionBegin(self: Collider2D, other: Collider2D, contact: IPhysics2DContact) {
@@ -39,13 +39,8 @@ export class Projectile extends Component {
           }
           this.scheduleOnce(() => {
             PoolManager.instance().putNode(this.node);
-           this.unscheduleAllCallbacks();
           });
           
-        }else{
-          this.scheduleOnce(() => {
-          PoolManager.instance().putNode(this.node);
-    }, 5);
         }
     }
 }

@@ -11,6 +11,7 @@ import { Actor } from '../actor/Actor';
 import { BuffManager } from '../buffManager/buffManager';
 import { SkillEmitter } from './SkillEmitter';
 import { timeUtil } from '../util/TimeUtil';
+import { Level } from '../level/Level';
 const { ccclass, property } = _decorator;
 enum SkillProperty {
     NONE=0,
@@ -25,11 +26,14 @@ enum SkillProperty {
 export class SkillElement extends Component {
     static elementCount:number[]=[0,0,0,0,0];
     static hasSkillFetter: boolean[][] = [[false, false, false], [false, false, false], [false, false, false], [false, false, false], [false, false, false]];
-    start() {
+    protected onEnable(): void {
         SkillElement.getElementCount();
         this.initElementCount();
+        Level.pause();
     }
-
+    protected onDisable(): void {
+        Level.resume();
+    }
    static getElementCount(){
     SkillElement.elementCount=[0,0,0,0,0];
     for(let i=0;i<Skill.instance.skillProperty.length;i++){

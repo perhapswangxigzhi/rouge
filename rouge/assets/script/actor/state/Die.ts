@@ -8,7 +8,7 @@ export class Die extends ActorState {
         this.actor.rigidbody.linearVelocity = Vec2.ZERO;
             if(this.dragonBoneAnimation){
                 this.dragonBoneAnimation.playAnimation(StateDefine.Die,1);
-	            this.dragonBoneAnimation.addEventListener(dragonBones.EventObject.COMPLETE, this.animationEventHandler, this)
+	           this.dragonBoneAnimation.addEventListener(dragonBones.EventObject.COMPLETE, this.animationEventHandler, this)
             }
             else{
             this.animation.play(StateDefine.Die);
@@ -17,23 +17,11 @@ export class Die extends ActorState {
         this.actor.dead = true;        
     }
     animationEventHandler(){
-		//对某个动画做监听
-        if(this.actor.current_ActorProperty.name=="ChallengeEnemy1"){
-        director.emit(GameEvent.OnChallengeDie_1, this.actor.node); 
-        }
-        if(this.actor.current_ActorProperty.name=="ChallengeEnemy2"){
-         director.emit(GameEvent.OnChallengeDie_2, this.actor.node); 
-        }
-        if(this.actor.current_ActorProperty.name=="Boss1"){
-        director.emit(GameEvent.OnBossDie, this.actor.node); 
-        }
         this.actor.scheduleOnce(() => {    
         this.actor.node.destroy();
         director.emit(GameEvent.OnDie, this.actor.node); 
         }, 0.1); 
-           
-	    }
-    
+	}
     onDieEnd(animationType: Animation.EventType, state: AnimationState) {
         if (animationType == Animation.EventType.FINISHED) {
             if (state.name == StateDefine.Die) {
@@ -44,9 +32,9 @@ export class Die extends ActorState {
                 }else{
                 //删除角色
                 this.actor.scheduleOnce(() => {    
-                this.actor.node.destroy();
-                director.emit(GameEvent.OnDie, this.actor.node); 
-                }, 0.1);
+                    this.actor.node.destroy();
+                    director.emit(GameEvent.OnDie, this.actor.node); 
+                    }, 0.1);
                 }   
             }
         }

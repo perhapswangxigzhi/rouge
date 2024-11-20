@@ -16,8 +16,8 @@ export class UIFail extends Component {
         this.node.active=false;
         find('LevelCanvas/Player').getComponent(Actor).dead=false;
         find('LevelCanvas/Player').getComponent(Actor).onListenable();
+       
         director.resume();    
-       // director.loadScene("game");
     }
    
 }

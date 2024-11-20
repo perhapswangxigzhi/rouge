@@ -1,7 +1,7 @@
-import { _decorator, Component, Node, RigidBody,RigidBody2D,CircleCollider2D,Collider2D, Sprite, CCFloat, Vec2, v2, IPhysics2DContact, Contact2DType, Animation, v3, Vec3, math, Color, Quat, assetManager, AudioClip, AudioSource, dragonBones, resources, Prefab, instantiate, find, UITransform, color, game, director, sys } from 'cc';
+import { _decorator, Component, Node, RigidBody,RigidBody2D,CircleCollider2D,Collider2D, Sprite, CCFloat, Vec2, v2, IPhysics2DContact, Contact2DType, Animation, v3, Vec3, math, Color, Quat, assetManager, AudioClip, AudioSource, dragonBones, resources, Prefab, instantiate, find, UITransform, color, game, director, sys, UI } from 'cc';
 import { StateMachine } from '../fsm/StateMachine';
 import { StateDefine } from './StateDefine';
-import { colliderTag } from './ColliderTag';
+import { colliderTag } from './projectile/ColliderTag';
 import { Projectile } from './projectile/Projectile';
 import { GameEvent } from '../event/GameEvent';
 import { PoolManager } from '../util/PoolManager';
@@ -14,9 +14,10 @@ import { mathutil } from '../util/MathUtil';
 import { AudioMgr } from '../sound/soundManager';
 import { Equipment } from '../bag/Equipment';
 import { AssentManager } from '../bag/AssentManager';
-import { PlayerController } from './PlayControl';
+import { PlayControl } from './PlayControl';
 import { ActorStage } from './ActorStage';
 import { traceProjectile } from './projectile/traceProjectile';
+import { UIporperty } from '../bag/UIporperty';
 const { ccclass, property ,requireComponent,disallowMultiple} = _decorator;
 
 @ccclass('Actor')
@@ -59,6 +60,7 @@ export class Actor extends Component {
     enemyStatic:boolean=false   //敌人是否处于减速状态
     static openDirection:boolean=false   //开启减速
     static increaseDeAndFrez:boolean=false //在减速和冰冻状态下，开启增伤
+    static isPause:boolean=false   //是否暂停
     start() {
         this.rigidbody = this.getComponent(RigidBody2D);
         this.collider = this.getComponent(Collider2D);
@@ -76,10 +78,8 @@ export class Actor extends Component {
         if(this.current_ActorProperty==ActorStage.instance.playerProperty){
             this.setEquip();//装备属性
             this.linearSpeed=ActorStage.instance.playerProperty.speed
-            console.log("装备属性设置成功")
-            console.log(ActorStage.instance.playerProperty)
         }
-        
+      
     }
     get isCoolingdown(){
         return game.totalTime-this.castTime>=this.cooldown*1000;
@@ -91,12 +91,18 @@ export class Actor extends Component {
         this.collider.on(Contact2DType.BEGIN_CONTACT, this.onProjectileTriggerEnter, this);
     }
     update(deltaTime: number) {
+        if(Actor.isPause==false){
         this.stateMgr.update(deltaTime);
            // 在每帧处理所有累积的伤害
         while (this.damageQueue.length > 0) {
             const { damage, hurtSrc, hitNormal } = this.damageQueue.shift();
             this.onHurt(damage, hurtSrc, hitNormal);
         }
+    }else{
+        this.rigidbody.linearVelocity=Vec2.ZERO
+    }
+        
+    
     }
     onProjectileTriggerEnter(ca:Collider2D, cb:Collider2D,contact:IPhysics2DContact){
       
@@ -155,21 +161,29 @@ export class Actor extends Component {
     }
   
     onHurt(damage:number, from:Actor, hurtDirection?:Vec2){
-        if (this.dead) {return;}
+        if (this.dead) {
+            if(this.current_ActorProperty.name!="Building_1" && this.current_ActorProperty.name!="Building_2" && this.current_ActorProperty.name!="Building_3"){
+                if(this.stateMgr.currState.id!=StateDefine.Die){
+                    this.stateMgr.transit(StateDefine.Die)
+                } 
+            }
+           
+            return;}
         if(damage==0){return;}
         if(this.current_ActorProperty!=null){
             if(from.current_ActorProperty!=null&&from.current_ActorProperty==ActorStage.instance.playerProperty){
                 //伤害计算
-            damage = Math.max(damage+ActorStage.instance.playerProperty.goldAddition-Math.floor((damage*this.current_ActorProperty.defence)/(50+this.current_ActorProperty.defence)), 0) * this.current_ActorProperty.hurtCoefficient;   
-            }else{
-                damage = Math.max(damage - Math.floor((damage*this.current_ActorProperty.defence)/(50+this.current_ActorProperty.defence)), 0) * this.current_ActorProperty.hurtCoefficient;
-            }
+            damage = Math.max(damage+ActorStage.instance.playerProperty.goldAddition-Math.round((damage*this.current_ActorProperty.defence)/(10+this.current_ActorProperty.defence)), 0) * this.current_ActorProperty.hurtCoefficient; 
             this.isCriticalHit=false;
-            this.isCriticalHit = Math.random() < this.current_ActorProperty.crit; // 判定是否暴击
+            this.isCriticalHit = Math.random() < ActorStage.instance.playerProperty.crit; // 判定是否暴击
             // 如果是暴击，乘以一个暴击倍数
             if (this.isCriticalHit) {
-                damage =damage*this.current_ActorProperty.physicalCritDamage ; // 乘以暴击伤害
-            
+                damage =Math.round(damage*ActorStage.instance.playerProperty.physicalCritDamage) ; // 乘以暴击伤害
+            }  
+            }
+            //非玩家造成伤害
+            else{
+                damage = Math.max(damage - Math.floor((damage*this.current_ActorProperty.defence)/(50+this.current_ActorProperty.defence)), 0) * this.current_ActorProperty.hurtCoefficient;
             }
             if(this.current_ActorProperty==ActorStage.instance.playerProperty&&this.current_ActorProperty.shield>0){
                 this.current_ActorProperty.shield=this.current_ActorProperty.shield-damage
@@ -194,7 +208,11 @@ export class Actor extends Component {
             //普通伤害文字
             const damageTextNode=instantiate(this.damageTextPrefab);
             damageTextNode.setParent(this.node);
-            damageTextNode.getComponent(DamageTextManager).showDamage(hitPosition, damage,Color.WHITE);
+            if(this.current_ActorProperty.name=='Player'){
+                damageTextNode.getComponent(DamageTextManager).showDamage(hitPosition, damage,Color.RED);
+            }else{
+                damageTextNode.getComponent(DamageTextManager).showDamage(hitPosition, damage,Color.WHITE);
+            }
         }
         this.rigidbody.applyLinearImpulseToCenter(hurtDirection,true)
         if(sys.isMobile==true){  //当前环境为手机
@@ -216,13 +234,13 @@ export class Actor extends Component {
     AudioMgr.inst.playOneShot('bulletIn',0.7);
     if(this.current_ActorProperty.hp<=0){
         this.dead = true; // 设置死亡标志
-        // 移除碰撞事件监听
-        this.onDisable();   
+        //上传死亡信息
+        this.emitDieEvent();
         //获取掉落物
         this.scheduleOnce(()=>{
-        let randomItem = Math.random();
+            let randomItem = Math.random();
         // 根据随机值选择资源
-        if (randomItem < 0.01) { // 1%的几率
+        if (randomItem < 0.05) { // 5%的几率
             this.itemName = "Magnet";
         } else { // 90%的几率
             this.itemName = "Item";
@@ -242,25 +260,38 @@ export class Actor extends Component {
                 this.node.destroy();
         },0.1)
         }else{
-        this.stateMgr.transit(StateDefine.Die)     
+            this.stateMgr.transit(StateDefine.Die)     
         }
         AudioMgr.inst.playOneShot('die1',0.8);
              
     }
     }
+    //死亡信息事件上传
+    emitDieEvent(){
+        if(this.current_ActorProperty.name=="ChallengeEnemy1"){
+        director.emit(GameEvent.OnChallengeDie_1, this.node); 
+        }
+        if(this.current_ActorProperty.name=="ChallengeEnemy2"){
+         director.emit(GameEvent.OnChallengeDie_2, this.node); 
+        }
+        if(this.current_ActorProperty.name=="Boss1"||this.current_ActorProperty.name=="Boss2"||this.current_ActorProperty.name=="Boss3"||this.current_ActorProperty.name=="Boss4"
+            ||this.current_ActorProperty.name=="Boss5")
+        {
+            director.emit(GameEvent.OnBossDie, this.node); 
+        }
+	}
     //实装装备属性
     setEquip(){
-        if(AssentManager.instance){
-        for(let i=0;i<AssentManager.instance.barEquipCount.length;i++){
-        ActorStage.instance.playerProperty.maxHp+=Equipment.inst.equipmentPerporty[AssentManager.instance.barEquipCount[i]].hp
-        ActorStage.instance.playerProperty.hp+=Equipment.inst.equipmentPerporty[AssentManager.instance.barEquipCount[i]].hp
-        ActorStage.instance.playerProperty.attack+=Equipment.inst.equipmentPerporty[AssentManager.instance.barEquipCount[i]].attack
-        ActorStage.instance.playerProperty.defence+=Equipment.inst.equipmentPerporty[AssentManager.instance.barEquipCount[i]].defence
-        ActorStage.instance.playerProperty.speed+= ActorStage.instance.playerProperty.speed*Equipment.inst.equipmentPerporty[AssentManager.instance.barEquipCount[i]].speed
-        ActorStage.instance.playerProperty.attackSpeed+=ActorStage.instance.playerProperty.attackSpeed*Equipment.inst.equipmentPerporty[AssentManager.instance.barEquipCount[i]].attackSpeed
-        ActorStage.instance.playerProperty.crit+=Equipment.inst.equipmentPerporty[AssentManager.instance.barEquipCount[i]].crit
-        }
-    }
+       if(UIporperty.rolePre.length>0){
+            ActorStage.instance.playerProperty.maxHp=UIporperty.rolePre[0];
+            ActorStage.instance.playerProperty.hp=UIporperty.rolePre[0];
+            ActorStage.instance.playerProperty.attack=UIporperty.rolePre[1];
+            ActorStage.instance.playerProperty.defence=UIporperty.rolePre[2];
+            ActorStage.instance.playerProperty.crit=UIporperty.rolePre[3];
+            ActorStage.instance.playerProperty.physicalCritDamage=UIporperty.rolePre[4];
+            ActorStage.instance.playerProperty.attackSpeed=UIporperty.rolePre[5];
+            ActorStage.instance.playerProperty.speed=UIporperty.rolePre[6];
+       }
     }
     //减速敌人
     oppoSpeed(directFactor:number){
@@ -276,19 +307,33 @@ export class Actor extends Component {
         }
     }
   //属性增伤
-   increaseHurt(skillPerporty:number,damage:number){
-    if(skillPerporty==1){
-        damage+=damage*ActorStage.instance.playerProperty.goldAttack;
-    }else if(skillPerporty==2){
-        damage+=damage*ActorStage.instance.playerProperty.woodAttack;
-    }else if(skillPerporty==3){
-        damage+=damage*ActorStage.instance.playerProperty.waterAttack;
-    }else if(skillPerporty==4){
-        damage+=damage*ActorStage.instance.playerProperty.fireAttack;
-    }else if(skillPerporty==5){
-        damage+=damage*ActorStage.instance.playerProperty.thunderAttack;
+  increaseHurt(skillProperty: number, damage: number): number {
+    let increaseAmount: number = 0; // 初始化增加的伤害值
+
+    switch (skillProperty) {
+        case 1:
+            increaseAmount = Math.round(damage * ActorStage.instance.playerProperty.goldAttack);
+            break;
+        case 2:
+            increaseAmount = Math.round(damage * ActorStage.instance.playerProperty.woodAttack);
+            break;
+        case 3:
+            increaseAmount = Math.round(damage * ActorStage.instance.playerProperty.waterAttack);
+            break;
+        case 4:
+            increaseAmount = Math.round(damage * ActorStage.instance.playerProperty.fireAttack);
+            break;
+        case 5:
+            increaseAmount = Math.round(damage * ActorStage.instance.playerProperty.thunderAttack);
+            break;
+        default:
+            break;
     }
+
+    // 将增加的伤害值加到原始伤害上
+    damage += increaseAmount;
+
     return damage;
-  }
+}
   
 }

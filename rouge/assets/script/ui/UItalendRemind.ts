@@ -21,7 +21,7 @@ export class UItalendRemind extends Component {
   }
   onCloseButtonClicked(){
       this.talentNode.active = true;
-      find('LevelCanvas/Player').pauseSystemEvents(true);
+      find('UIRoot/UIMask').active = true;
   }
  
   update(dt: number) {

@@ -29,7 +29,6 @@ export class DamageTextManager extends Component {
        
         this.node.position = position;
         const formattedDamage = `-${damageAmount.toString().replace(/\B/g, " ")}`;
-        console.log(this.node.name)
         const labelComponent=this.node.getChildByName('Label').getComponent(Label)
         labelComponent.string = formattedDamage;
         

@@ -13,11 +13,11 @@ enum SkillType {
     FixedSkill=2,  // 定点释放技能
     PointSkill=3,    // 指向技能
     
-    
 }
 @ccclass('SkillEmitter')
 export class SkillEmitter extends Component {
     attack:number;
+    static isPause:boolean=false;
     //skillType:SkillType
     skill:Skill|null=null;
      @property(CCFloat)
@@ -41,8 +41,6 @@ export class SkillEmitter extends Component {
      fixedSkillPrefab4:Prefab=null;
      @property(Prefab)
      fixedSkillPrefab5:Prefab=null;
-     @property(Prefab)
-     fixedSkillPrefab6:Prefab=null;
      @property(Prefab)
      pointSkillPrefab:Prefab=null;
      @property(Prefab)
@@ -68,24 +66,22 @@ export class SkillEmitter extends Component {
                     console.error(err);
                     return;
                 }
-                this.chostSkillPrefab=prefab;
-               
+                this.skillRealse(prefab.name);
             })
-            this.scheduleOnce(() => {
-            this.skillRealse();
-            },1)
-            this.chostSkillPrefab=null;
         }
-        skillRealse(){
-          if(this.chostSkillPrefab){
-            console.log("选择天赋的姓名",this.chostSkillPrefab.name)
+        skillRealse(skillName:string){
+          if(skillName){
+            console.log("选择天赋的姓名",skillName)
             let skillbar=instantiate(this.skillBarPrefab)
             this.skillBarList.addChild(skillbar)
-            skillbar.getComponent(SkillBar).getIcon(this.chostSkillPrefab.name)
-            switch(this.chostSkillPrefab.name){
+            skillbar.getComponent(SkillBar).getIcon(skillName)
+            switch(skillName){
                 case "HolySpring_skillicon_30203":
                     skillbar.getComponent(SkillBar).skillProgress(this.setTime(3));
                     this.schedule(() => {
+                        if(SkillEmitter.isPause==true){
+                            return;
+                        }
                         skillbar.getComponent(SkillBar).skillProgress(this.setTime(3));
                         let node=instantiate(this.strightSkillPrefab) 
                         node.position = this.node.parent.position;
@@ -103,11 +99,14 @@ export class SkillEmitter extends Component {
                                 }
                             }
                         }
-                        , this.setTime(3), macro.REPEAT_FOREVER, 0);
+                        , this.setTime(3), macro.REPEAT_FOREVER,0);
                     break;
                 case "HolySpring_skillicon_30217":
                     skillbar.getComponent(SkillBar).skillProgress(this.setTime(4));
                      this.schedule(() => {
+                            if(SkillEmitter.isPause==true){
+                                return;
+                            }
                             skillbar.getComponent(SkillBar).skillProgress(this.setTime(4));
                             let node=instantiate(this.strightSkillPrefab1) 
                             node.position = this.node.parent.position;
@@ -131,6 +130,9 @@ export class SkillEmitter extends Component {
                 case "HolySpring_skillicon_30021":
                     skillbar.getComponent(SkillBar).skillProgress(this.setTime(8));
                     this.schedule(() => {
+                        if(SkillEmitter.isPause==true){
+                            return;
+                        }
                         skillbar.getComponent(SkillBar).skillProgress(this.setTime(8));
                         let node1=instantiate(this.fixedSkillPrefab) 
                         node1.position = new Vec3(this.node.parent.position.x+100,this.node.parent.position.y,this.node.parent.position.z);
@@ -169,6 +171,9 @@ export class SkillEmitter extends Component {
                 case "HolySpring_skillicon_30102":
                     skillbar.getComponent(SkillBar).skillProgress(this.setTime(8));
                     this.schedule(() => {
+                        if(SkillEmitter.isPause==true){
+                            return;
+                        }
                         skillbar.getComponent(SkillBar).skillProgress(this.setTime(8));
                         let node=instantiate(this.fixedSkillPrefab1) 
                         node.position = this.node.position;
@@ -189,6 +194,9 @@ export class SkillEmitter extends Component {
                 case "HolySpring_skillicon_30130":
                     skillbar.getComponent(SkillBar).skillProgress(this.setTime(6));
                     this.schedule(() => {
+                        if(SkillEmitter.isPause==true){
+                            return;
+                        }
                         skillbar.getComponent(SkillBar).skillProgress(this.setTime(8));
                             let node=instantiate(this.fixedSkillPrefab2) 
                             node.position = this.node.parent.position;
@@ -209,17 +217,30 @@ export class SkillEmitter extends Component {
                 case "HolySpring_skillicon_50106":
                     skillbar.getComponent(SkillBar).skillProgress(this.setTime(8));
                     this.schedule(() => {
+                        if(SkillEmitter.isPause==true){
+                            return;
+                        }
                         skillbar.getComponent(SkillBar).skillProgress(this.setTime(8));
                         let node=instantiate(this.fixedSkillPrefab3) 
                         this.node.parent.parent.addChild(node);
-                        node.worldPosition =this.getEnemy().worldPosition
+                        try {
+                            node.worldPosition =this.getEnemy().worldPosition
+                        } catch (error) {
+                            console.log(error)
+                            node.worldPosition=this.node.parent.position
+                        }
                         if(SkillEmitter.replaceSkill==true){
                             if (Math.random() < 0.3) { // 30% 的几率
                                 this.scheduleOnce(() => {
-                                    skillbar.getComponent(SkillBar).skillProgress(0.1);
-                                    let node=instantiate(this.fixedSkillPrefab3) 
-                                    this.node.parent.parent.addChild(node);
-                                    node.worldPosition =this.getEnemy().worldPosition
+                                        skillbar.getComponent(SkillBar).skillProgress(0.1);
+                                        let node=instantiate(this.fixedSkillPrefab3) 
+                                        this.node.parent.parent.addChild(node);
+                                    try {
+                                        node.worldPosition =this.getEnemy().worldPosition
+                                    } catch (error) {
+                                        console.log(error)
+                                        node.worldPosition=this.node.parent.position
+                                    }
                                 }, 0.1); // 立即执行
                             }
                         }
@@ -229,6 +250,9 @@ export class SkillEmitter extends Component {
                 case "HolySpring_skillicon_30204":
                     skillbar.getComponent(SkillBar).skillProgress(this.setTime(8));
                     this.schedule(() => {
+                        if(SkillEmitter.isPause==true){
+                            return;
+                        }
                         skillbar.getComponent(SkillBar).skillProgress(this.setTime(8));
                         let node=instantiate(this.pointSkillPrefab) 
                         node.position = this.node.parent.parent.position;
@@ -250,6 +274,9 @@ export class SkillEmitter extends Component {
                     case "HolySpring_skillicon_30135":
                         skillbar.getComponent(SkillBar).skillProgress(this.setTime(8));
                         this.schedule(() => {
+                            if(SkillEmitter.isPause==true){
+                                return;
+                            }
                         skillbar.getComponent(SkillBar).skillProgress(this.setTime(8));
                         let node=instantiate(this.fixedSkillPrefab4) 
                         node.position = this.node.position;
@@ -270,6 +297,9 @@ export class SkillEmitter extends Component {
                     case "HolySpring_skillicon_30224":
                         skillbar.getComponent(SkillBar).skillProgress(this.setTime(4));
                     this.schedule(() => {
+                        if(SkillEmitter.isPause==true){
+                            return;
+                        }
                         skillbar.getComponent(SkillBar).skillProgress(this.setTime(4));
                         let node=instantiate(this.fixedSkillPrefab5) 
                         node.position = this.node.parent.position;
@@ -290,6 +320,9 @@ export class SkillEmitter extends Component {
                     case "HolySpring_skillicon_30229":
                         skillbar.getComponent(SkillBar).skillProgress(this.setTime(4));
                         this.schedule(() => {
+                            if(SkillEmitter.isPause==true){
+                                return;
+                            }
                         skillbar.getComponent(SkillBar).skillProgress(this.setTime(4));
                         let node=instantiate(this.strightSkillPrefab2) 
                         node.position = this.node.parent.position;
@@ -309,31 +342,12 @@ export class SkillEmitter extends Component {
                         }
                         , this.setTime(4), macro.REPEAT_FOREVER, 0);
                         break;  
-                    case "HolySpring_skillicon_30236":
-                        skillbar.getComponent(SkillBar).skillProgress(this.setTime(5));
-                    this.schedule(() => {
-                        skillbar.getComponent(SkillBar).skillProgress(this.setTime(5));
-                        let node=instantiate(this.fixedSkillPrefab6) 
-                        node.position = this.node.parent.position;
-                        node.rotation = this.node.parent.rotation;
-                        this.node.parent.parent.addChild(node);
-                        if(SkillEmitter.replaceSkill==true){
-                            if (Math.random() < 0.3) { // 30% 的几率
-                                this.scheduleOnce(() => {
-                                    skillbar.getComponent(SkillBar).skillProgress(0.1);
-                                    let node=instantiate(this.fixedSkillPrefab6) 
-                                    node.position = this.node.parent.position;
-                                    node.rotation = this.node.parent.rotation;
-                                    this.node.parent.parent.addChild(node);
-                                }, 0.1); // 立即执行
-                            }
-                        }
-                        }
-                        , this.setTime(5), macro.REPEAT_FOREVER, 0);
-                            break;  
                     case "HolySpring_skillicon_30310":
                         skillbar.getComponent(SkillBar).skillProgress(this.setTime(10));
                     this.schedule(() => {
+                        if(SkillEmitter.isPause==true){
+                            return;
+                        }
                         skillbar.getComponent(SkillBar).skillProgress(this.setTime(10));
                         let node=instantiate(this.HealingSkillPrefab) 
                         node.position = this.node.position;
@@ -360,8 +374,10 @@ export class SkillEmitter extends Component {
     getEnemy(): Node {
         for(let i=0;i<=2;i++){
             const enemyNode=find('LevelCanvas').getChildByName(`Enemy${i}`)
-            if(enemyNode!=null){
+            if(enemyNode!=null&&enemyNode.isValid==true){
                 return enemyNode ;
+            }else{
+                return null;
             }
         }
     }

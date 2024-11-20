@@ -9,10 +9,27 @@ enum EquipType {
     shoes,      //鞋子
 }
 export class EquipmentPerporty {
+     
+    /**
+     * 用户id
+    */
+    id:string ="888";
+     /**
+     * 装备id
+    */
+    equipId:number ;
+    /**
+     * 背包位置索引
+    */
+    indexOnBag:number = -1;
+     /**
+     * 装备栏位置索引
+    */
+    indexOnSlot:number = -1;
       /**
-     * 装备索引
+     * 装备图片路径索引
      */
-    Index:string = null;
+    indexIcon:string = null;
      /**
      * 装备名称
      */
@@ -20,7 +37,7 @@ export class EquipmentPerporty {
      /**
      * 装备类型
      */
-     type: EquipType = 0;
+    type: EquipType = 0;
     /**
      * 生命值
      */
@@ -29,6 +46,10 @@ export class EquipmentPerporty {
      * 攻击力
     */
     attack: number = 0;
+     /**
+     * 防御力
+    */
+    defence: number = 0;
     /**
      * 暴击率
     */
@@ -36,11 +57,8 @@ export class EquipmentPerporty {
      /**
      * 物理暴击伤害
     */
-     physicalCritDamage: number = 0;
-    /**
-     * 防御力
-    */
-    defence: number = 0;
+    physicalCritDamage: number = 0;
+   
     /**
      * 移动速度
     */

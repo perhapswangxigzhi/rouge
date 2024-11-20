@@ -28,10 +28,12 @@ export enum BlackboardKey {
     TargetActor = 'targetActor',
 
     // boolean
-    Escaped = 'escaped',
+    EscapeOnce = 'escapeOnce',
 
    // number
     Distance = 'distance',
     // v3
     Dir = 'dir',
+    //
+    CanAttack = 'canAttack'
 }   

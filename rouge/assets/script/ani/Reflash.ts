@@ -15,19 +15,15 @@ export class Reflash extends Component {
         let changeSkillExplain= UIFrame.getChildByName('SkillBg').getChildByName('SkillExplain').getComponent(Label);
         const filpDuration = 0.2;// 翻牌动画持续时间
         tween(UIFrame)
-        .to(filpDuration/2, {eulerAngles:new Vec3(0,-90,0)})
+        .to(filpDuration/2, { scale: new Vec3(0, 1, 1) })
         
         .call(() => {
             // 在半翻时更换精灵帧
         SkillManager.instance().randomSkill(changeSprite, chanegSkillName,changeSkillExplain);
         UIFrame.getChildByName('SkillBg').getChildByName('SkillIcon').getComponent(Sprite).spriteFrame = changeSprite.spriteFrame;  
+        UIFrame.getChildByName('SkillBg').getChildByName('SkillName').getComponent(Label).string = chanegSkillName.string;
         })
-        .to(filpDuration/ 2, { eulerAngles: new Vec3(0,  -180, 0) })
-        .call(() => {
-            UIFrame.getChildByName('SkillBg').getChildByName('SkillName').getComponent(Label).string = chanegSkillName.string;
-            UIFrame.eulerAngles = new Vec3(0, 0, 0);
-           
-        })
+        .to(filpDuration/2, { scale: new Vec3(1, 1, 1) })
         .start();
         
         

@@ -1,5 +1,5 @@
 import { _decorator, Button, Component, director, EventHandler, Label, Node, Sprite, tween } from 'cc';
-import { PlayerController } from '../actor/PlayControl';
+import { PlayControl } from '../actor/PlayControl';
 import { GameEvent } from '../event/GameEvent';
 import { CoinDrop } from '../ani/CoinDrop';
 const { ccclass, property } = _decorator;
@@ -17,26 +17,24 @@ export class SkillCooling extends Component {
         this.label = this.node.children[2].getComponent(Label);
         this.coin=this.node.getChildByName('UIcoin');
         this.node.on(Node.EventType.TOUCH_END, this.onClick, this);
-        
+        this.loadAni(30);
     }
     onClick() {
-        
-        this.button.enabled = false;
-        this.icon.grayscale = true;
-        this.mask.fillRange = 1;
-        // this.coin.active=true;
-        // this.coin.getComponent(CoinDrop).drop();
-       // const random = Math.floor(Math.random() * 9) + 2;
-        const tweenTime =  10;
         if(this.node.name=='GoldChanllengeBg'){
-        const playerNode=PlayerController.instance.node;
+        const playerNode=PlayControl.instance.node;
         director.emit(GameEvent.OnCreate1, playerNode); 
         }
         else if(this.node.name=='ExpChallengeBg'){
-        const playerNode=PlayerController.instance.node;
+        const playerNode=PlayControl.instance.node;
         director.emit(GameEvent.OnCreate2, playerNode); 
         }
- 
+        this.loadAni(30);
+    }
+    // 加载动画
+    loadAni(tweenTime:number) {
+        this.button.enabled = false;
+        this.icon.grayscale = true;
+        this.mask.fillRange = 1;
         tween(this.mask)
             .to(tweenTime - 1, { fillRange: 1 / tweenTime }, {
                 onUpdate: (target: object, ratio: number) => {
@@ -56,6 +54,7 @@ export class SkillCooling extends Component {
             })
             .start();
     }
+
     onDestroy() {
         // 移除事件监听器
         this.node.off(Node.EventType.TOUCH_END, this.onClick, this);

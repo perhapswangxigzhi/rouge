@@ -251,9 +251,10 @@
       "__expectedType__": "cc.Prefab"
     },
     "skillCoefficient": 0.5,
-    "skillContinueTime": 4,
+    "skillReleaseCount": 4,
     "playSkillDragonBoneAudio": "skill_1",
     "skillPerporty": 5,
+    "skillIsEnemy": false,
     "_id": ""
   },
   {

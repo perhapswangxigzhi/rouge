@@ -1,6 +1,6 @@
 import { _decorator, assetManager, CCClass, Component, director, find, Sprite, SpriteFrame } from "cc";
 import { Equipment } from "./Equipment";
-import { PlayerController } from "../actor/PlayControl";
+import { PlayControl } from "../actor/PlayControl";
 
 const { ccclass} = _decorator;
 
@@ -36,9 +36,14 @@ export  class AssentManager extends Component  {
         this.energyCount+=engry
         this.diamondCount+=diamond
     }
-    throwEquip(){
-        this.equipCount.pop()
-        this.Count--
+    throwEquip(equipIndex:number){
+        const index = this.equipCount.indexOf(equipIndex);
+        if (index !== -1) { // 确保元素存在
+            this.equipCount.splice(index, 1); // 删除指定下标的元素
+            this.Count--; // 更新计数
+        } else {
+            console.warn("装备不存在！"); // 可选：处理元素不存在的情况
+        }
 
     }
     
